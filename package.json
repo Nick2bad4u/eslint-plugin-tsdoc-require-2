@@ -1,44 +1,71 @@
 {
   "name": "eslint-plugin-tsdoc-require",
-  "version": "0.0.3",
-  "description": "Ensures that all typescript exported types and classes have TSDoc comments",
+  "version": "0.1.0",
+  "description": "Require TSDoc comments for exported TypeScript declarations.",
   "keywords": [
     "eslint",
-    "eslintplugin",
     "eslint-plugin",
+    "eslintplugin",
     "typescript",
     "tsdoc"
   ],
   "author": "Bruno Marotta",
-  "main": "./lib/index.js",
-  "exports": "./lib/index.js",
+  "license": "ISC",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "docs/rules",
+    "README.md"
+  ],
   "scripts": {
-    "lint": "npm-run-all \"lint:*\"",
-    "lint:eslint-docs": "npm-run-all \"update:eslint-docs -- --check\"",
-    "lint:js": "eslint .",
-    "test": "mocha tests --recursive",
-    "update:eslint-docs": "eslint-doc-generator"
+    "build": "tsc -p tsconfig.build.json",
+    "changelog:release-notes": "node ./scripts/changelog-release-notes.mjs",
+    "clean": "rimraf coverage dist temp",
+    "lint": "eslint .",
+    "lint:compat:eslint": "node ./scripts/eslint-compat-smoke.mjs",
+    "lint:compat:eslint10": "npm run lint:compat:eslint -- --expect-eslint-major=10",
+    "lint:compat:eslint9": "npm run lint:compat:eslint -- --expect-eslint-major=9",
+    "lint:fix": "eslint . --fix",
+    "release:check": "npm run clean && npm run build && npm run typecheck && npm run lint && npm run test",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@es-joy/jsdoccomment": "^0.84.0",
-    "requireindex": "^1.2.0"
+    "@es-joy/jsdoccomment": "^0.41.0",
+    "@typescript-eslint/utils": "^8.46.2"
   },
   "devDependencies": {
-    "eslint": "^10.0.3",
-    "eslint-doc-generator": "^3.3.1",
-    "eslint-plugin-eslint-plugin": "^7.3.2",
-    "eslint-plugin-node": "^11.1.0",
-    "mocha": "^11.7.5",
-    "npm-run-all": "^4.1.5"
+    "@eslint/js": "^9.39.1",
+    "@types/node": "^24.5.2",
+    "@typescript-eslint/eslint-plugin": "^8.46.2",
+    "@typescript-eslint/parser": "^8.46.2",
+    "@typescript-eslint/rule-tester": "^8.46.2",
+    "@vitest/coverage-v8": "^4.0.0",
+    "eslint": "^9.39.1",
+    "globals": "^16.4.0",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.9.2",
+    "vitest": "^4.0.0"
   },
   "engines": {
-    "node": "^14.17.0 || ^16.0.0 || >= 18.0.0"
+    "node": ">=18.18.0"
   },
   "peerDependencies": {
-    "@typescript-eslint/eslint-plugin": ">=5",
-    "@typescript-eslint/parser": ">=5",
-    "eslint": ">=7",
-    "typescript": ">=4"
+    "@typescript-eslint/parser": "^8.0.0 || ^9.0.0",
+    "eslint": "^9.0.0 || ^10.0.0",
+    "typescript": ">=5.4.0"
   },
-  "license": "ISC"
+  "publishConfig": {
+    "access": "public"
+  }
 }
