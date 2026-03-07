@@ -31,7 +31,7 @@ const testExcludePatterns = [
 const testFilePatterns = ["test/**/*.{test,spec}.{ts,tsx,js,mjs,cjs,mts,cts}"];
 
 /**
- * Vitest configuration for eslint-plugin-typefest.
+ * Vitest configuration for eslint-plugin-tsdoc-require-2.
  */
 const vitestConfig: ReturnType<typeof defineConfig> = defineConfig({
     cacheDir: "./.cache/vitest",

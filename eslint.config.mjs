@@ -84,8 +84,6 @@ import { fileURLToPath } from "node:url";
 import * as tomlEslintParser from "toml-eslint-parser";
 import * as yamlEslintParser from "yaml-eslint-parser";
 
-import typefest from "./plugin.mjs";
-
 // NOTE: eslint-plugin-json-schema-validator may attempt to fetch remote schemas
 // at lint time. That makes linting flaky/offline-hostile.
 // Keep it opt-in via ENABLE_JSON_SCHEMA_VALIDATION=1.
@@ -1423,24 +1421,6 @@ export default defineConfig([
             "unicorn/no-null": "off",
             "unicorn/prefer-import-meta-properties": "off",
             "unicorn/prevent-abbreviations": "off",
-        },
-    },
-    // #endregion
-    // #region 🐶 Dogfooding
-    // ═══════════════════════════════════════════════════════════════════════════════
-    // SECTION: 🐶 Dogfooding
-    // ═══════════════════════════════════════════════════════════════════════════════
-    {
-        files: [
-            "src/**/*.{ts,tsx,mts,cts}",
-            //    "test/**/*.{ts,tsx,mts,cts}"
-        ],
-        name: "Local typefest plugin manual dogfooding rules",
-        plugins: {
-            typefest: typefest,
-        },
-        rules: {
-            ...typefest.configs.all.rules,
         },
     },
     // #endregion
