@@ -1,52 +1,45 @@
 # eslint-plugin-tsdoc-require
 
-Ensures that all typescript exported types and classes have TSDoc comments
+Require TSDoc comments for exported TypeScript declarations.
 
 ## Installation
 
-You'll first need to install [ESLint](https://eslint.org/):
-
 ```sh
-npm i eslint --save-dev
+npm install --save-dev eslint eslint-plugin-tsdoc-require @typescript-eslint/parser typescript
 ```
 
-Next, install `eslint-plugin-tsdoc-require`:
+## Usage (Flat Config)
 
-```sh
-npm install eslint-plugin-tsdoc-require --save-dev
+```js
+// eslint.config.mjs
+import tsParser from "@typescript-eslint/parser";
+import tsdocRequire from "eslint-plugin-tsdoc-require";
+
+export default [
+    {
+        files: ["**/*.ts", "**/*.tsx"],
+        languageOptions: {
+            parser: tsParser,
+        },
+        plugins: {
+            "tsdoc-require": tsdocRequire,
+        },
+        rules: {
+            "tsdoc-require/require": "error",
+        },
+    },
+];
 ```
 
-## Usage
+You can also use the bundled recommended config:
 
-Add `tsdoc-require` to the plugins section of your `.eslintrc` configuration file. You can omit the `eslint-plugin-` prefix:
+```js
+// eslint.config.mjs
+import tsdocRequire from "eslint-plugin-tsdoc-require";
 
-```json
-{
-    "plugins": [
-        "tsdoc-require"
-    ]
-}
+export default [tsdocRequire.configs.recommended];
 ```
 
+## Rule
 
-Then configure the rules you want to use under the rules section.
-
-```json
-{
-    "rules": {
-        "tsdoc-require/require": 2
-    }
-}
-```
-
-## Rules
-
-<!-- begin auto-generated rules list -->
-
-| Name                             | Description                                                                |
-| :------------------------------- | :------------------------------------------------------------------------- |
-| [require](docs/rules/require.md) | Ensures that all typescript exported types and classes have TSDoc comments |
-
-<!-- end auto-generated rules list -->
-
-
+- [`tsdoc-require/require`](docs/rules/require.md): Requires TSDoc comments for exported TypeScript declarations and default exports.

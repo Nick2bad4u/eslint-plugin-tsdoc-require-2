@@ -1,37 +1,65 @@
-# Ensures that all typescript exported types and classes have TSDoc comments (`tsdoc-require/require`)
+# tsdoc-require/require
 
-<!-- end auto-generated rule header -->
-
-This rule extends the official Microsoft eslint-plugin-tsdoc plugin which checks the validity of [TSDoc|https://tsdoc.org] comments. The original plugin doesn't check if TSDoc comments are existing, only if they are valid. A typescript module with no TSDoc comments at all is therefore valid for the Microsoft plugin. This plugin aims to fix this problem.
+Requires TSDoc comments for exported TypeScript declarations and default exports.
 
 ## Rule Details
 
-This rules ensure that Typescript exported **functions**, **types**, **interfaces**, **enums** and **classes** are annotated with [TSDoc|https://tsdoc.org] comments. 
+This rule reports exported declarations that do not have a TSDoc block comment (`/** ... */`) directly above them.
 
-Examples of **incorrect** code for this rule:
+It checks:
+
+- exported classes
+- exported functions
+- exported interfaces
+- exported type aliases
+- exported enums
+- exported variables
+- default exports (including default-exported identifiers)
+
+Why this matters: if exported APIs are undocumented, consumers have to inspect implementation details instead of reading a stable contract.
+
+### ❌ Incorrect
 
 ```ts
+export class MissingDocs {}
 
-export MyClass {}
+interface Shape {
+	radius: number;
+}
 
-// This is my class
-export MyClass{}
+export { Shape };
 
+const createUser = () => ({ id: "1" });
+export default createUser;
 ```
 
-Examples of **correct** code for this rule:
+### ✅ Correct
 
 ```ts
+/** Public class used by external callers. */
+export class DocumentedClass {}
 
-/** This is my class */
-export MyClass{}
+/** Shape shared in the public API. */
+interface Shape {
+	radius: number;
+}
 
+export { Shape };
+
+/** Creates the default exported user payload. */
+const createUser = () => ({ id: "1" });
+export default createUser;
 ```
+
+## Options
+
+This rule has no options.
 
 ## When Not To Use It
 
-Use it when you want to enforce that developer write valid TSDoc comments for all exported entities
+Disable this rule if your project intentionally does not require API documentation on exported declarations.
 
 ## Further Reading
 
-For the full TSDoc documentation, please check https://tsdoc.org
+- [TSDoc](https://tsdoc.org)
+- [ESLint custom rule docs](https://eslint.org/docs/latest/extend/custom-rules)

@@ -83,7 +83,7 @@ jobs:
                   CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
               with:
                   token: ${{ env.CODECOV_TOKEN }}
-                  slug: Nick2bad4u/eslint-plugin-typefest
+                  slug: Nick2bad4u/eslint-plugin-tsdoc-require-2
                   files: ./coverage/lcov.info
                   flags: unit,${{ matrix.codecov_flag }}
                   name: vitest-unit-coverage-${{ matrix.codecov_flag }}
@@ -91,8 +91,8 @@ jobs:
                   disable_search: true
                   verbose: true
 
-    eslint9-compat:
-        name: ESLint 9 Compatibility (${{ matrix.label }})
+    eslint-runtime-compat:
+        name: ESLint Runtime Compatibility (${{ matrix.label }})
         runs-on: ubuntu-latest
         timeout-minutes: 20
         strategy:
@@ -101,10 +101,20 @@ jobs:
                 include:
                     - eslint-js-version: 9.0.0
                       eslint-version: 9.0.0
+                      eslint-major: 9
                       label: 9.0.0
                     - eslint-js-version: ^9.39.1
                       eslint-version: ^9.39.1
+                      eslint-major: 9
                       label: 9.latest
+                    - eslint-js-version: 10.0.0
+                      eslint-version: 10.0.0
+                      eslint-major: 10
+                      label: 10.0.0
+                    - eslint-js-version: ^10.0.0
+                      eslint-version: ^10.0.0
+                      eslint-major: 10
+                      label: 10.latest
 
         steps:
             - name: Harden the runner (Audit all outbound calls)
@@ -127,8 +137,8 @@ jobs:
             - name: Build package
               run: npm run build
 
-            - name: Install ESLint 9 runtime for compatibility smoke checks
+            - name: Install ESLint runtime for compatibility smoke checks
               run: npm install --no-save --force eslint@${{ matrix.eslint-version }} @eslint/js@${{ matrix.eslint-js-version }}
 
-            - name: Run ESLint 9 compatibility smoke checks
-              run: npm run lint:compat:eslint9 -- --expect-eslint-major=9
+            - name: Run ESLint compatibility smoke checks
+              run: npm run lint:compat:eslint -- --expect-eslint-major=${{ matrix.eslint-major }}
