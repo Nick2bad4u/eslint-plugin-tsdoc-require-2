@@ -1,4 +1,4 @@
-# tsdoc-require/require
+# tsdoc-require-2/require
 
 Requires TSDoc comments for exported TypeScript declarations and default exports.
 
@@ -53,7 +53,55 @@ export default createUser;
 
 ## Options
 
-This rule has no options.
+This rule accepts one optional object.
+
+```ts
+type Options = [
+	{
+		enforceFor?: Array<
+			"class" |
+			"enum" |
+			"function" |
+			"interface" |
+			"object" |
+			"type" |
+			"variable"
+		>;
+	},
+];
+```
+
+Default options:
+
+```ts
+[{ enforceFor: ["class", "enum", "function", "interface", "object", "type", "variable"] }]
+```
+
+### `enforceFor`
+
+Limits which exported entity kinds are checked.
+
+Example flat config that only enforces docs for classes and functions:
+
+```ts
+import tsdocRequire from "eslint-plugin-tsdoc-require-2";
+
+export default [
+	{
+		plugins: {
+			"tsdoc-require-2": tsdocRequire,
+		},
+		rules: {
+			"tsdoc-require-2/require": [
+				"error",
+				{
+					enforceFor: ["class", "function"],
+				},
+			],
+		},
+	},
+];
+```
 
 ## When Not To Use It
 

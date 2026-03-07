@@ -1,4 +1,4 @@
-import type { TSESLint, TSESTree } from "@typescript-eslint/utils";
+import type { JSONSchema, TSESLint, TSESTree } from "@typescript-eslint/utils";
 
 import {
     AST_NODE_TYPES,
@@ -16,10 +16,14 @@ type EntityKind =
     | "variable";
 type MessageIds = "missingTSDoc";
 
-type Options = [];
+type Options = [RuleOption];
 
 type RuleDocs = {
     recommended: boolean;
+};
+
+type RuleOption = {
+    enforceFor?: readonly EntityKind[];
 };
 
 type SupportedDeclaration =
@@ -42,6 +46,39 @@ type Target = {
     kind: EntityKind;
     name: string | undefined;
     reportNode: TSESTree.Node;
+};
+
+const enforceableEntityKinds = [
+    "class",
+    "enum",
+    "function",
+    "interface",
+    "object",
+    "type",
+    "variable",
+] as const satisfies readonly EntityKind[];
+
+const defaultEnforceFor: readonly EntityKind[] = [...enforceableEntityKinds];
+
+const defaultRuleOptions: Options = [
+    {
+        enforceFor: defaultEnforceFor,
+    },
+];
+
+const optionSchema: JSONSchema.JSONSchema4 = {
+    additionalProperties: false,
+    properties: {
+        enforceFor: {
+            items: {
+                enum: [...enforceableEntityKinds],
+                type: "string",
+            },
+            type: "array",
+            uniqueItems: true,
+        },
+    },
+    type: "object",
 };
 
 const assertUnreachable = (value: never): never => {
@@ -221,7 +258,7 @@ const declarationTargetsWithCommentNode = (
         commentNode,
     }));
 
-const requireRule: TSESLint.RuleModule<MessageIds> = createRule<
+const requireRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
     Options,
     MessageIds
 >({
@@ -229,8 +266,16 @@ const requireRule: TSESLint.RuleModule<MessageIds> = createRule<
         const declarationsByName = new Map<string, Target>();
         const checkedTargets = new Set<string>();
         const sourceCode = context.sourceCode;
+        const ruleOption = context.options.at(0);
+        const enabledKinds = new Set<EntityKind>(
+            ruleOption?.enforceFor ?? defaultEnforceFor
+        );
 
         const checkTarget = (target: Readonly<Target>): void => {
+            if (!enabledKinds.has(target.kind)) {
+                return;
+            }
+
             const targetKey = createTargetKey(target);
             if (checkedTargets.has(targetKey)) {
                 return;
@@ -359,8 +404,13 @@ const requireRule: TSESLint.RuleModule<MessageIds> = createRule<
             },
         };
     },
-    defaultOptions: [],
+    defaultOptions: defaultRuleOptions,
     meta: {
+        defaultOptions: [
+            {
+                enforceFor: [...enforceableEntityKinds],
+            },
+        ],
         docs: {
             description:
                 "require TSDoc comments for exported TypeScript declarations and default exports.",
@@ -371,7 +421,7 @@ const requireRule: TSESLint.RuleModule<MessageIds> = createRule<
             missingTSDoc:
                 "Missing TSDoc for exported {{entityKind}} {{entityName}}.",
         },
-        schema: [],
+        schema: [optionSchema],
         type: "problem",
     },
     name: "require",

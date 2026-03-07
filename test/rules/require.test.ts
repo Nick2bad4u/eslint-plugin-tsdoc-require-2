@@ -86,6 +86,73 @@ export default createConfig;
                 },
             ],
         },
+        {
+            code: 'export const API_TOKEN = "secret";',
+            errors: [
+                {
+                    data: {
+                        entityKind: "variable",
+                        entityName: "API_TOKEN",
+                    },
+                    messageId: "missingTSDoc",
+                },
+            ],
+            options: [
+                {
+                    enforceFor: ["variable"],
+                },
+            ],
+        },
+        {
+            code: "export default ({ enabled: true });",
+            errors: [
+                {
+                    data: {
+                        entityKind: "object",
+                        entityName: "<default export>",
+                    },
+                    messageId: "missingTSDoc",
+                },
+            ],
+            options: [
+                {
+                    enforceFor: ["object"],
+                },
+            ],
+        },
+        {
+            code: "export class ExplicitDefaultOptionsFallback {}",
+            errors: [
+                {
+                    data: {
+                        entityKind: "class",
+                        entityName: "ExplicitDefaultOptionsFallback",
+                    },
+                    messageId: "missingTSDoc",
+                },
+            ],
+            options: [{}],
+        },
+        {
+            code: `
+const localValue = 1;
+export { localValue };
+`,
+            errors: [
+                {
+                    data: {
+                        entityKind: "variable",
+                        entityName: "localValue",
+                    },
+                    messageId: "missingTSDoc",
+                },
+            ],
+            options: [
+                {
+                    enforceFor: ["variable"],
+                },
+            ],
+        },
     ],
     valid: [
         {
@@ -129,6 +196,49 @@ export default function (): string {
   return "ok";
 }
 `,
+        },
+        {
+            code: 'export const API_TOKEN = "secret";',
+            options: [
+                {
+                    enforceFor: ["class"],
+                },
+            ],
+        },
+        {
+            code: "export default () => 1;",
+            options: [
+                {
+                    enforceFor: ["class"],
+                },
+            ],
+        },
+        {
+            code: "export class MyClass {}",
+            options: [
+                {
+                    enforceFor: [],
+                },
+            ],
+        },
+        {
+            code: "export default () => 1;",
+            options: [
+                {
+                    enforceFor: ["object"],
+                },
+            ],
+        },
+        {
+            code: `
+const localValue = 1;
+export { localValue };
+`,
+            options: [
+                {
+                    enforceFor: ["class"],
+                },
+            ],
         },
     ],
 });

@@ -1,46 +1,41 @@
+import type { ESLint, Linter } from "eslint";
+
 import requireRule from "./rules/require.js";
 
-type Plugin = {
-    configs: {
-        recommended: RecommendedConfig;
-    };
-    meta: {
-        name: string;
-        version: string;
-    };
-    rules: {
-        require: typeof requireRule;
-    };
+type RecommendedConfig = Linter.Config & {
+    plugins: NonNullable<Linter.Config["plugins"]>;
+    rules: NonNullable<Linter.Config["rules"]>;
 };
 
-type RecommendedConfig = {
-    plugins: Record<string, unknown>;
-    rules: Record<string, "error">;
+type RuleModuleMap = {
+    require: typeof requireRule;
 };
 
-const rules: Plugin["rules"] = {
+const rules: RuleModuleMap = {
     require: requireRule,
 };
+
+const pluginRules = rules as unknown as NonNullable<ESLint.Plugin["rules"]>;
 
 const recommendedConfig: RecommendedConfig = {
     plugins: {},
     rules: {
-        "tsdoc-require/require": "error",
+        "tsdoc-require-2/require": "error",
     },
 };
 
-const plugin: Plugin = {
+const plugin: ESLint.Plugin = {
     configs: {
         recommended: recommendedConfig,
     },
     meta: {
-        name: "eslint-plugin-tsdoc-require",
+        name: "eslint-plugin-tsdoc-require-2",
         version: "0.1.0",
     },
-    rules,
+    rules: pluginRules,
 };
 
-recommendedConfig.plugins["tsdoc-require"] = plugin;
+recommendedConfig.plugins["tsdoc-require-2"] = plugin;
 
 export { rules };
 export default plugin;

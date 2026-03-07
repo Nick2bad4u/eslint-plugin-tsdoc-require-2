@@ -53,6 +53,9 @@ jobs:
             - name: Typecheck
               run: npm run typecheck
 
+            - name: Lint repository
+              run: npm run lint
+
             - name: Run tests with coverage and JUnit report
               run: npx vitest run --coverage --reporter=default --reporter=junit --outputFile=test-report.junit.xml --silent
               env:

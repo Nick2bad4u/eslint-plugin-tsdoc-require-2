@@ -1,11 +1,11 @@
-# eslint-plugin-tsdoc-require
+# eslint-plugin-tsdoc-require-2
 
 Require TSDoc comments for exported TypeScript declarations.
 
 ## Installation
 
 ```sh
-npm install --save-dev eslint eslint-plugin-tsdoc-require @typescript-eslint/parser typescript
+npm install --save-dev eslint eslint-plugin-tsdoc-require-2 @typescript-eslint/parser typescript
 ```
 
 ## Usage (Flat Config)
@@ -13,7 +13,7 @@ npm install --save-dev eslint eslint-plugin-tsdoc-require @typescript-eslint/par
 ```js
 // eslint.config.mjs
 import tsParser from "@typescript-eslint/parser";
-import tsdocRequire from "eslint-plugin-tsdoc-require";
+import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
 export default [
     {
@@ -22,10 +22,10 @@ export default [
             parser: tsParser,
         },
         plugins: {
-            "tsdoc-require": tsdocRequire,
+            "tsdoc-require-2": tsdocRequire,
         },
         rules: {
-            "tsdoc-require/require": "error",
+            "tsdoc-require-2/require": "error",
         },
     },
 ];
@@ -35,11 +35,11 @@ You can also use the bundled recommended config:
 
 ```js
 // eslint.config.mjs
-import tsdocRequire from "eslint-plugin-tsdoc-require";
+import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
 export default [tsdocRequire.configs.recommended];
 ```
 
 ## Rule
 
-- [`tsdoc-require/require`](docs/rules/require.md): Requires TSDoc comments for exported TypeScript declarations and default exports.
+- [`tsdoc-require-2/require`](docs/rules/require.md): Requires TSDoc comments for exported TypeScript declarations and default exports.

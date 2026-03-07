@@ -63,10 +63,10 @@ const eslint = new ESLint({
                 },
             },
             plugins: {
-                "tsdoc-require": plugin,
+                "tsdoc-require-2": plugin,
             },
             rules: {
-                "tsdoc-require/require": "error",
+                "tsdoc-require-2/require": "error",
             },
         },
     ],
