@@ -1,26 +1,92 @@
-import { RuleTester } from "@typescript-eslint/rule-tester";
-import tsParser from "@typescript-eslint/parser";
-import { afterAll, describe, it } from "vitest";
+import { getPluginRule } from "../_internal/ruleTester.js";
+import { createTypedRuleTester } from "../_internal/typed-rule-tester.js";
 
-import rule from "../../../src/rules/require.js";
+const ruleTester = createTypedRuleTester();
 
-RuleTester.afterAll = afterAll;
-RuleTester.describe = describe;
-RuleTester.it = it;
-RuleTester.itOnly = it.only;
-RuleTester.itSkip = it.skip;
-
-const ruleTester = new RuleTester({
-    languageOptions: {
-        parser: tsParser,
-        parserOptions: {
-            ecmaVersion: "latest",
-            sourceType: "module",
+ruleTester.run("require", getPluginRule("require"), {
+    invalid: [
+        {
+            code: "export class MyClass {}",
+            errors: [
+                {
+                    data: {
+                        entityKind: "class",
+                        entityName: "MyClass",
+                    },
+                    messageId: "missingTSDoc",
+                },
+            ],
         },
-    },
-});
+        {
+            code: "export function nonDocumentedFunction() { return true; }",
+            errors: [
+                {
+                    data: {
+                        entityKind: "function",
+                        entityName: "nonDocumentedFunction",
+                    },
+                    messageId: "missingTSDoc",
+                },
+            ],
+        },
+        {
+            code: "export type ShapeName = string;",
+            errors: [
+                {
+                    data: {
+                        entityKind: "type",
+                        entityName: "ShapeName",
+                    },
+                    messageId: "missingTSDoc",
+                },
+            ],
+        },
+        {
+            code: `
+interface Shape {
+  radius: number;
+}
 
-ruleTester.run("require", rule, {
+export { Shape };
+`,
+            errors: [
+                {
+                    data: {
+                        entityKind: "interface",
+                        entityName: "Shape",
+                    },
+                    messageId: "missingTSDoc",
+                },
+            ],
+        },
+        {
+            code: `
+const createConfig = () => ({ enabled: true });
+export default createConfig;
+`,
+            errors: [
+                {
+                    data: {
+                        entityKind: "variable",
+                        entityName: "createConfig",
+                    },
+                    messageId: "missingTSDoc",
+                },
+            ],
+        },
+        {
+            code: "export default () => 1;",
+            errors: [
+                {
+                    data: {
+                        entityKind: "function",
+                        entityName: "<default export>",
+                    },
+                    messageId: "missingTSDoc",
+                },
+            ],
+        },
+    ],
     valid: [
         {
             code: `
@@ -63,89 +129,6 @@ export default function (): string {
   return "ok";
 }
 `,
-        },
-    ],
-    invalid: [
-        {
-            code: "export class MyClass {}",
-            errors: [
-                {
-                    messageId: "missingTSDoc",
-                    data: {
-                        entityKind: "class",
-                        entityName: "MyClass",
-                    },
-                },
-            ],
-        },
-        {
-            code: "export function nonDocumentedFunction() { return true; }",
-            errors: [
-                {
-                    messageId: "missingTSDoc",
-                    data: {
-                        entityKind: "function",
-                        entityName: "nonDocumentedFunction",
-                    },
-                },
-            ],
-        },
-        {
-            code: "export type ShapeName = string;",
-            errors: [
-                {
-                    messageId: "missingTSDoc",
-                    data: {
-                        entityKind: "type",
-                        entityName: "ShapeName",
-                    },
-                },
-            ],
-        },
-        {
-            code: `
-interface Shape {
-  radius: number;
-}
-
-export { Shape };
-`,
-            errors: [
-                {
-                    messageId: "missingTSDoc",
-                    data: {
-                        entityKind: "interface",
-                        entityName: "Shape",
-                    },
-                },
-            ],
-        },
-        {
-            code: `
-const createConfig = () => ({ enabled: true });
-export default createConfig;
-`,
-            errors: [
-                {
-                    messageId: "missingTSDoc",
-                    data: {
-                        entityKind: "variable",
-                        entityName: "createConfig",
-                    },
-                },
-            ],
-        },
-        {
-            code: "export default () => 1;",
-            errors: [
-                {
-                    messageId: "missingTSDoc",
-                    data: {
-                        entityKind: "function",
-                        entityName: "<default export>",
-                    },
-                },
-            ],
         },
     ],
 });

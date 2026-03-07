@@ -69,8 +69,6 @@ import pluginSortClassMembers from "eslint-plugin-sort-class-members";
 import pluginTestingLibrary from "eslint-plugin-testing-library";
 import eslintPluginToml from "eslint-plugin-toml";
 import pluginTotalFunctions from "eslint-plugin-total-functions";
-import pluginTsdoc from "eslint-plugin-tsdoc";
-import pluginTSDocRequire from "eslint-plugin-tsdoc-require";
 import pluginUndefinedCss from "eslint-plugin-undefined-css-classes";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
 import pluginUnusedImports from "eslint-plugin-unused-imports";
@@ -437,25 +435,6 @@ export default defineConfig([
         name: "Type Declarations - TypeScript Parser",
     },
     // #endregion
-    // #region 📃 TSDoc Setup
-    // ═══════════════════════════════════════════════════════════════════════════════
-    // SECTION: 📃 TSDoc (tsdoc/*)
-    // ═══════════════════════════════════════════════════════════════════════════════
-    {
-        files: ["**/*.{ts,mts,cts,tsx}"],
-        name: "TSDoc rules (TypeScript files)",
-        plugins: {
-            tsdoc: pluginTsdoc,
-            "tsdoc-require": pluginTSDocRequire,
-        },
-        rules: {
-            // NOTE(ESLint10): Re-enable once eslint-plugin-tsdoc-require
-            // supports ESLint 10 rule context APIs.
-            "tsdoc-require/require": "off",
-            "tsdoc/syntax": "warn",
-        },
-    },
-    // #endregion
     // #region 🎨 CSS files
     // ═══════════════════════════════════════════════════════════════════════════════
     // SECTION: CSS (css/*)
@@ -655,7 +634,6 @@ export default defineConfig([
             sonarjs: sonarjs,
             "sort-class-members": sortClassMembersPlugin,
             "total-functions": fixupPluginRules(pluginTotalFunctions),
-            "tsdoc-require": pluginTSDocRequire,
             unicorn: eslintPluginUnicorn,
             "unused-imports": pluginUnusedImports,
         },

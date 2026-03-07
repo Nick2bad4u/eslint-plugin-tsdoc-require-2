@@ -48,8 +48,7 @@ if (
     );
 }
 
-const pluginModuleUrl = new URL("../dist/index.js", import.meta.url);
-const { default: plugin } = await import(pluginModuleUrl.href);
+const { default: plugin } = await import("../dist/plugin.js");
 
 const eslint = new ESLint({
     ignore: false,
