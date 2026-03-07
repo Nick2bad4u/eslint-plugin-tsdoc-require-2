@@ -1,4 +1,5 @@
 {
+    "$schema": "https://www.schemastore.org/package.json",
     "name": "eslint-plugin-tsdoc-require",
     "version": "0.1.0",
     "description": "Require TSDoc comments for exported TypeScript declarations.",
@@ -7,31 +8,42 @@
         "eslint-plugin",
         "eslintplugin",
         "typescript",
-        "tsdoc"
+        "tsdoc",
+        "jsdoc"
     ],
     "homepage": "https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2#readme",
     "bugs": {
-        "url": "https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/issues"
+        "url": "https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/issues",
+        "email": "20943337+Nick2bad4u@users.noreply.github.com"
     },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2.git"
     },
-    "license": "ISC",
-    "author": "Bruno Marotta",
+    "license": "MIT",
+    "author": "Nick2bad4u <20943337+Nick2bad4u@users.noreply.github.com> (https://nick2bad4u.github.io/eslint-plugin-typefest)",
+    "contributors": [
+        {
+            "name": "Nick2bad4u",
+            "email": "20943337+Nick2bad4u@users.noreply.github.com",
+            "url": "https://nick2bad4u.github.io/eslint-plugin-typefest"
+        }
+    ],
     "sideEffects": false,
     "type": "module",
     "exports": {
         ".": {
             "types": "./dist/plugin.d.ts",
-            "import": "./dist/plugin.js"
+            "import": "./dist/plugin.js",
+            "default": "./dist/plugin.js"
         }
     },
     "main": "./dist/plugin.js",
     "types": "./dist/plugin.d.ts",
     "files": [
         "dist",
-        "docs/rules"
+        "docs/rules",
+        "CHANGELOG.md"
     ],
     "scripts": {
         "build": "tsc -p tsconfig.build.json",
@@ -156,6 +168,10 @@
     },
     "packageManager": "npm@11.11.0",
     "engines": {
-        "node": ">=18.18.0"
-    }
+        "node": ">=20.19.0"
+    },
+    "publishConfig": {
+        "provenance": true
+    },
+    "readme": "README.md"
 }
