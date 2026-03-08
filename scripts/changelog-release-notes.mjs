@@ -7,18 +7,18 @@ const execFileAsync = promisify(execFile);
 
 const OUTPUT_FLAG = "--output";
 
-const parseOutputPath = (argumentsList) => {
-  const outputFlagIndex = argumentsList.indexOf(OUTPUT_FLAG);
-  if (outputFlagIndex < 0) {
-    return "temp/release-notes.md";
-  }
+const parseOutputPath = (/** @type {string | string[]} */ argumentsList) => {
+    const outputFlagIndex = argumentsList.indexOf(OUTPUT_FLAG);
+    if (outputFlagIndex < 0) {
+        return "temp/release-notes.md";
+    }
 
-  const outputPath = argumentsList[outputFlagIndex + 1];
-  if (outputPath === undefined || outputPath.trim().length === 0) {
-    throw new Error("The --output flag requires a file path.");
-  }
+    const outputPath = argumentsList[outputFlagIndex + 1];
+    if (outputPath === undefined || outputPath.trim().length === 0) {
+        throw new Error("The --output flag requires a file path.");
+    }
 
-  return outputPath;
+    return outputPath;
 };
 
 const outputPath = parseOutputPath(process.argv.slice(2));
@@ -27,19 +27,21 @@ const outputFilePath = resolve(outputPath);
 let changelogBody = "# Release Notes\n\n";
 
 try {
-  const { stdout } = await execFileAsync("git", [
-    "log",
-    "--pretty=format:- %s (%h)",
-    "--max-count=30",
-  ]);
+    const { stdout } = await execFileAsync("git", [
+        "log",
+        "--pretty=format:- %s (%h)",
+        "--max-count=30",
+    ]);
 
-  if (stdout.trim().length > 0) {
-    changelogBody += `${stdout.trim()}\n`;
-  } else {
-    changelogBody += "- No commit messages were available for release notes generation.\n";
-  }
+    if (stdout.trim().length > 0) {
+        changelogBody += `${stdout.trim()}\n`;
+    } else {
+        changelogBody +=
+            "- No commit messages were available for release notes generation.\n";
+    }
 } catch {
-  changelogBody += "- Release notes could not be generated from git history in this environment.\n";
+    changelogBody +=
+        "- Release notes could not be generated from git history in this environment.\n";
 }
 
 await mkdir(dirname(outputFilePath), { recursive: true });
