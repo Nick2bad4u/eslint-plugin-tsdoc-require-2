@@ -1,7 +1,7 @@
 {
     "$schema": "https://www.schemastore.org/package.json",
     "name": "eslint-plugin-tsdoc-require-2",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Require TSDoc comments for exported TypeScript declarations.",
     "keywords": [
         "eslint",
