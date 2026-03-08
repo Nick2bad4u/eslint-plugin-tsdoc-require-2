@@ -48,7 +48,7 @@
     "scripts": {
         "build": "tsc -p tsconfig.build.json",
         "changelog:release-notes": "node ./scripts/changelog-release-notes.mjs",
-        "clean": "rimraf coverage dist temp",
+        "clean": "rimraf coverage dist temp .cache/tsbuildinfo",
         "lint": "eslint --cache --cache-strategy content --cache-location .cache/.eslintcache",
         "lint:compat:eslint": "node ./scripts/eslint-compat-smoke.mjs",
         "lint:compat:eslint10": "npm run lint:compat:eslint -- --expect-eslint-major=10",

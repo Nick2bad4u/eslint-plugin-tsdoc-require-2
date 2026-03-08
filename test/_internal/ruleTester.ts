@@ -1,7 +1,7 @@
 import tsParser from "@typescript-eslint/parser";
 import { RuleTester } from "@typescript-eslint/rule-tester";
 
-import plugin from "../../src/plugin.js";
+import { rules as pluginRules } from "../../src/plugin.js";
 
 const defaultRuleTesterConfig: ConstructorParameters<typeof RuleTester>[0] = {
     languageOptions: {
@@ -13,8 +13,6 @@ const defaultRuleTesterConfig: ConstructorParameters<typeof RuleTester>[0] = {
     },
 };
 
-const pluginRules: typeof plugin.rules = plugin.rules;
-
 type PluginRuleName = keyof typeof pluginRules;
 
 const createRuleTester = (): RuleTester =>
@@ -24,5 +22,4 @@ const getPluginRule = <TRuleName extends PluginRuleName>(
     ruleName: TRuleName
 ): (typeof pluginRules)[TRuleName] => pluginRules[ruleName];
 
-export { createRuleTester,
-getPluginRule };
+export { createRuleTester, getPluginRule };
