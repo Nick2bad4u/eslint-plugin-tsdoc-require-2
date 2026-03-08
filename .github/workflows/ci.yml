@@ -14,6 +14,8 @@ jobs:
         name: Test (${{ matrix.label }})
         runs-on: ${{ matrix.os }}
         timeout-minutes: 25
+        env:
+            CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         strategy:
             fail-fast: false
             matrix:
@@ -71,8 +73,6 @@ jobs:
             - name: Upload test results to Codecov
               if: ${{ !cancelled() && env.CODECOV_TOKEN != '' }}
               uses: codecov/test-results-action@0fa95f0e1eeaafde2c782583b36b28ad0d8c77d3 # v1.2.1
-              env:
-                  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
               with:
                   token: ${{ env.CODECOV_TOKEN }}
                   files: test-report.junit.xml
@@ -82,8 +82,6 @@ jobs:
             - name: Upload coverage to Codecov
               if: ${{ !cancelled() && env.CODECOV_TOKEN != '' }}
               uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
-              env:
-                  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
               with:
                   token: ${{ env.CODECOV_TOKEN }}
                   slug: Nick2bad4u/eslint-plugin-tsdoc-require-2

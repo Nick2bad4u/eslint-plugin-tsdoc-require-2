@@ -1,0 +1,10 @@
+title = "eslint-plugin-tsdoc-require-2 gitleaks config"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Allow obvious non-secret placeholders in docs and tests"
+regexTarget = "line"
+paths = [ '''(^|/)(docs|test|tests)/''' ]
+regexes = [ '''(?i)(dummy|example|placeholder|notasecret|changeme)''' ]

@@ -2,8 +2,10 @@
 
 [![CI](https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/actions/workflows/ci.yml)
 [![Release](https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/actions/workflows/release.yml/badge.svg)](https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/actions/workflows/release.yml)
+[![Codecov](https://codecov.io/gh/Nick2bad4u/eslint-plugin-tsdoc-require-2/graph/badge.svg)](https://codecov.io/gh/Nick2bad4u/eslint-plugin-tsdoc-require-2)
 [![npm version](https://img.shields.io/npm/v/eslint-plugin-tsdoc-require-2)](https://www.npmjs.com/package/eslint-plugin-tsdoc-require-2)
 [![npm downloads](https://img.shields.io/npm/dm/eslint-plugin-tsdoc-require-2)](https://www.npmjs.com/package/eslint-plugin-tsdoc-require-2)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D20.19.0-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 
 Require TSDoc comments for exported TypeScript declarations.
 
