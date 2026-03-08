@@ -22,4 +22,5 @@ const getPluginRule = <TRuleName extends PluginRuleName>(
     ruleName: TRuleName
 ): (typeof pluginRules)[TRuleName] => pluginRules[ruleName];
 
-export { createRuleTester, getPluginRule };
+export { createRuleTester,
+getPluginRule };

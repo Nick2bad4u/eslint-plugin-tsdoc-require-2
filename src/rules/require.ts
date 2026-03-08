@@ -131,7 +131,7 @@ const getExpressionKind = (
     return assertUnreachable(node);
 };
 
-const getJSDocName = (name: string | undefined): string =>
+const getEntityDisplayName = (name: string | undefined): string =>
     name ?? "<default export>";
 
 const hasTSDocComment = (
@@ -290,7 +290,7 @@ const requireRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
             context.report({
                 data: {
                     entityKind: target.kind,
-                    entityName: getJSDocName(target.name),
+                    entityName: getEntityDisplayName(target.name),
                 },
                 messageId: "missingTSDoc",
                 node: target.reportNode,
@@ -411,9 +411,11 @@ const requireRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
                 enforceFor: [...enforceableEntityKinds],
             },
         ],
+        deprecated: false,
         docs: {
             description:
                 "require TSDoc comments for exported TypeScript declarations and default exports.",
+            frozen: false,
             recommended: false,
             url: "https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/docs/rules/require.md",
         },
