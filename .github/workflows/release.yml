@@ -6,14 +6,24 @@ on:
             - "v*"
     workflow_dispatch:
         inputs:
-            release:
-                description: "Release type (patch, minor, major) or explicit x.y.z"
-                required: false
+            release_type:
+                description: "Release bump type"
+                required: true
                 default: patch
+                type: choice
+                options:
+                    - patch
+                    - minor
+                    - major
+            version:
+                description: "Explicit version x.y.z (overrides release_type)"
+                required: false
+                type: string
             ref:
                 description: "Branch to release from"
                 required: false
                 default: main
+                type: string
 
 permissions:
     contents: read
@@ -42,13 +52,20 @@ jobs:
               run: |
                   set -euo pipefail
                   if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-                    if [ -n "${{ github.event.inputs.ref }}" ]; then
-                      echo "ref=${{ github.event.inputs.ref }}" >> "$GITHUB_OUTPUT"
-                    else
-                      echo "ref=main" >> "$GITHUB_OUTPUT"
+                    branch="${{ github.event.inputs.ref }}"
+                    if [ -z "$branch" ]; then
+                      branch="main"
                     fi
+                    branch="${branch#refs/heads/}"
+                    if [[ "$branch" == refs/tags/* ]]; then
+                      echo "workflow_dispatch ref must be a branch, not a tag: $branch" >&2
+                      exit 1
+                    fi
+                    echo "ref=$branch" >> "$GITHUB_OUTPUT"
+                    echo "branch=$branch" >> "$GITHUB_OUTPUT"
                   else
                     echo "ref=${GITHUB_REF}" >> "$GITHUB_OUTPUT"
+                    echo "branch=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
                   fi
 
             - name: Checkout
@@ -82,19 +99,26 @@ jobs:
               if: github.event_name == 'workflow_dispatch'
               shell: bash
               env:
-                  RELEASE_INPUT: ${{ github.event.inputs.release }}
+                  EXPLICIT_VERSION: ${{ github.event.inputs.version }}
+                  RELEASE_TYPE: ${{ github.event.inputs.release_type }}
               run: |
                   set -euo pipefail
-                  release="${RELEASE_INPUT:-patch}"
-                  if [[ "$release" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+                  explicit_version="${EXPLICIT_VERSION:-}"
+                  if [ -n "$explicit_version" ]; then
+                    if [[ ! "$explicit_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+                      echo "Invalid version input '$explicit_version'. Use x.y.z format." >&2
+                      exit 1
+                    fi
                     exit 0
                   fi
-                  case "$release" in
+
+                  release_type="${RELEASE_TYPE:-patch}"
+                  case "$release_type" in
                     patch|minor|major)
                       exit 0
                       ;;
                     *)
-                      echo "Invalid release input '$release'. Use patch, minor, major, or x.y.z." >&2
+                      echo "Invalid release_type '$release_type'. Allowed: patch, minor, major." >&2
                       exit 1
                       ;;
                   esac
@@ -113,12 +137,12 @@ jobs:
               run: npm run release:check
 
             - name: Ensure verification did not modify tracked files
-              if: github.event_name == 'workflow_dispatch'
+              if: startsWith(github.ref, 'refs/tags/v')
               shell: bash
               run: |
                   set -euo pipefail
                   if ! git diff --quiet || ! git diff --cached --quiet; then
-                    echo "release:check modified files. Commit/fix these changes before running release." >&2
+                    echo "release:check modified files on a tag-triggered release. Ensure main is clean before tagging." >&2
                     git status --short
                     exit 1
                   fi
@@ -127,17 +151,19 @@ jobs:
               id: version
               shell: bash
               env:
-                  RELEASE_INPUT: ${{ github.event.inputs.release }}
+                  EXPLICIT_VERSION: ${{ github.event.inputs.version }}
+                  RELEASE_TYPE: ${{ github.event.inputs.release_type }}
               run: |
                   set -euo pipefail
 
                   if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-                    release="${RELEASE_INPUT:-patch}"
-                    if [[ "$release" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-                      npm version "$release" --no-git-tag-version
-                      version="$release"
+                    explicit_version="${EXPLICIT_VERSION:-}"
+                    if [ -n "$explicit_version" ]; then
+                      npm version "$explicit_version" --no-git-tag-version
+                      version="$explicit_version"
                     else
-                      npm version "$release" --no-git-tag-version
+                      release_type="${RELEASE_TYPE:-patch}"
+                      npm version "$release_type" --no-git-tag-version
                       version=$(node -p "require('./package.json').version")
                     fi
                   else
@@ -181,9 +207,8 @@ jobs:
               if: github.event_name == 'workflow_dispatch'
               shell: bash
               env:
-                  BRANCH: ${{ steps.target_ref.outputs.ref }}
+                  BRANCH: ${{ steps.target_ref.outputs.branch }}
                   TAG: ${{ steps.version.outputs.tag }}
-                  VERSION: ${{ steps.version.outputs.version }}
               run: |
                   set -euo pipefail
 
@@ -192,9 +217,10 @@ jobs:
                     exit 1
                   fi
 
-                  git add package.json
-                  if [ -f package-lock.json ]; then
-                    git add package-lock.json
+                  git add -A
+                  if git diff --cached --quiet; then
+                    echo "No staged changes found for release commit." >&2
+                    exit 1
                   fi
 
                   git commit -m "chore: release ${TAG}"
