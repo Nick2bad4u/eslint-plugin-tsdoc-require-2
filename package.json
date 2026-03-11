@@ -1,7 +1,7 @@
 {
     "$schema": "https://www.schemastore.org/package.json",
     "name": "eslint-plugin-tsdoc-require-2",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "private": false,
     "description": "Require TSDoc comments for exported TypeScript declarations.",
     "keywords": [
@@ -62,9 +62,9 @@
         "lint:compat:eslint10": "npm run lint:compat:eslint -- --expect-eslint-major=10",
         "lint:compat:eslint9": "npm run lint:compat:eslint -- --expect-eslint-major=9",
         "lint:fix": "eslint --cache --cache-strategy content --cache-location .cache/.eslintcache --fix",
+        "lint:package:strict": "npm run lint:package-check:strict",
         "lint:package-check": "publint && attw --pack .",
         "lint:package-check:strict": "publint && attw --pack . --profile strict --config-path ./.attw.json",
-        "lint:package:strict": "npm run lint:package-check:strict",
         "lint:packagelintrc": "npmPkgJsonLint . --config .npmpackagejsonlintrc.json",
         "lint:prettier": "prettier . --log-level warn --cache --cache-location=.cache/.prettier-cache --cache-strategy=content --check",
         "lint:prettier:fix": "prettier . --log-level warn --cache --cache-location=.cache/.prettier-cache --cache-strategy=content --write",
