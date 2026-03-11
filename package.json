@@ -2,6 +2,7 @@
     "$schema": "https://www.schemastore.org/package.json",
     "name": "eslint-plugin-tsdoc-require-2",
     "version": "1.0.1",
+    "private": false,
     "description": "Require TSDoc comments for exported TypeScript declarations.",
     "keywords": [
         "eslint",
@@ -21,32 +22,39 @@
         "url": "git+https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2.git"
     },
     "license": "MIT",
-    "author": "Nick2bad4u <20943337+Nick2bad4u@users.noreply.github.com> (https://nick2bad4u.github.io/eslint-plugin-typefest)",
+    "author": "Nick2bad4u <20943337+Nick2bad4u@users.noreply.github.com> (https://nick2bad4u.github.io/eslint-plugin-tsdoc-require-2)",
     "contributors": [
         {
             "name": "Nick2bad4u",
             "email": "20943337+Nick2bad4u@users.noreply.github.com",
-            "url": "https://nick2bad4u.github.io/eslint-plugin-typefest"
+            "url": "https://nick2bad4u.github.io/eslint-plugin-tsdoc-require-2"
         }
     ],
     "sideEffects": false,
     "type": "module",
     "exports": {
         ".": {
-            "types": "./dist/plugin.d.ts",
-            "import": "./dist/plugin.js",
+            "import": {
+                "types": "./dist/plugin.d.ts",
+                "default": "./dist/plugin.js"
+            },
+            "require": {
+                "types": "./dist/plugin.d.cts",
+                "default": "./dist/plugin.cjs"
+            },
             "default": "./dist/plugin.js"
         }
     },
-    "main": "./dist/plugin.js",
-    "types": "./dist/plugin.d.ts",
+    "main": "./dist/plugin.cjs",
+    "module": "./dist/plugin.js",
+    "types": "./dist/plugin.d.cts",
     "files": [
         "dist",
         "docs/rules",
         "CHANGELOG.md"
     ],
     "scripts": {
-        "build": "tsc -p tsconfig.build.json",
+        "build": "tsc -p tsconfig.build.json && node ./scripts/write-cjs-entry.mjs",
         "changelog:release-notes": "node ./scripts/changelog-release-notes.mjs",
         "clean": "rimraf coverage dist temp .cache",
         "lint": "eslint --cache --cache-strategy content --cache-location .cache/.eslintcache",
@@ -54,6 +62,9 @@
         "lint:compat:eslint10": "npm run lint:compat:eslint -- --expect-eslint-major=10",
         "lint:compat:eslint9": "npm run lint:compat:eslint -- --expect-eslint-major=9",
         "lint:fix": "eslint --cache --cache-strategy content --cache-location .cache/.eslintcache --fix",
+        "lint:package-check": "publint && attw --pack .",
+        "lint:package-check:strict": "publint && attw --pack . --profile strict --config-path ./.attw.json",
+        "lint:package:strict": "npm run lint:package-check:strict",
         "lint:packagelintrc": "npmPkgJsonLint . --config .npmpackagejsonlintrc.json",
         "lint:prettier": "prettier . --log-level warn --cache --cache-location=.cache/.prettier-cache --cache-strategy=content --check",
         "lint:prettier:fix": "prettier . --log-level warn --cache --cache-location=.cache/.prettier-cache --cache-strategy=content --write",
@@ -65,34 +76,35 @@
         "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.build.json --noEmit && tsc -p tsconfig.eslint.json --noEmit && tsc -p tsconfig.js.json --noEmit"
     },
     "dependencies": {
-        "@typescript-eslint/utils": "^8.56.1"
+        "@typescript-eslint/utils": "^8.57.0"
     },
     "devDependencies": {
+        "@arethetypeswrong/cli": "^0.18.2",
         "@docusaurus/eslint-plugin": "^3.9.2",
         "@eslint-community/eslint-plugin-eslint-comments": "^4.7.1",
         "@eslint-react/eslint-plugin": "^2.13.0",
         "@eslint/compat": "^2.0.3",
         "@eslint/config-helpers": "^0.5.3",
-        "@eslint/css": "^0.14.1",
+        "@eslint/css": "^1.0.0",
         "@eslint/js": "^10.0.1",
-        "@eslint/json": "^1.0.1",
+        "@eslint/json": "^1.1.0",
         "@eslint/markdown": "^7.5.1",
         "@html-eslint/eslint-plugin": "^0.58.1",
         "@html-eslint/parser": "^0.58.1",
         "@microsoft/eslint-plugin-sdl": "^1.1.0",
         "@softonus/prettier-plugin-duplicate-remover": "^1.1.2",
         "@stylistic/eslint-plugin": "^5.10.0",
-        "@types/node": "^25.3.5",
-        "@typescript-eslint/eslint-plugin": "^8.56.1",
-        "@typescript-eslint/parser": "^8.56.1",
-        "@typescript-eslint/rule-tester": "^8.56.1",
+        "@types/node": "^25.4.0",
+        "@typescript-eslint/eslint-plugin": "^8.57.0",
+        "@typescript-eslint/parser": "^8.57.0",
+        "@typescript-eslint/rule-tester": "^8.57.0",
         "@vitest/coverage-v8": "^4.0.18",
-        "@vitest/eslint-plugin": "^1.6.9",
+        "@vitest/eslint-plugin": "^1.6.10",
         "eslint": "^10.0.3",
         "eslint-config-flat-gitignore": "^2.2.1",
         "eslint-config-prettier": "^10.1.8",
         "eslint-import-resolver-typescript": "^4.4.4",
-        "eslint-plugin-array-func": "^5.1.0",
+        "eslint-plugin-array-func": "^5.1.1",
         "eslint-plugin-canonical": "^5.1.3",
         "eslint-plugin-case-police": "^2.2.0",
         "eslint-plugin-comment-length": "^2.3.0",
@@ -102,7 +114,7 @@
         "eslint-plugin-eslint-plugin": "^7.3.2",
         "eslint-plugin-etc": "^2.0.3",
         "eslint-plugin-file-progress-2": "^3.4.2",
-        "eslint-plugin-import-x": "^4.16.1",
+        "eslint-plugin-import-x": "^4.16.2",
         "eslint-plugin-jsdoc": "^62.7.1",
         "eslint-plugin-jsonc": "^3.1.1",
         "eslint-plugin-jsx-a11y": "^6.10.2",
@@ -121,16 +133,16 @@
         "eslint-plugin-no-unsanitized": "^4.1.5",
         "eslint-plugin-no-use-extend-native": "^0.7.2",
         "eslint-plugin-node-dependencies": "^2.2.0",
-        "eslint-plugin-package-json": "^0.89.4",
+        "eslint-plugin-package-json": "^0.90.1",
         "eslint-plugin-perfectionist": "^5.6.0",
         "eslint-plugin-prefer-arrow": "^1.2.3",
         "eslint-plugin-prettier": "^5.5.5",
         "eslint-plugin-promise": "^7.2.1",
         "eslint-plugin-redos": "^4.5.0",
-        "eslint-plugin-regexp": "^3.0.0",
+        "eslint-plugin-regexp": "^3.1.0",
         "eslint-plugin-require-jsdoc": "^1.0.4",
         "eslint-plugin-security": "^4.0.0",
-        "eslint-plugin-sonarjs": "^4.0.1",
+        "eslint-plugin-sonarjs": "^4.0.2",
         "eslint-plugin-sort-class-members": "^1.21.0",
         "eslint-plugin-testing-library": "^7.16.0",
         "eslint-plugin-toml": "^1.3.1",
@@ -156,6 +168,7 @@
         "prettier-plugin-sort-json": "^4.2.0",
         "prettier-plugin-sql": "^0.19.2",
         "prettier-plugin-toml": "^2.0.6",
+        "publint": "^0.3.18",
         "recheck-jar": "^4.5.0",
         "rimraf": "^6.1.3",
         "toml-eslint-parser": "^1.0.3",
@@ -170,7 +183,7 @@
         "eslint": "^9.0.0 || ^10.0.0",
         "typescript": ">=5.4.0"
     },
-    "packageManager": "npm@11.11.0",
+    "packageManager": "npm@11.11.1",
     "engines": {
         "node": ">=20.19.0"
     },
