@@ -1,0 +1,77 @@
+{
+    "bracketLens.languageConfiguration": {
+        "brackets": {
+            "symbol": [
+                {
+                    "closing": ")",
+                    "headerMode": "smart",
+                    "inters": [],
+                    "opening": "("
+                },
+                {
+                    "closing": "]",
+                    "headerMode": "smart",
+                    "inters": [],
+                    "opening": "["
+                },
+                {
+                    "closing": "}",
+                    "headerMode": "smart",
+                    "inters": [],
+                    "opening": "{"
+                }
+            ],
+            "word": []
+        },
+        "comments": {
+            "block": [
+                {
+                    "closing": "*/",
+                    "opening": "/*"
+                }
+            ],
+            "line": [
+                "//"
+            ]
+        },
+        "ignoreCase": false,
+        "ignoreSymbols": [
+            "\\//"
+        ],
+        "strings": {
+            "inline": [
+                {
+                    "closing": "\"",
+                    "escape": [
+                        "\\\\",
+                        "\\\""
+                    ],
+                    "opening": "\""
+                },
+                {
+                    "closing": "'",
+                    "escape": [
+                        "\\\\",
+                        "\\'"
+                    ],
+                    "opening": "'"
+                }
+            ],
+            "multiline": [
+                {
+                    "closing": "`",
+                    "escape": [
+                        "\\\\",
+                        "\\`"
+                    ],
+                    "opening": "`"
+                }
+            ]
+        },
+        "terminators": [
+            ";",
+            ","
+        ]
+    },
+    "vitest.rootConfig": "C:\\Users\\Nick\\Dropbox\\PC (2)\\Documents\\GitHub\\eslint-plugin-tsdoc-require-2\\vite.config.ts"
+}
