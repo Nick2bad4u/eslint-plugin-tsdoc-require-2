@@ -30,7 +30,7 @@ const RequireExperimentalRule: TagRuleModule = createTagRule<
                 "require @experimental tag in TSDoc blocks for exported TypeScript declarations and default exports.",
             frozen: false,
             recommended: false,
-            url: "https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/docs/rules/required-tags.md#require-experimental",
+            url: "https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/docs/rules/required-tags/require-experimental.md",
         },
         messages: {
             missingTag:

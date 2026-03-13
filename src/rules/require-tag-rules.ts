@@ -143,8 +143,7 @@ const requiredTagRules: RequiredTagRules = {
     "require-virtual": requireVirtualRule,
 };
 
-type RequiredTagRuleName = keyof typeof requiredTagRules;
+export type RequiredTagRuleName = keyof typeof requiredTagRules;
 
 export { requiredTagDefinitions };
 export { requiredTagRules };
-export type { RequiredTagRuleName };

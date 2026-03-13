@@ -1,9 +1,12 @@
 import type { ESLint, Linter } from "eslint";
 
-import { requiredTagRules } from "./rules/require-tag-rules.js";
+import {
+    requiredTagDefinitions,
+    requiredTagRules,
+} from "./rules/require-tag-rules.js";
 import requireRule from "./rules/require.js";
 
-type RecommendedConfig = Linter.Config & {
+type FlatConfig = Linter.Config & {
     plugins: NonNullable<Linter.Config["plugins"]>;
     rules: NonNullable<Linter.Config["rules"]>;
 };
@@ -19,25 +22,43 @@ const rules: RuleModuleMap = {
 
 const pluginRules = rules as unknown as NonNullable<ESLint.Plugin["rules"]>;
 
-const recommendedConfig: RecommendedConfig = {
+const plugin: ESLint.Plugin = {
+    configs: {},
+    meta: {
+        name: "eslint-plugin-tsdoc-require-2",
+        version: "1.0.2",
+    },
+    rules: pluginRules,
+};
+
+const recommendedConfig: FlatConfig = {
     plugins: {},
     rules: {
         "tsdoc-require-2/require": "error",
     },
 };
 
-const plugin: ESLint.Plugin = {
-    configs: {
-        recommended: recommendedConfig,
-    },
-    meta: {
-        name: "eslint-plugin-tsdoc-require-2",
-        version: "0.1.0",
-    },
-    rules: pluginRules,
+const allConfigRules: NonNullable<FlatConfig["rules"]> = {
+    "tsdoc-require-2/require": "error",
 };
 
 recommendedConfig.plugins["tsdoc-require-2"] = plugin;
+
+for (const { ruleName } of requiredTagDefinitions) {
+    allConfigRules[`tsdoc-require-2/${ruleName}`] = "error";
+}
+
+const allConfig: FlatConfig = {
+    plugins: {
+        "tsdoc-require-2": plugin,
+    },
+    rules: allConfigRules,
+};
+
+plugin.configs = {
+    all: allConfig,
+    recommended: recommendedConfig,
+};
 
 export { rules };
 export default plugin;

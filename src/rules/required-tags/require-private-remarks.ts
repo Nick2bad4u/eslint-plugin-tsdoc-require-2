@@ -30,7 +30,7 @@ const RequirePrivateRemarksRule: TagRuleModule = createTagRule<
                 "require @privateRemarks tag in TSDoc blocks for exported TypeScript declarations and default exports.",
             frozen: false,
             recommended: false,
-            url: "https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/docs/rules/required-tags.md#require-private-remarks",
+            url: "https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/docs/rules/required-tags/require-private-remarks.md",
         },
         messages: {
             missingTag:

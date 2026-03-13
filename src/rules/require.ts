@@ -416,7 +416,7 @@ const requireRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
             description:
                 "require TSDoc comments for exported TypeScript declarations and default exports.",
             frozen: false,
-            recommended: false,
+            recommended: true,
             url: "https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/docs/rules/require.md",
         },
         messages: {

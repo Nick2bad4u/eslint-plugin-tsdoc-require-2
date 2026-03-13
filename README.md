@@ -47,6 +47,11 @@ import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 export default [tsdocRequire.configs.recommended];
 ```
 
+Available presets:
+
+- `tsdocRequire.configs.recommended` — enables `tsdoc-require-2/require`.
+- `tsdocRequire.configs.all` — enables `tsdoc-require-2/require` plus every split required-tag rule.
+
 ## Options (`tsdoc-require-2/require`)
 
 This rule accepts one optional settings object:
@@ -104,3 +109,6 @@ export default [
 ## Rule
 
 - [`tsdoc-require-2/require`](docs/rules/require.md): Requires TSDoc comments for exported TypeScript declarations and default exports.
+- [`tsdoc-require-2/require-tags`](docs/rules/required-tags.md): Shared docs for the split per-tag rules.
+
+Per-tag split rules are documented in [`docs/rules/required-tags/`](docs/rules/required-tags/).

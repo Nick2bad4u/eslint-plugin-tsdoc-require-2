@@ -1,9 +1,9 @@
-import { getPluginRule } from "../_internal/ruleTester.js";
+import requireRule from "../../src/rules/require.js";
 import { createTypedRuleTester } from "../_internal/typed-rule-tester.js";
 
 const ruleTester = createTypedRuleTester();
 
-ruleTester.run("require", getPluginRule("require"), {
+ruleTester.run("require", requireRule, {
     invalid: [
         {
             code: "export class MyClass {}",

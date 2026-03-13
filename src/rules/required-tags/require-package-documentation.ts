@@ -30,7 +30,7 @@ const RequirePackageDocumentationRule: TagRuleModule = createTagRule<
                 "require @packageDocumentation tag in TSDoc blocks for exported TypeScript declarations and default exports.",
             frozen: false,
             recommended: false,
-            url: "https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/docs/rules/required-tags.md#require-package-documentation",
+            url: "https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/docs/rules/required-tags/require-package-documentation.md",
         },
         messages: {
             missingTag:
