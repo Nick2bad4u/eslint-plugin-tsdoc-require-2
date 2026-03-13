@@ -1,5 +1,6 @@
 import type { ESLint, Linter } from "eslint";
 
+import { requiredTagRules } from "./rules/require-tag-rules.js";
 import requireRule from "./rules/require.js";
 
 type RecommendedConfig = Linter.Config & {
@@ -7,12 +8,13 @@ type RecommendedConfig = Linter.Config & {
     rules: NonNullable<Linter.Config["rules"]>;
 };
 
-type RuleModuleMap = {
+type RuleModuleMap = typeof requiredTagRules & {
     require: typeof requireRule;
 };
 
 const rules: RuleModuleMap = {
     require: requireRule,
+    ...requiredTagRules,
 };
 
 const pluginRules = rules as unknown as NonNullable<ESLint.Plugin["rules"]>;

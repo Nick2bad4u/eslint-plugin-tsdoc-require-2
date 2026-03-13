@@ -13,13 +13,23 @@ const defaultRuleTesterConfig: ConstructorParameters<typeof RuleTester>[0] = {
     },
 };
 
-type PluginRuleName = keyof typeof pluginRules;
-
 const createRuleTester = (): RuleTester =>
     new RuleTester(defaultRuleTesterConfig);
 
-const getPluginRule = <TRuleName extends PluginRuleName>(
-    ruleName: TRuleName
-): (typeof pluginRules)[TRuleName] => pluginRules[ruleName];
+const pluginRuleMap: Readonly<
+    Record<string, (typeof pluginRules)[keyof typeof pluginRules]>
+> = pluginRules;
 
-export { createRuleTester, getPluginRule };
+const getPluginRule = (
+    ruleName: string
+): (typeof pluginRules)[keyof typeof pluginRules] => {
+    const pluginRule = pluginRuleMap[ruleName];
+    if (pluginRule === undefined) {
+        throw new TypeError(`Unknown plugin rule: ${ruleName}`);
+    }
+
+    return pluginRule;
+};
+
+export { createRuleTester };
+export { getPluginRule };
