@@ -31,33 +31,41 @@ const plugin: ESLint.Plugin = {
     rules: pluginRules,
 };
 
-const recommendedConfig: FlatConfig = {
-    plugins: {},
-    rules: {
-        "tsdoc-require-2/require": "error",
-    },
+const presetRuleNames = {
+    all: ["require", ...requiredTagDefinitions.map(({ ruleName }) => ruleName)],
+    detailed: ["require", "require-remarks"],
+    packages: [
+        "require",
+        "require-remarks",
+        "require-package-documentation",
+    ],
+    recommended: ["require"],
+} as const;
+
+const createPresetRules = (
+    ruleNames: readonly string[]
+): NonNullable<FlatConfig["rules"]> => {
+    const presetRules: NonNullable<FlatConfig["rules"]> = {};
+
+    for (const ruleName of ruleNames) {
+        presetRules[`tsdoc-require-2/${ruleName}`] = "error";
+    }
+
+    return presetRules;
 };
 
-const allConfigRules: NonNullable<FlatConfig["rules"]> = {
-    "tsdoc-require-2/require": "error",
-};
-
-recommendedConfig.plugins["tsdoc-require-2"] = plugin;
-
-for (const { ruleName } of requiredTagDefinitions) {
-    allConfigRules[`tsdoc-require-2/${ruleName}`] = "error";
-}
-
-const allConfig: FlatConfig = {
+const createPresetConfig = (ruleNames: readonly string[]): FlatConfig => ({
     plugins: {
         "tsdoc-require-2": plugin,
     },
-    rules: allConfigRules,
-};
+    rules: createPresetRules(ruleNames),
+});
 
 plugin.configs = {
-    all: allConfig,
-    recommended: recommendedConfig,
+    all: createPresetConfig(presetRuleNames.all),
+    detailed: createPresetConfig(presetRuleNames.detailed),
+    packages: createPresetConfig(presetRuleNames.packages),
+    recommended: createPresetConfig(presetRuleNames.recommended),
 };
 
 export { rules };
