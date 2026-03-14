@@ -22,19 +22,20 @@ const RequireEventPropertyRule: TagRuleModule = createTagRule<
         defaultOptions: [
             {
                 enforceFor: [...enforceableEntityKinds],
+                includeNonExported: false,
             },
         ],
         deprecated: false,
         docs: {
             description:
-                "require @eventProperty tag in TSDoc blocks for exported TypeScript declarations and default exports.",
+                "require @eventProperty tag in TSDoc blocks for TypeScript declarations and default exports.",
             frozen: false,
             recommended: false,
             url: "https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/docs/rules/required-tags/require-event-property.md",
         },
         messages: {
             missingTag:
-                "TSDoc for exported {{entityKind}} {{entityName}} must include @eventProperty.",
+                "TSDoc for {{entityKind}} {{entityName}} must include @eventProperty.",
         },
         schema: [optionSchema],
         type: "problem",

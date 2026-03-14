@@ -1,6 +1,6 @@
 # required-tags
 
-Require specific TSDoc tags to exist in TSDoc blocks for exported declarations.
+Require specific TSDoc tags to exist in TSDoc blocks for exported declarations, with optional enforcement for non-exported top-level declarations.
 
 ## Rules in this family
 
@@ -46,6 +46,7 @@ Each rule accepts the same option shape:
             | "type"
             | "variable"
         >;
+        includeNonExported?: boolean;
     },
 ]
 ```
@@ -64,8 +65,12 @@ Default:
             "type",
             "variable",
         ],
+        includeNonExported: false,
     },
 ]
 ```
+
+- `enforceFor`: limits which declaration kinds are checked.
+- `includeNonExported`: when `true`, also checks non-exported top-level declarations.
 
 For behavior and examples, open each individual rule document linked above.

@@ -22,19 +22,20 @@ const RequireRemarksRule: TagRuleModule = createTagRule<
         defaultOptions: [
             {
                 enforceFor: [...enforceableEntityKinds],
+                includeNonExported: false,
             },
         ],
         deprecated: false,
         docs: {
             description:
-                "require @remarks tag in TSDoc blocks for exported TypeScript declarations and default exports.",
+                "require @remarks tag in TSDoc blocks for TypeScript declarations and default exports.",
             frozen: false,
             recommended: false,
             url: "https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/docs/rules/required-tags/require-remarks.md",
         },
         messages: {
             missingTag:
-                "TSDoc for exported {{entityKind}} {{entityName}} must include @remarks.",
+                "TSDoc for {{entityKind}} {{entityName}} must include @remarks.",
         },
         schema: [optionSchema],
         type: "problem",

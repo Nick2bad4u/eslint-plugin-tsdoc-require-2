@@ -87,6 +87,23 @@ export default createConfig;
             ],
         },
         {
+            code: "function internalHelper() { return true; }",
+            errors: [
+                {
+                    data: {
+                        entityKind: "function",
+                        entityName: "internalHelper",
+                    },
+                    messageId: "missingTSDoc",
+                },
+            ],
+            options: [
+                {
+                    includeNonExported: true,
+                },
+            ],
+        },
+        {
             code: 'export const API_TOKEN = "secret";',
             errors: [
                 {
@@ -100,6 +117,27 @@ export default createConfig;
             options: [
                 {
                     enforceFor: ["variable"],
+                },
+            ],
+        },
+        {
+            code: `
+const localValue = 1;
+export { localValue };
+`,
+            errors: [
+                {
+                    data: {
+                        entityKind: "variable",
+                        entityName: "localValue",
+                    },
+                    messageId: "missingTSDoc",
+                },
+            ],
+            options: [
+                {
+                    enforceFor: ["variable"],
+                    includeNonExported: true,
                 },
             ],
         },
@@ -165,6 +203,19 @@ export class MyClass {}
             code: `
 class InternalOnly {}
 `,
+        },
+        {
+            code: `
+/** Internal utility docs. */
+function internalOnly(): boolean {
+  return true;
+}
+`,
+            options: [
+                {
+                    includeNonExported: true,
+                },
+            ],
         },
         {
             code: `

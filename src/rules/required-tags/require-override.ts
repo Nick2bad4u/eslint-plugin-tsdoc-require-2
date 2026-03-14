@@ -22,19 +22,20 @@ const RequireOverrideRule: TagRuleModule = createTagRule<
         defaultOptions: [
             {
                 enforceFor: [...enforceableEntityKinds],
+                includeNonExported: false,
             },
         ],
         deprecated: false,
         docs: {
             description:
-                "require @override tag in TSDoc blocks for exported TypeScript declarations and default exports.",
+                "require @override tag in TSDoc blocks for TypeScript declarations and default exports.",
             frozen: false,
             recommended: false,
             url: "https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/docs/rules/required-tags/require-override.md",
         },
         messages: {
             missingTag:
-                "TSDoc for exported {{entityKind}} {{entityName}} must include @override.",
+                "TSDoc for {{entityKind}} {{entityName}} must include @override.",
         },
         schema: [optionSchema],
         type: "problem",

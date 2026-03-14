@@ -54,3 +54,39 @@ for (const { ruleName, tagName } of requiredTagDefinitions) {
         valid: validCases,
     });
 }
+
+ruleTester.run("require-remarks", requiredTagRules["require-remarks"], {
+    invalid: [
+        {
+            code: `/**
+ * Internal description.
+ */
+function internalTaggedFunction(value: string): string {
+    return value;
+}`,
+            errors: [
+                {
+                    data: {
+                        entityKind: "function",
+                        entityName: "internalTaggedFunction",
+                        tagName: "@remarks",
+                    },
+                    messageId: "missingTag",
+                },
+            ],
+            options: [{ includeNonExported: true }],
+        },
+    ],
+    valid: [
+        {
+            code: `/**
+ * Internal description.
+ * @remarks
+ */
+function internalTaggedFunction(value: string): string {
+    return value;
+}`,
+            options: [{ includeNonExported: true }],
+        },
+    ],
+});

@@ -22,19 +22,20 @@ const RequireInternalRule: TagRuleModule = createTagRule<
         defaultOptions: [
             {
                 enforceFor: [...enforceableEntityKinds],
+                includeNonExported: false,
             },
         ],
         deprecated: false,
         docs: {
             description:
-                "require @internal tag in TSDoc blocks for exported TypeScript declarations and default exports.",
+                "require @internal tag in TSDoc blocks for TypeScript declarations and default exports.",
             frozen: false,
             recommended: false,
             url: "https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/docs/rules/required-tags/require-internal.md",
         },
         messages: {
             missingTag:
-                "TSDoc for exported {{entityKind}} {{entityName}} must include @internal.",
+                "TSDoc for {{entityKind}} {{entityName}} must include @internal.",
         },
         schema: [optionSchema],
         type: "problem",

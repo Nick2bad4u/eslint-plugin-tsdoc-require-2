@@ -36,6 +36,7 @@ const createTagRule: ReturnType<typeof ESLintUtils.RuleCreator<RuleDocs>> =
 
 type RuleOption = {
     enforceFor?: readonly EntityKind[];
+    includeNonExported?: boolean;
 };
 
 type SupportedDeclaration =
@@ -84,6 +85,7 @@ const defaultEnforceFor: readonly EntityKind[] = [...enforceableEntityKinds];
 const defaultRuleOptions: TagRuleOptions = [
     {
         enforceFor: defaultEnforceFor,
+        includeNonExported: false,
     },
 ];
 
@@ -97,6 +99,11 @@ const optionSchema: JSONSchema.JSONSchema4 = {
             },
             type: "array",
             uniqueItems: true,
+        },
+        includeNonExported: {
+            default: false,
+            description: "Also enforce on non-exported declarations (opt-in).",
+            type: "boolean",
         },
     },
     type: "object",
@@ -323,6 +330,7 @@ const createRequireTagRuleListener = (
     const enabledKinds = new Set<EntityKind>(
         ruleOption?.enforceFor ?? defaultEnforceFor
     );
+    const includeNonExported = ruleOption?.includeNonExported ?? false;
 
     const checkTarget = (target: Readonly<Target>): void => {
         if (!enabledKinds.has(target.kind)) {
@@ -446,6 +454,14 @@ const createRequireTagRuleListener = (
             checkedTargets.clear();
 
             for (const statement of programNode.body) {
+                if (includeNonExported && isSupportedDeclaration(statement)) {
+                    for (const target of declarationTargetsWithCommentNode(
+                        statement,
+                        statement
+                    )) {
+                        checkTarget(target);
+                    }
+                }
                 if (isSupportedDeclaration(statement)) {
                     trackDeclarationTargets(statement);
                     continue;

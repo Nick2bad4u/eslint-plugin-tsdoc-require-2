@@ -24,6 +24,7 @@ type RuleDocs = {
 
 type RuleOption = {
     enforceFor?: readonly EntityKind[];
+    includeNonExported?: boolean;
 };
 
 type SupportedDeclaration =
@@ -63,6 +64,7 @@ const defaultEnforceFor: readonly EntityKind[] = [...enforceableEntityKinds];
 const defaultRuleOptions: Options = [
     {
         enforceFor: defaultEnforceFor,
+        includeNonExported: false,
     },
 ];
 
@@ -76,6 +78,11 @@ const optionSchema: JSONSchema.JSONSchema4 = {
             },
             type: "array",
             uniqueItems: true,
+        },
+        includeNonExported: {
+            default: false,
+            description: "Also enforce on non-exported declarations (opt-in).",
+            type: "boolean",
         },
     },
     type: "object",
@@ -270,6 +277,7 @@ const requireRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
         const enabledKinds = new Set<EntityKind>(
             ruleOption?.enforceFor ?? defaultEnforceFor
         );
+        const includeNonExported = ruleOption?.includeNonExported ?? false;
 
         const checkTarget = (target: Readonly<Target>): void => {
             if (!enabledKinds.has(target.kind)) {
@@ -388,6 +396,15 @@ const requireRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
 
                 for (const statement of programNode.body) {
                     if (isSupportedDeclaration(statement)) {
+                        if (includeNonExported) {
+                            for (const target of declarationTargetsWithCommentNode(
+                                statement,
+                                statement
+                            )) {
+                                checkTarget(target);
+                            }
+                        }
+
                         trackDeclarationTargets(statement);
                         continue;
                     }
@@ -409,19 +426,19 @@ const requireRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
         defaultOptions: [
             {
                 enforceFor: [...enforceableEntityKinds],
+                includeNonExported: false,
             },
         ],
         deprecated: false,
         docs: {
             description:
-                "require TSDoc comments for exported TypeScript declarations and default exports.",
+                "require TSDoc comments for exported TypeScript declarations and default exports, with opt-in non-exported support.",
             frozen: false,
             recommended: true,
             url: "https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/docs/rules/require.md",
         },
         messages: {
-            missingTSDoc:
-                "Missing TSDoc for exported {{entityKind}} {{entityName}}.",
+            missingTSDoc: "Missing TSDoc for {{entityKind}} {{entityName}}.",
         },
         schema: [optionSchema],
         type: "problem",
