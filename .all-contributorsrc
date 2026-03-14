@@ -1,7 +1,7 @@
 {
     "badgeTemplate": "[![All Contributors.](https://img.shields.io/badge/all_contributors-<%= contributors.length %>-orange.svg?style=flat-square)](#contributors-)",
     "commit": false,
-    "commitConvention": "angular",
+    "commitConvention": "gitmoji",
     "commitType": "docs",
     "contributors": [
         {
