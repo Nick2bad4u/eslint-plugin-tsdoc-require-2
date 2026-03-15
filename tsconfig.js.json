@@ -19,6 +19,7 @@
     ],
     "extends": "./tsconfig.json",
     "include": [
-        "*.mjs"
+        "*.mjs",
+        "types/**/*.d.ts"
     ]
 }

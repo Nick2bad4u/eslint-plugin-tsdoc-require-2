@@ -33,11 +33,11 @@ const parseRequiredTagRuleNames = (sourceText) => {
 
     for (const match of sourceText.matchAll(ruleNamePattern)) {
         const groups = match.groups;
-        if (groups?.ruleName === undefined) {
+        if (groups?.["ruleName"] === undefined) {
             continue;
         }
 
-        ruleNames.push(groups.ruleName);
+        ruleNames.push(groups["ruleName"]);
     }
 
     return [...new Set(ruleNames)].sort((left, right) =>

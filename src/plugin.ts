@@ -15,6 +15,7 @@ type RuleModuleMap = typeof requiredTagRules & {
     require: typeof requireRule;
 };
 
+/** Map of all exported rule modules. */
 const rules: RuleModuleMap = {
     require: requireRule,
     ...requiredTagRules,
@@ -22,6 +23,7 @@ const rules: RuleModuleMap = {
 
 const pluginRules = rules as unknown as NonNullable<ESLint.Plugin["rules"]>;
 
+/** Plugin object exported to ESLint. */
 const plugin: ESLint.Plugin = {
     configs: {},
     meta: {

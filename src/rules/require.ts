@@ -265,6 +265,7 @@ const declarationTargetsWithCommentNode = (
         commentNode,
     }));
 
+/** ESLint rule module implementing tsdoc-require-2/require. */
 const requireRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
     Options,
     MessageIds

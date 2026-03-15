@@ -62,17 +62,16 @@ const parseRequiredTagDefinitions = (sourceText) => {
 
         if (
             groups === undefined ||
-            groups.ruleName === undefined ||
-            groups.tagName === undefined ||
-            groups.tagName === undefined
+            groups["ruleName"] === undefined ||
+            groups["tagName"] === undefined
         ) {
             continue;
         }
 
         definitions.push({
-            description: `require ${groups.tagName} tag in TSDoc blocks for exported declarations.`,
-            docsPath: docsPathFromRuleName(groups.ruleName),
-            ruleName: groups.ruleName,
+            description: `require ${groups["tagName"]} tag in TSDoc blocks`,
+            docsPath: docsPathFromRuleName(groups["ruleName"]),
+            ruleName: groups["ruleName"],
         });
     }
 
@@ -192,7 +191,7 @@ const main = async () => {
     const allRules = [
         {
             description:
-                "require TSDoc comments for exported TypeScript declarations and default exports.",
+                "require TSDoc comments for exported TypeScript declarations and default exports, with opt-in non-exported support.",
             docsPath: "docs/rules/require.md",
             ruleName: "require",
         },

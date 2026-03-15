@@ -10,6 +10,7 @@ import {
     type TagRuleOptions,
 } from "../../internal/require-tag-factory.js";
 
+/** Rule module for `tsdoc-require-2/require-override`. */
 const RequireOverrideRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds

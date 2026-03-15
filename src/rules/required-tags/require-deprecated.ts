@@ -10,6 +10,7 @@ import {
     type TagRuleOptions,
 } from "../../internal/require-tag-factory.js";
 
+/** Rule module for `tsdoc-require-2/require-deprecated`. */
 const RequireDeprecatedRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds

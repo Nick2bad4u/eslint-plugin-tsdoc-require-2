@@ -6,6 +6,7 @@ import {
     ESLintUtils,
 } from "@typescript-eslint/utils";
 
+/** Supported declaration kinds enforced by require/required-tag rules. */
 type EntityKind =
     | "class"
     | "enum"
@@ -15,18 +16,24 @@ type EntityKind =
     | "type"
     | "variable";
 
+/** Extra docs metadata shape used by this plugin's RuleCreator. */
 type RuleDocs = {
     recommended: boolean;
 };
+
+/** Rule context type alias shared by generated required-tag rules. */
 type TagRuleContext = Readonly<
     TSESLint.RuleContext<TagRuleMessageIds, TagRuleOptions>
 >;
+
+/** Rule module type alias shared by generated required-tag rules. */
 type TagRuleModule = ESLintUtils.RuleModule<
     TagRuleMessageIds,
     TagRuleOptions,
     RuleDocs
 >;
 
+/** RuleCreator instance for all required-tag rules in this plugin. */
 const createTagRule: ReturnType<typeof ESLintUtils.RuleCreator<RuleDocs>> =
     // eslint-disable-next-line total-functions/no-hidden-type-assertions -- RuleCreator generic is required to support plugin-specific docs.recommended metadata field.
     ESLintUtils.RuleCreator<RuleDocs>(
@@ -34,6 +41,7 @@ const createTagRule: ReturnType<typeof ESLintUtils.RuleCreator<RuleDocs>> =
             `https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/docs/rules/required-tags.md#${ruleName}`
     );
 
+/** Shared options supported by required-tag rules. */
 type RuleOption = {
     enforceFor?: readonly EntityKind[];
     includeNonExported?: boolean;
@@ -54,13 +62,16 @@ type SupportedDefaultExportExpression =
     | TSESTree.FunctionExpression
     | TSESTree.ObjectExpression;
 
+/** Metadata describing an individual required-tag rule. */
 type TagRuleDefinition = {
     readonly ruleName: string;
     readonly tagName: `@${string}`;
 };
 
+/** Message id union used by generated required-tag rules. */
 type TagRuleMessageIds = "missingTag";
 
+/** RuleTester-compatible options tuple for required-tag rules. */
 type TagRuleOptions = [RuleOption];
 
 type Target = {
@@ -70,6 +81,7 @@ type Target = {
     reportNode: TSESTree.Node;
 };
 
+/** Entity kinds that can be checked by this rule family. */
 const enforceableEntityKinds: readonly EntityKind[] = [
     "class",
     "enum",
@@ -82,6 +94,7 @@ const enforceableEntityKinds: readonly EntityKind[] = [
 
 const defaultEnforceFor: readonly EntityKind[] = [...enforceableEntityKinds];
 
+/** Default option tuple for required-tag rules. */
 const defaultRuleOptions: TagRuleOptions = [
     {
         enforceFor: defaultEnforceFor,
@@ -89,6 +102,7 @@ const defaultRuleOptions: TagRuleOptions = [
     },
 ];
 
+/** JSON schema describing shared required-tag rule options. */
 const optionSchema: JSONSchema.JSONSchema4 = {
     additionalProperties: false,
     properties: {
@@ -319,6 +333,14 @@ const declarationTargetsWithCommentNode = (
         commentNode,
     }));
 
+/**
+ * Builds the listener implementation for a specific required-tag rule.
+ *
+ * @param context - Rule execution context.
+ * @param requiredTag - TSDoc tag that must exist on matching declarations.
+ *
+ * @returns Rule listener object for ESLint traversal.
+ */
 const createRequireTagRuleListener = (
     context: Readonly<TSESLint.RuleContext<TagRuleMessageIds, TagRuleOptions>>,
     requiredTag: `@${string}`

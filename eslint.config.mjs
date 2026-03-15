@@ -1,3 +1,5 @@
+// @ts-nocheck -- ESLint plugins always have the wrong types and are a PITA to type correctly,
+// and this file is already checked by ESLint itself, so we can skip type checking for the whole file.
 /**
  * Optimized ESLint configuration
  *
@@ -385,7 +387,6 @@ export default defineConfig([
         name: "ESLint comments recommended (code files only)",
     },
     {
-        // @ts-expect-error -- Plugin needs update for Eslint v10
         ...arrayFunc.configs.all,
         files: ["**/*.{js,jsx,mjs,cjs,ts,tsx,cts,mts}"],
         name: "Array func all (code files only)",
@@ -731,7 +732,7 @@ export default defineConfig([
             ...importX.flatConfigs.recommended.rules,
             ...importX.flatConfigs.electron.rules,
             ...importX.flatConfigs.typescript.rules,
-            // @ts-expect-error -- Plugin needs update for Eslint v10
+
             ...pluginPromise.configs["flat/recommended"].rules,
             ...eslintPluginUnicorn.configs.all.rules,
             ...sonarjsConfigs.recommended.rules,
@@ -741,11 +742,11 @@ export default defineConfig([
             ...eslintPluginMath.configs.recommended.rules,
             ...comments.recommended.rules,
             ...pluginCanonical.configs.recommended.rules,
-            // @ts-expect-error -- Plugin needs update for Eslint v10
+
             ...pluginSortClassMembers.configs["flat/recommended"].rules,
-            // @ts-expect-error -- Plugin needs update for Eslint v10
+
             ...eslintPluginNoUseExtendNative.configs.recommended.rules,
-            // @ts-expect-error -- Plugin needs update for Eslint v10
+
             ...pluginMicrosoftSdl.configs.required.rules,
             ...readPluginConfigRules(listeners, "strict"),
             ...moduleInterop.configs.recommended.rules,
@@ -2549,7 +2550,7 @@ export default defineConfig([
             ...importX.flatConfigs.recommended.rules,
             ...importX.flatConfigs.electron.rules,
             ...importX.flatConfigs.typescript.rules,
-            // @ts-expect-error -- Plugin needs update for Eslint v10
+
             ...pluginPromise.configs["flat/recommended"].rules,
             ...eslintPluginUnicorn.configs.all.rules,
             ...sonarjsConfigs.recommended.rules,

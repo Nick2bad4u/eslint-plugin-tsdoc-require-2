@@ -32,6 +32,7 @@ import requireThrowsRule from "./required-tags/require-throws.js";
 import requireTypeParamRule from "./required-tags/require-type-param.js";
 import requireVirtualRule from "./required-tags/require-virtual.js";
 
+/** Definitions that map each required-tag rule name to its required TSDoc tag. */
 const requiredTagDefinitions: readonly TagRuleDefinition[] = [
     { ruleName: "require-alpha", tagName: "@alpha" },
     { ruleName: "require-beta", tagName: "@beta" },
@@ -115,6 +116,7 @@ type RequiredTagRules = {
     "require-virtual": TSESLint.RuleModule<TagRuleMessageIds, TagRuleOptions>;
 };
 
+/** Runtime map of required-tag rule modules keyed by rule name. */
 const requiredTagRules: RequiredTagRules = {
     "require-alpha": requireAlphaRule,
     "require-beta": requireBetaRule,
@@ -143,6 +145,7 @@ const requiredTagRules: RequiredTagRules = {
     "require-virtual": requireVirtualRule,
 };
 
+/** Union of all required-tag rule names exported by this plugin. */
 export type RequiredTagRuleName = keyof typeof requiredTagRules;
 
 export { requiredTagDefinitions };

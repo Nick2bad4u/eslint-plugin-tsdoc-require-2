@@ -29,6 +29,7 @@
         "src/**/*.mjs",
         "scripts/**/*.ts",
         "scripts/**/*.mjs",
+        "types/**/*.d.ts",
         "test/**/*.d.ts",
         "test/**/*.ts",
         "test/**/*.mjs",

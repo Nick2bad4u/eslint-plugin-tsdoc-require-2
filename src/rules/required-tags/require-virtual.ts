@@ -10,6 +10,7 @@ import {
     type TagRuleOptions,
 } from "../../internal/require-tag-factory.js";
 
+/** Rule module for `tsdoc-require-2/require-virtual`. */
 const RequireVirtualRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
