@@ -91,13 +91,17 @@ const buildPresetRows = (requiredTagRuleNames) => {
         },
         {
             name: "all",
-            purpose: "Enable every rule shipped by this plugin.",
+            purpose:
+                "Enable every rule shipped by this plugin. (NOT RECOMMENDED)",
             rules: allRuleNames,
         },
     ];
 
     return presets.map((preset) => {
-        const includedRules = preset.rules.map(toRuleLink).join(", ");
+        const includedRules =
+            preset.name === "all"
+                ? "**All plugin rules**"
+                : preset.rules.map(toRuleLink).join(", ");
 
         return `| \`${preset.name}\` | ${preset.rules.length} | ${includedRules} | ${preset.purpose} |`;
     });
