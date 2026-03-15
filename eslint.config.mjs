@@ -1,4 +1,3 @@
-// @ts-nocheck -- ESlint plugins always have wrong or outdated types
 /**
  * Optimized ESLint configuration
  *
@@ -34,7 +33,6 @@ import * as pluginCssModules from "eslint-plugin-css-modules";
 import deMorgan from "eslint-plugin-de-morgan";
 import depend from "eslint-plugin-depend";
 import eslintPluginEslintPlugin from "eslint-plugin-eslint-plugin";
-import etcPlugin from "eslint-plugin-etc";
 import progress from "eslint-plugin-file-progress-2";
 import { importX } from "eslint-plugin-import-x";
 import jsdocPlugin from "eslint-plugin-jsdoc";
@@ -69,6 +67,8 @@ import pluginSortClassMembers from "eslint-plugin-sort-class-members";
 import pluginTestingLibrary from "eslint-plugin-testing-library";
 import eslintPluginToml from "eslint-plugin-toml";
 import pluginTotalFunctions from "eslint-plugin-total-functions";
+import pluginTsdoc from "eslint-plugin-tsdoc";
+import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 import pluginUndefinedCss from "eslint-plugin-undefined-css-classes";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
 import pluginUnusedImports from "eslint-plugin-unused-imports";
@@ -106,19 +106,27 @@ const jsonSchemaValidatorRules = enableJsonSchemaValidation
     ? { "json-schema-validator/no-invalid": "error" }
     : {};
 
+/**
+ * @param {unknown} pluginValue
+ *
+ * @returns {import("eslint").ESLint.Plugin}
+ */
+const asEslintPlugin = (pluginValue) =>
+    /** @type {import("eslint").ESLint.Plugin} */ (pluginValue);
+
 const canonicalPlugin = fixupPluginRules(pluginCanonical);
-// @ts-expect-error -- Plugin needs update for Eslint v10
-const noExplicitTypeExportsPlugin = fixupPluginRules(noExplicitTypeExports);
-// @ts-expect-error -- Plugin needs update for Eslint v10
-const noUnsanitizedPlugin = fixupPluginRules(nounsanitized);
-// @ts-expect-error -- Plugin needs update for Eslint v10
-const preferArrowPlugin = fixupPluginRules(pluginPreferArrow);
-// @ts-expect-error -- Plugin needs update for Eslint v10
-const sortClassMembersPlugin = fixupPluginRules(pluginSortClassMembers);
+const noExplicitTypeExportsPlugin = fixupPluginRules(
+    asEslintPlugin(noExplicitTypeExports)
+);
+const noUnsanitizedPlugin = fixupPluginRules(asEslintPlugin(nounsanitized));
+const preferArrowPlugin = fixupPluginRules(asEslintPlugin(pluginPreferArrow));
+const sortClassMembersPlugin = fixupPluginRules(
+    asEslintPlugin(pluginSortClassMembers)
+);
 const writeGoodCommentsPlugin = fixupPluginRules(pluginWriteGood);
-// @ts-expect-error -- Plugin needs update for Eslint v10
-const pluginLoadableImports = fixupPluginRules(loadbleImportsPlugin);
-const etc = fixupPluginRules(etcPlugin);
+const pluginLoadableImports = fixupPluginRules(
+    asEslintPlugin(loadbleImportsPlugin)
+);
 const jsxA11yPlugin = fixupPluginRules(eslintPluginJsxA11y);
 const eslintReactStrictTypeCheckedConfig = /**
  * @type {{
@@ -131,6 +139,54 @@ const eslintReactStrictTypeCheckedConfig = /**
 /** @typedef {import("eslint").Linter.Config} EslintConfig */
 /** @typedef {import("eslint").Linter.BaseConfig} BaseEslintConfig */
 /** @typedef {import("eslint").Linter.LinterOptions} LinterOptions */
+
+/**
+ * @param {unknown} value
+ *
+ * @returns {value is Readonly<Record<string, unknown>>}
+ */
+const isReadonlyRecord = (value) =>
+    typeof value === "object" && value !== null && !Array.isArray(value);
+
+/**
+ * Read `rules` from a flat/legacy ESLint config object safely.
+ *
+ * @param {unknown} configValue
+ *
+ * @returns {Readonly<Record<string, unknown>>}
+ */
+const readConfigRules = (configValue) => {
+    if (!isReadonlyRecord(configValue)) {
+        return {};
+    }
+
+    const { rules } = configValue;
+    return isReadonlyRecord(rules) ? rules : {};
+};
+
+/**
+ * @param {unknown} pluginValue
+ * @param {string} configName
+ *
+ * @returns {Readonly<Record<string, unknown>>}
+ */
+const readPluginConfigRules = (pluginValue, configName) => {
+    if (!isReadonlyRecord(pluginValue)) {
+        return {};
+    }
+
+    const { configs } = pluginValue;
+    if (!isReadonlyRecord(configs)) {
+        return {};
+    }
+
+    if (!Object.hasOwn(configs, configName)) {
+        return {};
+    }
+
+    // eslint-disable-next-line security/detect-object-injection -- configName is a controlled constant, not user input.
+    return readConfigRules(configs[configName]);
+};
 
 const require = createRequire(import.meta.url);
 // eslint-disable-next-line unicorn/prefer-import-meta-properties -- n/no-unsupported-features reports import.meta.dirname as unsupported in this config context.
@@ -435,6 +491,31 @@ export default defineConfig([
         name: "Type Declarations - TypeScript Parser",
     },
     // #endregion
+    // #region 📃 TSDoc Setup
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // SECTION: 📃 TSDoc (tsdoc/*)
+    // ═══════════════════════════════════════════════════════════════════════════════
+    {
+        files: ["**/*.{ts,mts,cts,tsx}"],
+        name: "TSDoc rules (TypeScript files)",
+        plugins: {
+            tsdoc: pluginTsdoc,
+        },
+        rules: {
+            "tsdoc/syntax": "warn",
+        },
+    },
+    {
+        files: ["src/**/*.{ts,mts,cts,tsx}"],
+        name: "TSDoc rules (TypeScript files)",
+        plugins: {
+            "tsdoc-require-2": tsdocRequire,
+        },
+        rules: {
+            "tsdoc-require-2/require": "warn",
+        },
+    },
+    // #endregion
     // #region 🎨 CSS files
     // ═══════════════════════════════════════════════════════════════════════════════
     // SECTION: CSS (css/*)
@@ -454,7 +535,7 @@ export default defineConfig([
         },
         rules: {
             ...css.configs.recommended.rules,
-            ...pluginUndefinedCss.configs.recommended.rules,
+            ...readPluginConfigRules(pluginUndefinedCss, "recommended"),
             ...pluginCssModules.configs.recommended.rules,
             // CSS Eslint Rules (css/*)
             "css/no-empty-blocks": "error",
@@ -613,7 +694,6 @@ export default defineConfig([
             "comment-length": eslintPluginCommentLength,
             "eslint-comments": comments,
             "eslint-plugin": eslintPluginEslintPlugin,
-            etc: etc,
             "import-x": importX,
             js: js,
             jsdoc: jsdocPlugin,
@@ -634,6 +714,7 @@ export default defineConfig([
             sonarjs: sonarjs,
             "sort-class-members": sortClassMembersPlugin,
             "total-functions": fixupPluginRules(pluginTotalFunctions),
+            "tsdoc-require-2": tsdocRequire,
             unicorn: eslintPluginUnicorn,
             "unused-imports": pluginUnusedImports,
         },
@@ -641,11 +722,11 @@ export default defineConfig([
             // TypeScript backend rules
             ...js.configs.all.rules,
             ...tseslint.configs["recommendedTypeChecked"],
-            ...tseslint.configs["recommended"].rules,
+            ...readConfigRules(tseslint.configs["recommended"]),
             ...tseslint.configs["strictTypeChecked"],
-            ...tseslint.configs["strict"].rules,
+            ...readConfigRules(tseslint.configs["strict"]),
             ...tseslint.configs["stylisticTypeChecked"],
-            ...tseslint.configs["stylistic"].rules,
+            ...readConfigRules(tseslint.configs["stylistic"]),
             ...pluginRegexp.configs.all.rules,
             ...importX.flatConfigs.recommended.rules,
             ...importX.flatConfigs.electron.rules,
@@ -666,11 +747,9 @@ export default defineConfig([
             ...eslintPluginNoUseExtendNative.configs.recommended.rules,
             // @ts-expect-error -- Plugin needs update for Eslint v10
             ...pluginMicrosoftSdl.configs.required.rules,
-            ...listeners.configs.strict.rules,
+            ...readPluginConfigRules(listeners, "strict"),
             ...moduleInterop.configs.recommended.rules,
-            ...pluginTotalFunctions.configs.recommended.rules,
-            // @ts-expect-error -- Plugin needs update for Eslint v10
-            ...etc.configs.recommended.rules,
+            ...readPluginConfigRules(pluginTotalFunctions, "recommended"),
             "@eslint-community/eslint-comments/no-restricted-disable": "warn",
             // Deprecated rule - turned off
             "@eslint-community/eslint-comments/no-unused-disable": "off",
@@ -949,6 +1028,7 @@ export default defineConfig([
             "@typescript-eslint/unbound-method": "warn",
             "@typescript-eslint/unified-signatures": "warn",
             "@typescript-eslint/use-unknown-in-catch-callback-variable": "warn",
+            "canonical/export-specifier-newline": "off",
             "canonical/filename-match-exported": "off",
             "canonical/filename-match-regex": "off", // Taken care of by unicorn rules
             "canonical/filename-no-index": "error",
@@ -1176,17 +1256,6 @@ export default defineConfig([
             "eslint-plugin/test-case-property-ordering": "warn",
             "eslint-plugin/test-case-shorthand-strings": "error",
             "eslint-plugin/unique-test-case-names": "error",
-            "etc/no-commented-out-code": "off",
-            "etc/no-const-enum": "warn",
-            "etc/no-enum": "off",
-            "etc/no-foreach": "off",
-            "etc/no-internal": "off",
-            "etc/no-misused-generics": "warn",
-            "etc/no-t": "off",
-            "etc/prefer-interface": "off",
-            "etc/prefer-less-than": "off",
-            "etc/throw-error": "warn",
-            "etc/underscore-internal": "off",
             "import-x/consistent-type-specifier-style": "off",
             "import-x/default": "warn",
             "import-x/dynamic-import-chunkname": "off",
@@ -1505,11 +1574,11 @@ export default defineConfig([
         rules: {
             ...js.configs.all.rules,
             ...tseslint.configs["recommendedTypeChecked"],
-            ...tseslint.configs["recommended"].rules,
+            ...readConfigRules(tseslint.configs["recommended"]),
             ...tseslint.configs["strictTypeChecked"],
-            ...tseslint.configs["strict"].rules,
+            ...readConfigRules(tseslint.configs["strict"]),
             ...tseslint.configs["stylisticTypeChecked"],
-            ...tseslint.configs["stylistic"].rules,
+            ...readConfigRules(tseslint.configs["stylistic"]),
             ...vitest.configs.all.rules,
             ...eslintPluginUnicorn.configs.all.rules,
             ...pluginTestingLibrary.configs["flat/react"].rules,
@@ -1689,7 +1758,9 @@ export default defineConfig([
             "unicorn/prefer-optional-catch-binding": "off", // Allow optional catch binding for test flexibility
             "unicorn/prevent-abbreviations": "off", // Too many false positives in tests
             "vitest/max-expects": "off",
-            "vitest/no-alias-methods": "warn",
+            // Needs update to not use deprecated alias methods like
+            // Replace toThrow() with its canonical name oThrowError()
+            "vitest/no-alias-methods": "off",
             "vitest/no-commented-out-tests": "warn",
             "vitest/no-conditional-expect": "off",
             "vitest/no-disabled-tests": "warn",
@@ -1707,6 +1778,9 @@ export default defineConfig([
             "vitest/prefer-describe-function-title": "warn",
             "vitest/prefer-expect-assertions": "off",
             "vitest/prefer-expect-resolves": "warn",
+            // Vitest's autofix currently rewrites to `expectTypeOf(...).toBeFunction()`
+            // which does not typecheck with the current expect-type typings.
+            "vitest/prefer-expect-type-of": "off",
             "vitest/prefer-mock-return-shorthand": "warn",
             "vitest/prefer-spy-on": "off",
             "vitest/prefer-strict-boolean-matchers": "off",
@@ -1794,6 +1868,7 @@ export default defineConfig([
             // do not publish provenance metadata consistently).
             "node-dependencies/require-provenance-deps": "off",
             "node-dependencies/valid-semver": "error",
+            // Package.json Plugin Rules (package-json/*)
             "package-json/bin-name-casing": "warn",
             "package-json/exports-subpaths-style": "warn",
             "package-json/no-empty-fields": "warn",
@@ -1803,11 +1878,20 @@ export default defineConfig([
             "package-json/repository-shorthand": "warn",
             "package-json/require-attribution": "warn",
             "package-json/require-author": "warn",
+            // Not a CLI package.
+            "package-json/require-bin": "off",
             "package-json/require-bugs": "warn",
             "package-json/require-bundleDependencies": "off",
+            // Optional metadata for this repository.
+            "package-json/require-contributors": "warn",
+            "package-json/require-cpu": "off",
             "package-json/require-dependencies": "warn",
             "package-json/require-description": "warn",
             "package-json/require-devDependencies": "warn",
+            // Optional and currently uncommon metadata field.
+            "package-json/require-devEngines": "warn",
+            // Legacy npm field, not needed for this plugin package.
+            "package-json/require-directories": "off",
             "package-json/require-engines": "warn",
             "package-json/require-exports": [
                 "error",
@@ -1816,14 +1900,22 @@ export default defineConfig([
                 },
             ],
             "package-json/require-files": "warn",
+            // Optional for this project.
+            "package-json/require-funding": "off",
             "package-json/require-homepage": "warn",
             "package-json/require-keywords": "warn",
             "package-json/require-license": "warn",
+            "package-json/require-main": "warn",
+            // Not a manpage-distributed package.
+            "package-json/require-man": "off",
+            "package-json/require-module": "off",
             "package-json/require-name": "warn",
             "package-json/require-optionalDependencies": "off",
-            // Package.json Plugin Rules (package-json/*)
+            "package-json/require-os": "off",
             "package-json/require-packageManager": "warn",
             "package-json/require-peerDependencies": "warn",
+            "package-json/require-private": "warn",
+            "package-json/require-publishConfig": "warn",
             "package-json/require-repository": "error",
             "package-json/require-scripts": "warn",
             "package-json/require-sideEffects": "warn",
@@ -1862,6 +1954,7 @@ export default defineConfig([
             "package-json/unique-dependencies": "warn",
             "package-json/valid-author": "warn",
             "package-json/valid-bin": "warn",
+            "package-json/valid-bugs": "warn",
             "package-json/valid-bundleDependencies": "warn",
             "package-json/valid-config": "warn",
             "package-json/valid-contributors": "warn",
@@ -1869,20 +1962,24 @@ export default defineConfig([
             "package-json/valid-dependencies": "warn",
             "package-json/valid-description": "warn",
             "package-json/valid-devDependencies": "warn",
+            "package-json/valid-devEngines": "warn",
             "package-json/valid-directories": "warn",
             "package-json/valid-engines": "warn",
             "package-json/valid-exports": "warn",
             "package-json/valid-files": "warn",
+            "package-json/valid-funding": "warn",
             "package-json/valid-homepage": "warn",
             "package-json/valid-keywords": "warn",
             "package-json/valid-license": "warn",
-            "package-json/valid-local-dependency": "off",
             "package-json/valid-main": "warn",
             "package-json/valid-man": "warn",
             "package-json/valid-module": "warn",
             "package-json/valid-name": "warn",
             "package-json/valid-optionalDependencies": "warn",
             "package-json/valid-os": "warn",
+            // Deprecated upstream rule; retained as explicit off until removed.
+            "package-json/valid-package-definition": "off",
+            "package-json/valid-packageManager": "warn",
             "package-json/valid-peerDependencies": "warn",
             "package-json/valid-private": "warn",
             "package-json/valid-publishConfig": "warn",
@@ -2457,7 +2554,7 @@ export default defineConfig([
             ...eslintPluginUnicorn.configs.all.rules,
             ...sonarjsConfigs.recommended.rules,
             ...pluginPerfectionist.configs["recommended-natural"].rules,
-            ...pluginRedos.configs.recommended.rules,
+            ...readPluginConfigRules(pluginRedos, "recommended"),
             ...pluginSecurity.configs.recommended.rules,
             ...nodePlugin.configs["flat/recommended"].rules,
             ...eslintPluginMath.configs.recommended.rules,
@@ -2713,6 +2810,7 @@ export default defineConfig([
             "callback-return": "off",
             camelcase: "off",
             "canonical/destructuring-property-newline": "off",
+            "canonical/export-specifier-newline": "off",
             "canonical/import-specifier-newline": "off",
             "capitalized-comments": [
                 "error",
