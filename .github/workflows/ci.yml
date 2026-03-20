@@ -130,9 +130,13 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
               with:
-                  node-version-file: .node-version
-                  cache: npm
-                  cache-dependency-path: package-lock.json 20.19.0
+                  # Use the latest LTS release for compat checks — these jobs
+                  # test ESLint API compatibility, not Node.js compatibility, so
+                  # we don't need the exact version pinned in .node-version.
+                  # Using lts/* guarantees the version is always found in the
+                  # runner manifest and avoids the slow fallback-download path
+                  # that can break the npm cache setup step.
+                  node-version: lts/*
 
             - name: Install dependencies
               run: npm ci --force
