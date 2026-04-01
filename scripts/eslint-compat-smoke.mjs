@@ -19,7 +19,7 @@ const getExpectedMajorVersion = (argumentsList) => {
     const value = expectedFlag.slice(EXPECT_FLAG.length);
     if (!/^\d+$/.test(value)) {
         throw new Error(
-            `Invalid expected ESLint major version: \"${value}\". Use integers, for example --expect-eslint-major=9`
+            `Invalid expected ESLint major version: "${value}". Use integers, for example --expect-eslint-major=9`
         );
     }
 
@@ -34,7 +34,7 @@ const currentMajorVersion = Number.parseInt(
 
 if (!Number.isInteger(currentMajorVersion)) {
     throw new Error(
-        `Unable to parse ESLint version from \"${currentVersion}\".`
+        `Unable to parse ESLint version from "${currentVersion}".`
     );
 }
 

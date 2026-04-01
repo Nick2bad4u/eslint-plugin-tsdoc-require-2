@@ -279,6 +279,8 @@ export default defineConfig([
     globalIgnores([
         "**/CHANGELOG.md",
         ".remarkrc.mjs",
+        "docs/docusaurus/static/eslint-inspector/**",
+        "docs/docusaurus/static/stylelint-inspector/**",
         "test/fixtures/**",
     ]),
     gitignore({
@@ -562,6 +564,7 @@ export default defineConfig([
             "docs/docusaurus/.docusaurus/**",
             "docs/docusaurus/build/**",
             "docs/docusaurus/static/eslint-inspector/**",
+            "docs/docusaurus/static/stylelint-inspector/**",
         ],
         languageOptions: {
             parser: tseslintParser,
@@ -574,9 +577,14 @@ export default defineConfig([
                 jsDocParsingMode: "all",
                 projectService: {
                     allowDefaultProject: [
+                        "docs/docusaurus/scripts/*.mjs",
+                        "docs/docusaurus/site-contract.config.d.mts",
+                        "docs/docusaurus/site-contract.config.mjs",
+                        "docs/docusaurus/typedoc.local.config.mjs",
                         "docs/docusaurus/typedoc-plugins/*.mjs",
                         "docs/docusaurus/typedoc-plugins/*.mts",
                     ],
+                    maximumDefaultProjectFileMatchCount_THIS_WILL_SLOW_DOWN_LINTING: 256,
                 },
                 sourceType: "module",
                 tsconfigRootDir: import.meta.dirname,
@@ -597,26 +605,13 @@ export default defineConfig([
             "@docusaurus/no-untranslated-text": "off",
             "@docusaurus/prefer-docusaurus-heading": "warn",
             "@docusaurus/string-literal-i18n-messages": "off",
-            "@eslint-react/dom/prefer-namespace-import": "warn",
             "@eslint-react/jsx-dollar": "warn",
             "@eslint-react/jsx-shorthand-boolean": "warn",
             "@eslint-react/jsx-shorthand-fragment": "warn",
-            "@eslint-react/naming-convention/component-name": "warn",
-            // Docusaurus relies on canonical non-PascalCase filenames
-            // (for example: docusaurus.config.ts, sidebars.ts), so this
-            // React filename convention rule does not match repository
-            // conventions for docs tooling files.
-            "@eslint-react/naming-convention/filename": "off",
-            "@eslint-react/naming-convention/filename-extension": "warn",
             "@eslint-react/no-duplicate-key": "warn",
             "@eslint-react/no-missing-component-display-name": "warn",
             "@eslint-react/no-missing-context-display-name": "warn",
-            "@eslint-react/no-unnecessary-key": "warn",
-            "@eslint-react/no-unnecessary-use-ref": "warn",
             "@eslint-react/prefer-namespace-import": "warn",
-            // JS-only docs components do not consistently model props via
-            // readonly TS types, so keep this disabled in docs scope.
-            "@eslint-react/prefer-read-only-props": "off",
             "jsx-a11y/lang": "warn",
             "jsx-a11y/no-aria-hidden-on-focusable": "warn",
             "jsx-a11y/prefer-tag-over-role": "warn",
@@ -2103,7 +2098,11 @@ export default defineConfig([
     // ═══════════════════════════════════════════════════════════════════════════════
     {
         files: ["**/*.{html,htm,xhtml}"],
-        ignores: ["report/**"],
+        ignores: [
+            "docs/docusaurus/static/eslint-inspector/**",
+            "docs/docusaurus/static/stylelint-inspector/**",
+            "report/**",
+        ],
         languageOptions: {
             parser: htmlParser,
         },

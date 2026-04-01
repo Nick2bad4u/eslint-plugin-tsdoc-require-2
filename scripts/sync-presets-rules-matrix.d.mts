@@ -1,21 +1,30 @@
-export interface PresetsRuleModule {
-    readonly meta?:
-        | {
-              readonly docs?:
-                  | {
-                        readonly typefestConfigs?:
-                            | readonly string[]
-                            | string
-                            | undefined;
-                        readonly url?: string | undefined;
-                    }
-                  | undefined;
-              readonly fixable?: string | undefined;
-              readonly hasSuggestions?: boolean | undefined;
-          }
-        | undefined;
-}
+type FlatConfigRuleEntry =
+    | "error"
+    | "off"
+    | "warn"
+    | readonly ["error" | "off" | "warn", ...unknown[]];
 
-export function generatePresetsRulesMatrixSectionFromRules(
-    rules: Readonly<Record<string, PresetsRuleModule>>
-): string;
+type FlatConfig = {
+    readonly rules?: Readonly<Record<string, FlatConfigRuleEntry | undefined>>;
+};
+
+type PluginModule = {
+    readonly configs: {
+        readonly all: FlatConfig;
+        readonly detailed: FlatConfig;
+        readonly jsdoc: FlatConfig;
+        readonly packages: FlatConfig;
+        readonly recommended: FlatConfig;
+        readonly tsdoc: FlatConfig;
+        readonly typedoc: FlatConfig;
+        readonly "typedoc-strict": FlatConfig;
+    };
+};
+
+type PresetDefinition = {
+    readonly name: string;
+    readonly purpose: string;
+    readonly rules: readonly string[];
+};
+
+export type { FlatConfig, FlatConfigRuleEntry, PluginModule, PresetDefinition };

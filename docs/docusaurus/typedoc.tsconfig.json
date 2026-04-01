@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "composite": false,
+        "declaration": true,
+        "emitDeclarationOnly": false,
+        "noEmit": true
+    },
+    "exclude": [
+        "../../docs/**",
+        "../../node_modules/**",
+        "../../test/**"
+    ],
+    "extends": "../../tsconfig.json",
+    "include": [
+        "../../src/**/*.ts"
+    ]
+}

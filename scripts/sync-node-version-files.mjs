@@ -82,6 +82,23 @@ const parseArguments = (argumentList) => {
     /** @type {string | null} */
     let explicitVersion = null;
 
+    /**
+     * @param {number} argumentIndex
+     *
+     * @returns {number}
+     */
+    const consumeVersionValue = (argumentIndex) => {
+        const nextArgument = argumentList[argumentIndex + 1];
+
+        if (typeof nextArgument !== "string") {
+            throw new TypeError("Expected a version after --version.");
+        }
+
+        explicitVersion = normalizeNodeVersion(nextArgument);
+
+        return argumentIndex + 1;
+    };
+
     for (let index = 0; index < argumentList.length; index += 1) {
         const argument = argumentList[index];
 
@@ -102,14 +119,7 @@ const parseArguments = (argumentList) => {
         }
 
         if (argument === "--version") {
-            const nextArgument = argumentList[index + 1];
-
-            if (typeof nextArgument !== "string") {
-                throw new TypeError("Expected a version after --version.");
-            }
-
-            explicitVersion = normalizeNodeVersion(nextArgument);
-            index += 1;
+            index = consumeVersionValue(index);
             continue;
         }
 

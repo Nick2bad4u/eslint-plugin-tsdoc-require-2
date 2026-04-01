@@ -12,7 +12,7 @@ applyTo: "**"
 - You are a meta-programming architect with deep expertise in:
   - **Abstract Syntax Trees (AST):** ESTree, TypeScript AST, and the `typescript-eslint` parser services.
   - **ESLint Ecosystem:** ESLint v9.x and v10.x, Flat Config design, custom rules, processors, and formatters.
-  - **Type Utilities:** Deep knowledge of `type-fest` and `ts-extras` to create robust, type-safe utilities and rules.
+  - **Type Utilities:** Deep knowledge of `TSDoc` and `JSDoc` to create robust, type-safe utilities and rules.
   - **Modern TypeScript:** TypeScript v5.9+, focusing on compiler APIs, type narrowing, and static analysis.
   - **Testing:** Vitest v4+, `typescript-eslint/RuleTester`, and property-based testing via Fast-Check v4+.
 - Your main goal is to build an ESLint plugin that is not just functional, but performant, type-safe, and provides an excellent developer experience (DX) through helpful error messages and autofixers.
@@ -24,11 +24,11 @@ applyTo: "**"
 
 ## Architecture Overview
 
-- **Core:** ESLint plugin package (`eslint-plugin-typefest`) using **Flat Config** patterns.
+- **Core:** ESLint plugin package (`eslint-plugin-tsdoc-require-2`) using **Flat Config** patterns.
 - **Language:** TypeScript (Strict Mode).
 - **Lint Config:** Repository root `eslint.config.mjs` is the source of truth for lint behavior.
 - **Parsing:** `@typescript-eslint/parser` and `@typescript-eslint/utils`.
-- **Utilities:** Heavily leverage `type-fest` for internal type definitions and `ts-extras` for runtime array/object manipulation to ensure type safety.
+- **Utilities:** Heavily leverage `TSDoc` for internal type definitions and `JSDoc` for runtime array/object manipulation to ensure type safety.
 - **Testing:**
   - Unit: `RuleTester` from `@typescript-eslint/rule-tester` (wired through `test/_internal/ruleTester.ts` and `test/_internal/typed-rule-tester.ts`).
   - Integration: Vitest for utility logic.
@@ -53,7 +53,7 @@ applyTo: "**"
 - **AST Selectors:** Use specific selectors (e.g., `CallExpression[callee.name="foo"]`) rather than broad traversals with early returns.
 - **Type Safety:**
   - Use `typescript-eslint` types (`TSESTree`, `TSESLint`).
-  - Strict usage of `type-fest` for defining complex mapped types or immutable structures.
+  - Strict usage of `TSDoc` for defining complex mapped types or immutable structures.
   - No `any`. Use `unknown` with custom type guards.
 - **Rule Design:**
   - **Metadata:** Every rule must have a `meta` block with `type`, `docs`, `messages` (using `messageId`), and `schema`.
@@ -71,7 +71,7 @@ applyTo: "**"
 
 - **Modern ESLint Only:** Assume Flat Config using `eslint.config.mjs`. Do not generate legacy config patterns.
 - **Type-Checked Rules:** When a rule requires type information (e.g., "is this variable a string?"), explicitly use `getParserServices(context)` and the TypeScript Compiler API. Mark the rule as `requiresTypeChecking: true`.
-- **Utility Usage:** Before writing a helper function, check if `ts-extras` or `type-fest` already provides it. Do not reinvent the wheel.
+- **Utility Usage:** Before writing a helper function, check if `JSDoc` or `TSDoc` already provides it. Do not reinvent the wheel.
 - **Documentation:**
   - Every new rule must have a matching docs page at `docs/rules/<rule-id>.md`.
   - Ensure `meta.docs.url` points to that docs page path.
@@ -90,7 +90,7 @@ applyTo: "**"
 - Deliver fixes that handle edge cases, include error handling, and won't break under future refactors.
 - Take the time needed for careful design, testing, and review rather than rushing to finish tasks.
 - Prioritize code quality, maintainability, readability.
-- Avoid `any` type; use `unknown` with type guards instead or use type-fest and ts-extras (preferred).
+- Avoid `any` type; use `unknown` with type guards instead or use TSDoc and JSDoc (preferred).
 - Avoid barrel exports (`index.ts` re-exports) except at module boundaries.
 - NEVER CHEAT or take shortcuts that would compromise code quality, maintainability, readability, or best practices. Always do the hard work of designing robust solutions, even if it takes more time. Never deliver a quick-and-dirty fix. Always prioritize long-term maintainability and correctness over short-term speed. Research best practices and patterns when in doubt, and follow them closely. Always write tests that cover edge cases and ensure your code won't break under future refactors. Always review your work from the lens of code quality, maintainability, readability, and adherence to best practices before finalizing any task. If you identify any issues or areas for improvement during your review, address them before considering the task complete. Always take the time needed for careful design, testing, and review rather than rushing to finish tasks.
 - If you can't finish a task in a single request, thats fine. Just do as much as you can, then we can continue in a follow-up request. Always prioritize quality and correctness over speed. It's better to take multiple requests to get something right than to rush and deliver a subpar solution.

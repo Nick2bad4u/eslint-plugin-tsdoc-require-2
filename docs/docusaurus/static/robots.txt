@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nick2bad4u.github.io/eslint-plugin-tsdoc-require-2/sitemap.xml

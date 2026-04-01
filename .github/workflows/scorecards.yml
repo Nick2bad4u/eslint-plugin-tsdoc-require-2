@@ -15,7 +15,11 @@ on:
         branches: ["main"]
 
 # Declare default permissions as read only.
-permissions: read-all
+permissions:
+    actions: read
+    contents: read
+    id-token: write
+    security-events: write
 
 jobs:
     analysis:

@@ -1,0 +1,50 @@
+{
+    "$schema": "https://typedoc.org/schema.json",
+    "alwaysCreateEntryPointModule": true,
+    "categorizeByGroup": true,
+    "disableSources": false,
+    "entryPointStrategy": "resolve",
+    "entryPoints": [
+        "../../src/plugin.ts"
+    ],
+    "excludeExternals": true,
+    "excludeInternal": false,
+    "excludeNotDocumented": false,
+    "excludePrivate": true,
+    "excludeProtected": false,
+    "expandParameters": true,
+    "hideBreadcrumbs": false,
+    "hidePageHeader": false,
+    "hidePageTitle": false,
+    "includeVersion": true,
+    "name": "eslint-plugin-tsdoc-require-2 API",
+    "out": "site-docs/developer/api",
+    "plugin": [
+        "typedoc-plugin-markdown"
+    ],
+    "preserveAnchorCasing": false,
+    "readme": "none",
+    "requiredToBeDocumented": [
+        "Class",
+        "Function",
+        "Interface",
+        "Method",
+        "Property",
+        "TypeAlias",
+        "Variable"
+    ],
+    "sort": [
+        "source-order",
+        "required-first",
+        "visibility"
+    ],
+    "tsconfig": "./typedoc.tsconfig.json",
+    "useCodeBlocks": true,
+    "useHTMLAnchors": false,
+    "validation": {
+        "invalidLink": true,
+        "notDocumented": false,
+        "notExported": false,
+        "rewrittenLink": true
+    }
+}

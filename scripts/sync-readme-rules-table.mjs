@@ -67,13 +67,13 @@ const docsPathFromRuleName = (ruleName) =>
  */
 const parseRequiredTagDefinitions = (sourceText) => {
     const definitionPattern =
-        /\{\s*ruleName:\s*"(?<ruleName>[^"]+)"\s*,\s*tagName:\s*"(?<tagName>[^"]+)"\s*,?\s*\}/gu;
+        /^\s*\{\s*ruleName:\s*"(?<ruleName>[^"]+)"\s*,\s*tagName:\s*"(?<tagName>[^"]+)"\s*,?\s*\}\s*,?\s*$/u;
 
     /** @type {RuleRow[]} */
     const definitions = [];
 
-    for (const match of sourceText.matchAll(definitionPattern)) {
-        const groups = match.groups;
+    for (const lineText of sourceText.split(/\r?\n/gu)) {
+        const groups = definitionPattern.exec(lineText)?.groups;
 
         if (
             groups === undefined ||

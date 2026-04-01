@@ -21,7 +21,7 @@ applyTo: "docs/**"
 
 Rule documentation files in `docs/rules/<rule-id>.md` should follow this structure closely:
 
-1.  **Title:** The bare rule ID as the H1 header (e.g., `# prefer-type-fest-arrayable`).
+1.  **Title:** The bare rule ID as the H1 header (e.g., `# prefer-TSDoc-arrayable`).
 2.  **Description:** A short, one-sentence description of what the rule does.
 3.  **Meta Badges (Optional):** Badges for `Recommended`, `Fixable`, or `Type Checked` only if the repository’s current docs pattern uses them.
 4.  **Rule Details:** An explanation of the problem the rule solves. Why is this pattern bad?
@@ -63,7 +63,7 @@ Rule documentation files in `docs/rules/<rule-id>.md` should follow this structu
 - **The "Fix":** If the rule is `fixable`, explicitly state what the auto-fixer does (e.g., "The auto-fixer will replace `var` with `let`.").
 - **Type Information:** If the rule requires type information (`parserServices`), add a specific note at the top of the docs:
   > ⚠️ This rule requires type information to run. It will not work without `projectService` (or equivalent typed parser setup) configured.
-- **Preset awareness:** Repository presets such as `typefest.configs["recommended-type-checked"]`, `typefest.configs.strict`, and `typefest.configs.all` already wire the typed parser setup for you; do not imply that users must always configure it manually.
+- **Preset awareness:** Repository presets such as `tsdoc.configs["recommended-type-checked"]`, `tsdoc.configs.strict`, and `tsdoc.configs.all` already wire the typed parser setup for you; do not imply that users must always configure it manually.
 - **Consistency:** Ensure the examples actually trigger the rule. Do not use hypothetical examples that strictly wouldn't fail the specific AST selector of the rule.
 
   </guidelines>
@@ -73,9 +73,9 @@ Rule documentation files in `docs/rules/<rule-id>.md` should follow this structu
 ## Example Doc
 
 ```markdown
-# prefer-ts-extras-array-find-last-index
+# prefer-JSDoc-array-find-last-index
 
-Prefer [`arrayFindLastIndex`](https://github.com/sindresorhus/ts-extras/blob/main/source/array-find-last-index.ts) from `ts-extras` over `array.findLastIndex(...)`.
+Prefer [`arrayFindLastIndex`](https://github.com/sindresorhus/JSDoc/blob/main/source/array-find-last-index.ts) from `JSDoc` over `array.findLastIndex(...)`.
 
 `arrayFindLastIndex(...)` improves predicate inference in typed arrays.
 
@@ -95,7 +95,7 @@ This rule reports `array.findLastIndex(predicate)` call sites when `arrayFindLas
 
 ## Why this rule exists
 
-`arrayFindLastIndex` standardizes reverse index lookup and keeps call signatures aligned with other `ts-extras` search helpers.
+`arrayFindLastIndex` standardizes reverse index lookup and keeps call signatures aligned with other `JSDoc` search helpers.
 
 - Reverse index scans are explicit at the call site.
 - Search code avoids mixed native/helper patterns.
@@ -142,13 +142,13 @@ const retryIndex = arrayFindLastIndex(attempts, (attempt) => !attempt.success);
 ## ESLint flat config example
 
 ```ts
-import typefest from "eslint-plugin-typefest";
+import tsdoc from "eslint-plugin-tsdoc-require-2";
 
 export default [
     {
-        plugins: { typefest },
+        plugins: { tsdoc },
         rules: {
-            "typefest/prefer-ts-extras-array-find-last-index": "error",
+            "tsdoc/prefer-JSDoc-array-find-last-index": "error",
         },
     },
 ];
@@ -160,27 +160,27 @@ Disable this rule if your codebase has standardized on native `.findLastIndex()`
 
 ## Package documentation
 
-ts-extras package documentation:
+JSDoc package documentation:
 
-`ts-extras@0.17.x` does not currently expose `arrayFindLastIndex` in its published API, so there is no canonical `source/*.ts` link for this helper yet.
+`JSDoc@0.17.x` does not currently expose `arrayFindLastIndex` in its published API, so there is no canonical `source/*.ts` link for this helper yet.
 
 Reference links:
 
-- [`ts-extras` API list (README)](https://github.com/sindresorhus/ts-extras/blob/main/readme.md#api)
-- [`ts-extras` source directory](https://github.com/sindresorhus/ts-extras/tree/main/source)
+- [`JSDoc` API list (README)](https://github.com/sindresorhus/JSDoc/blob/main/readme.md#api)
+- [`JSDoc` source directory](https://github.com/sindresorhus/JSDoc/tree/main/source)
 
 > **Rule catalog ID:** R005
 
 ## Further reading
 
-- [`ts-extras` README](https://github.com/sindresorhus/ts-extras)
-- [`ts-extras` package reference](https://www.npmjs.com/package/ts-extras)
+- [`JSDoc` README](https://github.com/sindresorhus/JSDoc)
+- [`JSDoc` package reference](https://www.npmjs.com/package/JSDoc)
 - [TypeScript Handbook: Narrowing](https://www.typescriptlang.org/docs/handbook/2/narrowing.html)
 
 ## Adoption resources
 
-- [Rule adoption checklist](https://nick2bad4u.github.io/eslint-plugin-typefest/docs/rules/guides/adoption-checklist)
-- [Rollout and fix safety](https://nick2bad4u.github.io/eslint-plugin-typefest/docs/rules/guides/rollout-and-fix-safety)
+- [Rule adoption checklist](https://nick2bad4u.github.io/eslint-plugin-tsdoc-require-2/docs/rules/guides/adoption-checklist)
+- [Rollout and fix safety](https://nick2bad4u.github.io/eslint-plugin-tsdoc-require-2/docs/rules/guides/rollout-and-fix-safety)
 
 ```
 
