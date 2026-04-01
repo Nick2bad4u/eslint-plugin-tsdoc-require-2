@@ -102,10 +102,49 @@ const buildPresetRows = (requiredTagRuleNames) => {
             ],
         },
         {
+            name: "typedoc-strict",
+            purpose:
+                "Stricter TypeDoc preset with module/remarks requirements plus compatibility-tag restrictions.",
+            rules: [
+                "require",
+                "require-class",
+                "require-enum",
+                "require-function",
+                "require-interface",
+                "require-module",
+                "require-remarks",
+                "restrict-tags",
+            ],
+        },
+        {
+            name: "tsdoc",
+            purpose:
+                "TSDoc-focused baseline with scoped function/type-parameter tags and compatibility-tag restrictions.",
+            rules: [
+                "require",
+                "require-param",
+                "require-remarks",
+                "require-returns",
+                "require-throws",
+                "require-type-param",
+                "restrict-tags",
+            ],
+        },
+        {
+            name: "jsdoc",
+            purpose: "JSDoc-leaning baseline for function documentation tags.",
+            rules: [
+                "require",
+                "require-param",
+                "require-returns",
+                "require-throws",
+            ],
+        },
+        {
             name: "all",
             purpose:
                 "Enable every rule shipped by this plugin. (NOT RECOMMENDED)",
-            rules: allRuleNames,
+            rules: ["restrict-tags", ...allRuleNames],
         },
     ];
 

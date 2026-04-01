@@ -26,6 +26,9 @@ const END_MARKER = "<!-- END_RULES_TABLE -->";
  *     "detailed",
  *     "packages",
  *     "typedoc",
+ *     "typedoc-strict",
+ *     "tsdoc",
+ *     "jsdoc",
  *     "all",
  * ]}
  */
@@ -34,6 +37,9 @@ const PRESET_NAMES = [
     "detailed",
     "packages",
     "typedoc",
+    "typedoc-strict",
+    "tsdoc",
+    "jsdoc",
     "all",
 ];
 
@@ -95,6 +101,9 @@ const parseRequiredTagDefinitions = (sourceText) => {
  *     detailed: ReadonlySet<string>;
  *     packages: ReadonlySet<string>;
  *     typedoc: ReadonlySet<string>;
+ *     "typedoc-strict": ReadonlySet<string>;
+ *     tsdoc: ReadonlySet<string>;
+ *     jsdoc: ReadonlySet<string>;
  *     all: ReadonlySet<string>;
  * }}
  */
@@ -115,6 +124,31 @@ const getPresetMembership = (ruleNames) => {
             "require-enum",
             "require-function",
             "require-interface",
+        ]),
+        "typedoc-strict": new Set([
+            "require",
+            "require-class",
+            "require-enum",
+            "require-function",
+            "require-interface",
+            "require-module",
+            "require-remarks",
+            "restrict-tags",
+        ]),
+        tsdoc: new Set([
+            "require",
+            "require-param",
+            "require-remarks",
+            "require-returns",
+            "require-throws",
+            "require-type-param",
+            "restrict-tags",
+        ]),
+        jsdoc: new Set([
+            "require",
+            "require-param",
+            "require-returns",
+            "require-throws",
         ]),
         recommended: new Set(["require"]),
     };
@@ -142,8 +176,8 @@ const toRuleLink = ({ docsPath, ruleName }) =>
  */
 const buildRulesTable = (rules) => {
     const header = [
-        "| Rule | Description | Recommended | Detailed | Packages | TypeDoc | All |",
-        "| --- | --- | :---: | :---: | :---: | :---: | :---: |",
+        "| Rule | Description | Recommended | Detailed | Packages | TypeDoc | TypeDoc Strict | TSDoc | JSDoc | All |",
+        "| --- | --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
     ];
 
     const membership = getPresetMembership(rules.map((rule) => rule.ruleName));
@@ -152,18 +186,11 @@ const buildRulesTable = (rules) => {
         const cells = [
             toRuleLink(rule),
             rule.description,
-            ...PRESET_NAMES.map(
-                /** @param {"recommended"
-    | "detailed"
-    | "packages"
-    | "typedoc"
-    | "all"} presetName */
-                (presetName) => {
-                    const presetMembers = membership[presetName];
+            ...PRESET_NAMES.map((presetName) => {
+                const presetMembers = membership[presetName];
 
-                    return toCheckmark(presetMembers.has(rule.ruleName));
-                }
-            ),
+                return toCheckmark(presetMembers.has(rule.ruleName));
+            }),
         ];
 
         return `| ${cells.join(" | ")} |`;
@@ -215,6 +242,12 @@ const main = async () => {
                 "require TSDoc comments for supported TypeScript declarations and default exports, with configurable export scope.",
             docsPath: "docs/rules/require.md",
             ruleName: "require",
+        },
+        {
+            description:
+                "restrict specific TSDoc/JSDoc tags in TSDoc blocks using allow/deny lists with configurable declaration scope.",
+            docsPath: "docs/rules/restrict-tags.md",
+            ruleName: "restrict-tags",
         },
         ...requiredTagRules,
     ];

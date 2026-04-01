@@ -63,11 +63,7 @@ import requireTypeParamRule from "./required-tags/require-type-param.js";
 import requireUseDeclaredTypeRule from "./required-tags/require-use-declared-type.js";
 import requireVirtualRule from "./required-tags/require-virtual.js";
 
-type TagRuleModuleMap = Record<
-    string,
-    TSESLint.RuleModule<TagRuleMessageIds, TagRuleOptions>
->;
-
+/** Union of all required-tag rule names exported by this plugin. */
 type RequiredTagRuleName =
     | "require-abstract"
     | "require-alpha"
@@ -125,6 +121,11 @@ type RequiredTagRuleName =
     | "require-type-param"
     | "require-use-declared-type"
     | "require-virtual";
+
+type TagRuleModuleMap = Record<
+    string,
+    TSESLint.RuleModule<TagRuleMessageIds, TagRuleOptions>
+>;
 
 /** Definitions that map each required-tag rule name to its required TSDoc tag. */
 const requiredTagDefinitions: readonly TagRuleDefinition[] = [

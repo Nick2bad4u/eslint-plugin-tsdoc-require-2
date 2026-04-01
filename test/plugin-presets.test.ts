@@ -66,6 +66,103 @@ describe("plugin presets", () => {
             { enforceFor: ["interface"] },
         ]);
         expect(rules["tsdoc-require-2/require-remarks"]).toBeUndefined();
+        expect(rules["tsdoc-require-2/restrict-tags"]).toBeUndefined();
+    });
+
+    it("enables typedoc-strict with compatibility-tag restrictions", () => {
+        const rules = getPresetRules("typedoc-strict");
+
+        expect(rules["tsdoc-require-2/require"]).toBe("error");
+        expect(rules["tsdoc-require-2/require-class"]).toEqual([
+            "error",
+            { enforceFor: ["class"] },
+        ]);
+        expect(rules["tsdoc-require-2/require-module"]).toEqual([
+            "error",
+            { enforceFor: ["namespace"] },
+        ]);
+        expect(rules["tsdoc-require-2/require-remarks"]).toBe("error");
+        expect(rules["tsdoc-require-2/restrict-tags"]).toEqual([
+            "error",
+            {
+                mode: "deny",
+                tags: [
+                    "@augments",
+                    "@callback",
+                    "@extends",
+                    "@jsx",
+                    "@satisfies",
+                    "@type",
+                    "@typedef",
+                    "@yields",
+                ],
+            },
+        ]);
+    });
+
+    it("enables tsdoc preset with scoped function/type-parameter tags", () => {
+        const rules = getPresetRules("tsdoc");
+
+        expect(rules["tsdoc-require-2/require"]).toBe("error");
+        expect(rules["tsdoc-require-2/require-remarks"]).toBe("error");
+        expect(rules["tsdoc-require-2/require-param"]).toEqual([
+            "error",
+            { enforceFor: ["function"] },
+        ]);
+        expect(rules["tsdoc-require-2/require-returns"]).toEqual([
+            "error",
+            { enforceFor: ["function"] },
+        ]);
+        expect(rules["tsdoc-require-2/require-throws"]).toEqual([
+            "error",
+            { enforceFor: ["function"] },
+        ]);
+        expect(rules["tsdoc-require-2/require-type-param"]).toEqual([
+            "error",
+            {
+                enforceFor: [
+                    "class",
+                    "function",
+                    "interface",
+                    "type",
+                ],
+            },
+        ]);
+        expect(rules["tsdoc-require-2/restrict-tags"]).toEqual([
+            "error",
+            {
+                mode: "deny",
+                tags: [
+                    "@augments",
+                    "@callback",
+                    "@extends",
+                    "@jsx",
+                    "@satisfies",
+                    "@type",
+                    "@typedef",
+                    "@yields",
+                ],
+            },
+        ]);
+    });
+
+    it("enables jsdoc preset with function-focused tags", () => {
+        const rules = getPresetRules("jsdoc");
+
+        expect(rules["tsdoc-require-2/require"]).toBe("error");
+        expect(rules["tsdoc-require-2/require-param"]).toEqual([
+            "error",
+            { enforceFor: ["function"] },
+        ]);
+        expect(rules["tsdoc-require-2/require-returns"]).toEqual([
+            "error",
+            { enforceFor: ["function"] },
+        ]);
+        expect(rules["tsdoc-require-2/require-throws"]).toEqual([
+            "error",
+            { enforceFor: ["function"] },
+        ]);
+        expect(rules["tsdoc-require-2/restrict-tags"]).toBeUndefined();
     });
 
     it("enables every plugin rule in all preset", () => {
@@ -76,8 +173,9 @@ describe("plugin presets", () => {
         }
 
         expect(rules["tsdoc-require-2/require"]).toBe("error");
+        expect(rules["tsdoc-require-2/restrict-tags"]).toBe("error");
         expect(Object.keys(rules)).toHaveLength(
-            requiredTagDefinitions.length + 1
+            requiredTagDefinitions.length + 2
         );
     });
 });
