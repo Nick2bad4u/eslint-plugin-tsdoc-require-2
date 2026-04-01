@@ -15,6 +15,11 @@ type RuleModuleMap = typeof requiredTagRules & {
     require: typeof requireRule;
 };
 
+type PresetRuleEntry = {
+    readonly ruleName: keyof RuleModuleMap;
+    readonly value?: NonNullable<FlatConfig["rules"]>[string];
+};
+
 /** Map of all exported rule modules. */
 const rules: RuleModuleMap = {
     require: requireRule,
@@ -33,41 +38,79 @@ const plugin: ESLint.Plugin = {
     rules: pluginRules,
 };
 
-const presetRuleNames = {
-    all: ["require", ...requiredTagDefinitions.map(({ ruleName }) => ruleName)],
-    detailed: ["require", "require-remarks"],
-    packages: [
-        "require",
-        "require-remarks",
-        "require-package-documentation",
+const createPresetRuleEntry = (
+    ruleName: keyof RuleModuleMap,
+    value: NonNullable<FlatConfig["rules"]>[string] = "error"
+): PresetRuleEntry => ({
+    ruleName,
+    value,
+});
+
+const presetRuleEntries = {
+    all: [
+        createPresetRuleEntry("require"),
+        ...requiredTagDefinitions.map(({ ruleName }) =>
+            createPresetRuleEntry(ruleName as keyof RuleModuleMap)
+        ),
     ],
-    recommended: ["require"],
+    detailed: [
+        createPresetRuleEntry("require"),
+        createPresetRuleEntry("require-remarks"),
+    ],
+    packages: [
+        createPresetRuleEntry("require"),
+        createPresetRuleEntry("require-remarks"),
+        createPresetRuleEntry("require-package-documentation"),
+    ],
+    recommended: [createPresetRuleEntry("require")],
+    typedoc: [
+        createPresetRuleEntry("require"),
+        createPresetRuleEntry("require-class", [
+            "error",
+            { enforceFor: ["class"] },
+        ]),
+        createPresetRuleEntry("require-enum", [
+            "error",
+            { enforceFor: ["enum"] },
+        ]),
+        createPresetRuleEntry("require-function", [
+            "error",
+            { enforceFor: ["function"] },
+        ]),
+        createPresetRuleEntry("require-interface", [
+            "error",
+            { enforceFor: ["interface"] },
+        ]),
+    ],
 } as const;
 
 const createPresetRules = (
-    ruleNames: readonly string[]
+    ruleEntries: readonly PresetRuleEntry[]
 ): NonNullable<FlatConfig["rules"]> => {
     const presetRules: NonNullable<FlatConfig["rules"]> = {};
 
-    for (const ruleName of ruleNames) {
-        presetRules[`tsdoc-require-2/${ruleName}`] = "error";
+    for (const { ruleName, value } of ruleEntries) {
+        presetRules[`tsdoc-require-2/${ruleName}`] = value ?? "error";
     }
 
     return presetRules;
 };
 
-const createPresetConfig = (ruleNames: readonly string[]): FlatConfig => ({
+const createPresetConfig = (
+    ruleEntries: readonly PresetRuleEntry[]
+): FlatConfig => ({
     plugins: {
         "tsdoc-require-2": plugin,
     },
-    rules: createPresetRules(ruleNames),
+    rules: createPresetRules(ruleEntries),
 });
 
 plugin.configs = {
-    all: createPresetConfig(presetRuleNames.all),
-    detailed: createPresetConfig(presetRuleNames.detailed),
-    packages: createPresetConfig(presetRuleNames.packages),
-    recommended: createPresetConfig(presetRuleNames.recommended),
+    all: createPresetConfig(presetRuleEntries.all),
+    detailed: createPresetConfig(presetRuleEntries.detailed),
+    packages: createPresetConfig(presetRuleEntries.packages),
+    recommended: createPresetConfig(presetRuleEntries.recommended),
+    typedoc: createPresetConfig(presetRuleEntries.typedoc),
 };
 
 export { rules };

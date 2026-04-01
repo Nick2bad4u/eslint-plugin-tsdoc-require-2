@@ -45,6 +45,29 @@ describe("plugin presets", () => {
         );
     });
 
+    it("enables a conservative typedoc baseline with scoped kind tags", () => {
+        const rules = getPresetRules("typedoc");
+
+        expect(rules["tsdoc-require-2/require"]).toBe("error");
+        expect(rules["tsdoc-require-2/require-class"]).toEqual([
+            "error",
+            { enforceFor: ["class"] },
+        ]);
+        expect(rules["tsdoc-require-2/require-enum"]).toEqual([
+            "error",
+            { enforceFor: ["enum"] },
+        ]);
+        expect(rules["tsdoc-require-2/require-function"]).toEqual([
+            "error",
+            { enforceFor: ["function"] },
+        ]);
+        expect(rules["tsdoc-require-2/require-interface"]).toEqual([
+            "error",
+            { enforceFor: ["interface"] },
+        ]);
+        expect(rules["tsdoc-require-2/require-remarks"]).toBeUndefined();
+    });
+
     it("enables every plugin rule in all preset", () => {
         const rules = getPresetRules("all");
 

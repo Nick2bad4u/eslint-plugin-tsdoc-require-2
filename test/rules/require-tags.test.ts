@@ -35,6 +35,24 @@ for (const { ruleName, tagName } of requiredTagDefinitions) {
         });
     }
 
+    if (ruleName === "require-label") {
+        validCases.push({
+            code: `/**\n * Description.\n * {@label stable}\n */\nexport function taggedFunction(value: string): string {\n    return value;\n}`,
+        });
+    }
+
+    if (ruleName === "require-inherit-doc") {
+        validCases.push({
+            code: `/**\n * {@inheritDoc BaseTaggedFunction}\n */\nexport function taggedFunction(value: string): string {\n    return value;\n}`,
+        });
+    }
+
+    if (ruleName === "require-include") {
+        validCases.push({
+            code: `/**\n * Description.\n * {@include ./snippets/api.md}\n */\nexport function taggedFunction(value: string): string {\n    return value;\n}`,
+        });
+    }
+
     ruleTester.run(typedRuleName, ruleModule, {
         invalid: [
             {
@@ -76,6 +94,25 @@ function internalTaggedFunction(value: string): string {
             ],
             options: [{ includeNonExported: true }],
         },
+        {
+            code: `/**
+ * Internal description.
+ */
+function internalTaggedFunctionWithExportMode(value: string): string {
+    return value;
+}`,
+            errors: [
+                {
+                    data: {
+                        entityKind: "function",
+                        entityName: "internalTaggedFunctionWithExportMode",
+                        tagName: "@remarks",
+                    },
+                    messageId: "missingTag",
+                },
+            ],
+            options: [{ exportMode: "non-exported" }],
+        },
     ],
     valid: [
         {
@@ -88,5 +125,86 @@ function internalTaggedFunction(value: string): string {
 }`,
             options: [{ includeNonExported: true }],
         },
+        {
+            code: `/**
+ * Exported description.
+ */
+export function exportedTaggedFunction(value: string): string {
+    return value;
+}`,
+            options: [{ exportMode: "non-exported" }],
+        },
     ],
 });
+
+ruleTester.run(
+    "require-module namespace targeting",
+    requiredTagRules["require-module"],
+    {
+        invalid: [
+            {
+                code: `/**
+ * Namespace docs.
+ */
+export namespace ApiDocs {
+    export type Id = string;
+}`,
+                errors: [
+                    {
+                        data: {
+                            entityKind: "namespace",
+                            entityName: "ApiDocs",
+                            tagName: "@module",
+                        },
+                        messageId: "missingTag",
+                    },
+                ],
+                options: [{ enforceFor: ["namespace"] }],
+            },
+            {
+                code: `/**
+ * Internal namespace docs.
+ */
+namespace InternalDocs {
+    export type Id = string;
+}`,
+                errors: [
+                    {
+                        data: {
+                            entityKind: "namespace",
+                            entityName: "InternalDocs",
+                            tagName: "@module",
+                        },
+                        messageId: "missingTag",
+                    },
+                ],
+                options: [
+                    { enforceFor: ["namespace"], exportMode: "non-exported" },
+                ],
+            },
+        ],
+        valid: [
+            {
+                code: `/**
+ * Namespace docs.
+ * @module
+ */
+export namespace ApiDocs {
+    export type Id = string;
+}`,
+                options: [{ enforceFor: ["namespace"] }],
+            },
+            {
+                code: `/**
+ * Exported namespace docs.
+ */
+export namespace ApiDocs {
+    export type Id = string;
+}`,
+                options: [
+                    { enforceFor: ["namespace"], exportMode: "non-exported" },
+                ],
+            },
+        ],
+    }
+);

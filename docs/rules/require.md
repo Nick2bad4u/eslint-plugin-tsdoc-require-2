@@ -1,6 +1,6 @@
 # tsdoc-require-2/require
 
-Requires TSDoc comments for exported TypeScript declarations and default exports, with optional enforcement for non-exported top-level declarations.
+Require TSDoc comments for supported TypeScript declarations and default exports, with configurable export scope.
 
 ## Rule Details
 
@@ -11,12 +11,13 @@ It checks:
 - exported classes
 - exported functions
 - exported interfaces
+- exported namespaces and `declare module` declarations
 - exported type aliases
 - exported enums
 - exported variables
 - default exports (including default-exported identifiers)
 
-When `includeNonExported: true` is enabled, the same checks also apply to non-exported top-level declarations.
+When `exportMode: "all"` is enabled, the same checks also apply to non-exported top-level declarations. When `exportMode: "non-exported"` is enabled, only non-exported top-level declarations are checked.
 
 Why this matters: if exported APIs are undocumented, consumers have to inspect implementation details instead of reading a stable contract.
 
@@ -65,10 +66,12 @@ type Options = [
 			"enum" |
 			"function" |
 			"interface" |
+			"namespace" |
 			"object" |
 			"type" |
 			"variable"
 		>;
+		exportMode?: "all" | "exported" | "non-exported";
 		includeNonExported?: boolean;
 	},
 ];
@@ -79,8 +82,8 @@ Default options:
 ```ts
 [
 	{
-		enforceFor: ["class", "enum", "function", "interface", "object", "type", "variable"],
-		includeNonExported: false,
+		enforceFor: ["class", "enum", "function", "interface", "namespace", "object", "type", "variable"],
+		exportMode: "exported",
 	},
 ]
 ```
@@ -111,9 +114,13 @@ export default [
 ];
 ```
 
-### `includeNonExported`
+### `exportMode`
 
-When `true`, this rule also enforces TSDoc on supported non-exported top-level declarations.
+Controls whether the rule checks exported declarations, non-exported top-level declarations, or both.
+
+- `"exported"` (default): check exported declarations and default exports.
+- `"non-exported"`: only check supported non-exported top-level declarations.
+- `"all"`: check both exported and non-exported top-level declarations.
 
 Example flat config:
 
@@ -129,13 +136,17 @@ export default [
 			"tsdoc-require-2/require": [
 				"error",
 				{
-					includeNonExported: true,
+					exportMode: "all",
 				},
 			],
 		},
 	},
 ];
 ```
+
+### `includeNonExported`
+
+`includeNonExported` is still supported as a backward-compatible alias for `exportMode: "all"`. Prefer `exportMode` in new configurations because it can also express `"non-exported"` explicitly.
 
 ## When Not To Use It
 

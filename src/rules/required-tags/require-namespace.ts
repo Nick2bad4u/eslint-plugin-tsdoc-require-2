@@ -1,0 +1,47 @@
+import {
+    createRequireTagRuleListener,
+    createTagRule,
+    defaultRuleOptions,
+    enforceableEntityKinds,
+    optionSchema,
+    type TagRuleContext,
+    type TagRuleMessageIds,
+    type TagRuleModule,
+    type TagRuleOptions,
+} from "../../internal/require-tag-factory.js";
+
+/** Rule module for `tsdoc-require-2/require-namespace`. */
+const RequireNamespaceRule: TagRuleModule = createTagRule<
+    TagRuleOptions,
+    TagRuleMessageIds
+>({
+    create(context: TagRuleContext) {
+        return createRequireTagRuleListener(context, "@namespace");
+    },
+    defaultOptions: defaultRuleOptions,
+    meta: {
+        defaultOptions: [
+            {
+                enforceFor: [...enforceableEntityKinds],
+                includeNonExported: false,
+            },
+        ],
+        deprecated: false,
+        docs: {
+            description:
+                "require @namespace tag in TSDoc blocks for supported TypeScript declarations and default exports.",
+            frozen: false,
+            recommended: false,
+            url: "https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/docs/rules/required-tags/require-namespace.md",
+        },
+        messages: {
+            missingTag:
+                "TSDoc for {{entityKind}} {{entityName}} must include @namespace.",
+        },
+        schema: [optionSchema],
+        type: "problem",
+    },
+    name: "require-namespace",
+});
+
+export default RequireNamespaceRule;

@@ -20,11 +20,20 @@ const requiredTagRulesPath = path.join(
 const BEGIN_MARKER = "<!-- BEGIN_RULES_TABLE -->";
 const END_MARKER = "<!-- END_RULES_TABLE -->";
 
-/** @type {readonly ["recommended", "detailed", "packages", "all"]} */
+/**
+ * @type {readonly [
+ *     "recommended",
+ *     "detailed",
+ *     "packages",
+ *     "typedoc",
+ *     "all",
+ * ]}
+ */
 const PRESET_NAMES = [
     "recommended",
     "detailed",
     "packages",
+    "typedoc",
     "all",
 ];
 
@@ -85,6 +94,7 @@ const parseRequiredTagDefinitions = (sourceText) => {
  *     recommended: ReadonlySet<string>;
  *     detailed: ReadonlySet<string>;
  *     packages: ReadonlySet<string>;
+ *     typedoc: ReadonlySet<string>;
  *     all: ReadonlySet<string>;
  * }}
  */
@@ -98,6 +108,13 @@ const getPresetMembership = (ruleNames) => {
             "require",
             "require-package-documentation",
             "require-remarks",
+        ]),
+        typedoc: new Set([
+            "require",
+            "require-class",
+            "require-enum",
+            "require-function",
+            "require-interface",
         ]),
         recommended: new Set(["require"]),
     };
@@ -125,8 +142,8 @@ const toRuleLink = ({ docsPath, ruleName }) =>
  */
 const buildRulesTable = (rules) => {
     const header = [
-        "| Rule | Description | Recommended | Detailed | Packages | All |",
-        "| --- | --- | :---: | :---: | :---: | :---: |",
+        "| Rule | Description | Recommended | Detailed | Packages | TypeDoc | All |",
+        "| --- | --- | :---: | :---: | :---: | :---: | :---: |",
     ];
 
     const membership = getPresetMembership(rules.map((rule) => rule.ruleName));
@@ -136,7 +153,11 @@ const buildRulesTable = (rules) => {
             toRuleLink(rule),
             rule.description,
             ...PRESET_NAMES.map(
-                /** @param {"recommended" | "detailed" | "packages" | "all"} presetName */
+                /** @param {"recommended"
+    | "detailed"
+    | "packages"
+    | "typedoc"
+    | "all"} presetName */
                 (presetName) => {
                     const presetMembers = membership[presetName];
 
@@ -191,7 +212,7 @@ const main = async () => {
     const allRules = [
         {
             description:
-                "require TSDoc comments for exported TypeScript declarations and default exports, with opt-in non-exported support.",
+                "require TSDoc comments for supported TypeScript declarations and default exports, with configurable export scope.",
             docsPath: "docs/rules/require.md",
             ruleName: "require",
         },

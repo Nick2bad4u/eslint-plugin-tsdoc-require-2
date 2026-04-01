@@ -90,6 +90,18 @@ const buildPresetRows = (requiredTagRuleNames) => {
             ],
         },
         {
+            name: "typedoc",
+            purpose:
+                "Conservative TypeDoc-oriented baseline using declaration-kind tags that can be inferred safely.",
+            rules: [
+                "require",
+                "require-class",
+                "require-enum",
+                "require-function",
+                "require-interface",
+            ],
+        },
+        {
             name: "all",
             purpose:
                 "Enable every rule shipped by this plugin. (NOT RECOMMENDED)",

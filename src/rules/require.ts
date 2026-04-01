@@ -11,9 +11,11 @@ type EntityKind =
     | "enum"
     | "function"
     | "interface"
+    | "namespace"
     | "object"
     | "type"
     | "variable";
+type ExportMode = "all" | "exported" | "non-exported";
 type MessageIds = "missingTSDoc";
 
 type Options = [RuleOption];
@@ -24,6 +26,7 @@ type RuleDocs = {
 
 type RuleOption = {
     enforceFor?: readonly EntityKind[];
+    exportMode?: ExportMode;
     includeNonExported?: boolean;
 };
 
@@ -33,6 +36,7 @@ type SupportedDeclaration =
     | TSESTree.TSDeclareFunction
     | TSESTree.TSEnumDeclaration
     | TSESTree.TSInterfaceDeclaration
+    | TSESTree.TSModuleDeclaration
     | TSESTree.TSTypeAliasDeclaration
     | TSESTree.VariableDeclaration;
 
@@ -54,6 +58,7 @@ const enforceableEntityKinds = [
     "enum",
     "function",
     "interface",
+    "namespace",
     "object",
     "type",
     "variable",
@@ -64,7 +69,7 @@ const defaultEnforceFor: readonly EntityKind[] = [...enforceableEntityKinds];
 const defaultRuleOptions: Options = [
     {
         enforceFor: defaultEnforceFor,
-        includeNonExported: false,
+        exportMode: "exported",
     },
 ];
 
@@ -79,14 +84,41 @@ const optionSchema: JSONSchema.JSONSchema4 = {
             type: "array",
             uniqueItems: true,
         },
+        exportMode: {
+            description:
+                "Choose whether to check exported declarations, non-exported top-level declarations, or both.",
+            enum: [
+                "all",
+                "exported",
+                "non-exported",
+            ],
+            type: "string",
+        },
         includeNonExported: {
             default: false,
-            description: "Also enforce on non-exported declarations (opt-in).",
+            description:
+                'Legacy alias for exportMode: "all". Also enforce on non-exported declarations when true.',
             type: "boolean",
         },
     },
     type: "object",
 };
+
+const resolveExportMode = (
+    ruleOption: Readonly<RuleOption> | undefined
+): ExportMode => {
+    if (ruleOption?.includeNonExported === true) {
+        return "all";
+    }
+
+    return ruleOption?.exportMode ?? "exported";
+};
+
+const shouldCheckExportedDeclarations = (exportMode: ExportMode): boolean =>
+    exportMode === "all" || exportMode === "exported";
+
+const shouldCheckNonExportedDeclarations = (exportMode: ExportMode): boolean =>
+    exportMode === "all" || exportMode === "non-exported";
 
 const assertUnreachable = (value: never): never => {
     throw new Error(`Unexpected node type: ${String(value)}`);
@@ -106,6 +138,7 @@ const isSupportedDeclaration = (
     node.type === AST_NODE_TYPES.TSDeclareFunction ||
     node.type === AST_NODE_TYPES.TSEnumDeclaration ||
     node.type === AST_NODE_TYPES.TSInterfaceDeclaration ||
+    node.type === AST_NODE_TYPES.TSModuleDeclaration ||
     node.type === AST_NODE_TYPES.TSTypeAliasDeclaration ||
     node.type === AST_NODE_TYPES.VariableDeclaration;
 
@@ -140,6 +173,26 @@ const getExpressionKind = (
 
 const getEntityDisplayName = (name: string | undefined): string =>
     name ?? "<default export>";
+
+const isTopLevelNode = (node: Readonly<TSESTree.Node>): boolean =>
+    node.parent?.type === AST_NODE_TYPES.Program;
+
+const getModuleDeclarationName = (
+    declaration: Readonly<TSESTree.TSModuleDeclaration>
+): string | undefined => {
+    if (declaration.id.type === AST_NODE_TYPES.Identifier) {
+        return declaration.id.name;
+    }
+
+    if (
+        declaration.id.type === AST_NODE_TYPES.Literal &&
+        typeof declaration.id.value === "string"
+    ) {
+        return declaration.id.value;
+    }
+
+    return undefined;
+};
 
 const hasTSDocComment = (
     sourceCode: Readonly<TSESLint.SourceCode>,
@@ -225,6 +278,17 @@ const declarationTargets = (
         ];
     }
 
+    if (declaration.type === AST_NODE_TYPES.TSModuleDeclaration) {
+        return [
+            {
+                commentNode: declaration,
+                kind: "namespace",
+                name: getModuleDeclarationName(declaration),
+                reportNode: declaration,
+            },
+        ];
+    }
+
     if (declaration.type === AST_NODE_TYPES.TSTypeAliasDeclaration) {
         return [
             {
@@ -278,7 +342,7 @@ const requireRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
         const enabledKinds = new Set<EntityKind>(
             ruleOption?.enforceFor ?? defaultEnforceFor
         );
-        const includeNonExported = ruleOption?.includeNonExported ?? false;
+        const exportMode = resolveExportMode(ruleOption);
 
         const checkTarget = (target: Readonly<Target>): void => {
             if (!enabledKinds.has(target.kind)) {
@@ -345,6 +409,13 @@ const requireRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
             ExportDefaultDeclaration(
                 exportNode: Readonly<TSESTree.ExportDefaultDeclaration>
             ): void {
+                if (
+                    !shouldCheckExportedDeclarations(exportMode) ||
+                    !isTopLevelNode(exportNode)
+                ) {
+                    return;
+                }
+
                 const { declaration } = exportNode;
 
                 if (declaration.type === AST_NODE_TYPES.Identifier) {
@@ -369,6 +440,13 @@ const requireRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
             ExportNamedDeclaration(
                 exportNode: Readonly<TSESTree.ExportNamedDeclaration>
             ): void {
+                if (
+                    !shouldCheckExportedDeclarations(exportMode) ||
+                    !isTopLevelNode(exportNode)
+                ) {
+                    return;
+                }
+
                 if (
                     exportNode.declaration !== null &&
                     isSupportedDeclaration(exportNode.declaration)
@@ -397,7 +475,7 @@ const requireRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
 
                 for (const statement of programNode.body) {
                     if (isSupportedDeclaration(statement)) {
-                        if (includeNonExported) {
+                        if (shouldCheckNonExportedDeclarations(exportMode)) {
                             for (const target of declarationTargetsWithCommentNode(
                                 statement,
                                 statement
@@ -406,11 +484,14 @@ const requireRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
                             }
                         }
 
-                        trackDeclarationTargets(statement);
+                        if (shouldCheckExportedDeclarations(exportMode)) {
+                            trackDeclarationTargets(statement);
+                        }
                         continue;
                     }
 
                     if (
+                        shouldCheckExportedDeclarations(exportMode) &&
                         statement.type ===
                             AST_NODE_TYPES.ExportNamedDeclaration &&
                         statement.declaration !== null &&
@@ -427,13 +508,13 @@ const requireRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
         defaultOptions: [
             {
                 enforceFor: [...enforceableEntityKinds],
-                includeNonExported: false,
+                exportMode: "exported",
             },
         ],
         deprecated: false,
         docs: {
             description:
-                "require TSDoc comments for exported TypeScript declarations and default exports, with opt-in non-exported support.",
+                "require TSDoc comments for supported TypeScript declarations and default exports, with configurable export scope.",
             frozen: false,
             recommended: true,
             url: "https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/docs/rules/require.md",

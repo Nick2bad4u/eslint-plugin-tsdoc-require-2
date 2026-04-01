@@ -87,6 +87,22 @@ export default createConfig;
             ],
         },
         {
+            code: `
+export namespace ApiDocs {
+  export type Id = string;
+}
+`,
+            errors: [
+                {
+                    data: {
+                        entityKind: "namespace",
+                        entityName: "ApiDocs",
+                    },
+                    messageId: "missingTSDoc",
+                },
+            ],
+        },
+        {
             code: "function internalHelper() { return true; }",
             errors: [
                 {
@@ -100,6 +116,23 @@ export default createConfig;
             options: [
                 {
                     includeNonExported: true,
+                },
+            ],
+        },
+        {
+            code: "function internalHelperWithExportMode() { return true; }",
+            errors: [
+                {
+                    data: {
+                        entityKind: "function",
+                        entityName: "internalHelperWithExportMode",
+                    },
+                    messageId: "missingTSDoc",
+                },
+            ],
+            options: [
+                {
+                    exportMode: "non-exported",
                 },
             ],
         },
@@ -218,9 +251,25 @@ function internalOnly(): boolean {
             ],
         },
         {
+            code: "export function exportedOnly(): boolean { return true; }",
+            options: [
+                {
+                    exportMode: "non-exported",
+                },
+            ],
+        },
+        {
             code: `
 /** Public alias docs. */
 export type UserId = string;
+`,
+        },
+        {
+            code: `
+/** Namespace docs. */
+export namespace ApiDocs {
+  export type Id = string;
+}
 `,
         },
         {
@@ -269,6 +318,18 @@ export default function (): string {
             options: [
                 {
                     enforceFor: [],
+                },
+            ],
+        },
+        {
+            code: `
+export namespace ApiDocs {
+  export type Id = string;
+}
+`,
+            options: [
+                {
+                    enforceFor: ["class"],
                 },
             ],
         },
