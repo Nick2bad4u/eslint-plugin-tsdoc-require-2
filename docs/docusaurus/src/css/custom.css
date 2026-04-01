@@ -22,6 +22,9 @@
  */
 
 /* You can override the default Infima variables here. */
+/* --------------------------------------------- */
+/* Rules sidebar accent bars (typefest-style)    */
+/* --------------------------------------------- */
 
 @font-face {
     font-family: "NerdFontSymbols Nerd Font Symbols";
@@ -48,10 +51,10 @@
 }
 
 :root {
-    --ifm-color-primary: #15803d;
-    --ifm-color-primary-dark: #166534;
-    --ifm-color-primary-darker: #14532d;
-    --ifm-color-primary-darkest: #052e16;
+    --ifm-color-primary: #128b38;
+    --ifm-color-primary-dark: #0f7a31;
+    --ifm-color-primary-darker: #0d6b2b;
+    --ifm-color-primary-darkest: #0a5521;
     --ifm-color-primary-light: #16a34a;
     --ifm-color-primary-lighter: #22c55e;
     --ifm-color-primary-lightest: #4ade80;
@@ -60,12 +63,12 @@
         "Inter var", "Inter", "Segoe UI", "NerdFontSymbols Nerd Font Symbols",
         system-ui, -apple-system, sans-serif;
     --sb-accent-overview: #22c55e;
-    --sb-accent-started: #0ea5e9;
-    --sb-accent-developer: #8b5cf6;
-    --sb-accent-developer-ops: #ec4899;
-    --sb-accent-rules: #f97316;
-    --sb-accent-presets: #eab308;
-    --sb-accent-guides: #06b6d4;
+    --sb-accent-started: #16a34a;
+    --sb-accent-developer: #128b38;
+    --sb-accent-developer-ops: #0f7a31;
+    --sb-accent-rules: #84cc16;
+    --sb-accent-presets: #22c55e;
+    --sb-accent-guides: #16a34a;
     --sb-accent-api-overview: #6366f1;
     --sb-accent-api-types: #14b8a6;
     --sb-accent-api-runtime: #f43f5e;
@@ -73,16 +76,16 @@
     --sb-accent-dev-links: #10b981;
     --sb-accent-adr: #f59e0b;
     --sb-accent-rules-ts: #22c55e;
-    --sb-accent-rules-required-tags: #a855f7;
+    --sb-accent-rules-required-tags: #22c55e;
     --sb-prefix-rule-number: #52525b;
     --sb-preset-minimal: #22c55e;
-    --sb-preset-recommended: #facc15;
-    --sb-preset-recommended-type-checked: #fb923c;
-    --sb-preset-strict: #f43f5e;
-    --sb-preset-all: #a855f7;
-    --sb-preset-experimental: #38bdf8;
-    --sb-preset-typedoc: #60a5fa;
-    --sb-preset-tsdoc: #fb923c;
+    --sb-preset-recommended: #84cc16;
+    --sb-preset-recommended-type-checked: #4ade80;
+    --sb-preset-strict: #16a34a;
+    --sb-preset-all: #0f7a31;
+    --sb-preset-experimental: #14532d;
+    --sb-preset-typedoc: #22c55e;
+    --sb-preset-tsdoc: #16a34a;
 }
 
 [data-theme="dark"] {

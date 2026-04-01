@@ -99,6 +99,15 @@
         "test:watch": "vitest",
         "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.build.json --noEmit && tsc -p tsconfig.eslint.json --noEmit && tsc -p tsconfig.js.json --noEmit"
     },
+    "overrides": {
+        "brace-expansion@^1.1.0": "1.1.13",
+        "brace-expansion@^2.0.0": "2.0.2",
+        "brace-expansion@^5.0.0": "5.0.5",
+        "external-editor": {
+            "tmp": "0.2.4"
+        },
+        "yaml": "2.8.3"
+    },
     "dependencies": {
         "@typescript-eslint/utils": "^8.58.0"
     },
@@ -210,13 +219,6 @@
         "@typescript-eslint/parser": "^8.0.0 || ^9.0.0",
         "eslint": "^9.0.0 || ^10.0.0",
         "typescript": ">=5.4.0"
-    },
-    "overrides": {
-        "brace-expansion@^1.1.0": "1.1.13",
-        "brace-expansion@^2.0.0": "2.0.2",
-        "external-editor": {
-            "tmp": "0.2.4"
-        }
     },
     "packageManager": "npm@11.12.1",
     "engines": {

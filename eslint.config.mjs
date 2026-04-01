@@ -92,13 +92,10 @@ const enableJsonSchemaValidation =
 
 const jsonSchemaValidatorPackageName = "eslint-plugin-json-schema-validator";
 
-let eslintPluginJsonSchemaValidator = undefined;
-
-if (enableJsonSchemaValidation) {
-    eslintPluginJsonSchemaValidator =
-        // eslint-disable-next-line no-unsanitized/method -- Controlled package name constant; no user input reaches dynamic import.
-        (await import(jsonSchemaValidatorPackageName)).default;
-}
+const eslintPluginJsonSchemaValidator = enableJsonSchemaValidation
+    ? // eslint-disable-next-line no-unsanitized/method -- Controlled package name constant; no user input reaches dynamic import.
+      (await import(jsonSchemaValidatorPackageName)).default
+    : null;
 
 const jsonSchemaValidatorPlugins = enableJsonSchemaValidation
     ? { "json-schema-validator": eslintPluginJsonSchemaValidator }

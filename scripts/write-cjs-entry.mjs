@@ -83,7 +83,7 @@ const transpileToCjs = async (inputFilePath) => {
     }
 
     const outputFilePath = inputFilePath.replace(/\.js$/u, ".cjs");
-    const rewrittenOutputText = outputText.replace(
+    const rewrittenOutputText = outputText.replaceAll(
         relativeJSImportPattern,
         (_matchedText, quoteCharacter, importPathWithoutExtension) =>
             `require(${quoteCharacter}${importPathWithoutExtension}.cjs${quoteCharacter})`
@@ -156,9 +156,11 @@ const run = async () => {
     }
 };
 
-run().catch((error) => {
+try {
+    await run();
+} catch (error) {
     const errorMessage =
         error instanceof Error ? (error.stack ?? error.message) : String(error);
     console.error(`[write-cjs-entry] ${errorMessage}`);
     process.exitCode = 1;
-});
+}

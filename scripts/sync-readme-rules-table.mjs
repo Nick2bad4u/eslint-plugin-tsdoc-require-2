@@ -51,6 +51,33 @@ const PRESET_NAMES = [
 const docsPathFromRuleName = (ruleName) =>
     `docs/rules/required-tags/${ruleName}.md`;
 
+const requiredTagRuleNamePattern = /ruleName:\s*"(?<ruleName>[^"\r\n]+)"/u;
+const requiredTagTagNamePattern = /tagName:\s*"(?<tagName>[^"\r\n]+)"/u;
+
+/**
+ * @param {string} lineText
+ *
+ * @returns {{
+ *     ruleName: string;
+ *     tagName: string;
+ * } | null}
+ */
+const parseRequiredTagDefinitionLine = (lineText) => {
+    const ruleName =
+        requiredTagRuleNamePattern.exec(lineText)?.groups?.["ruleName"];
+    const tagName =
+        requiredTagTagNamePattern.exec(lineText)?.groups?.["tagName"];
+
+    if (ruleName === undefined || tagName === undefined) {
+        return null;
+    }
+
+    return {
+        ruleName,
+        tagName,
+    };
+};
+
 /**
  * @typedef RuleRow
  *
@@ -66,27 +93,19 @@ const docsPathFromRuleName = (ruleName) =>
  * @returns {RuleRow[]}
  */
 const parseRequiredTagDefinitions = (sourceText) => {
-    const definitionPattern =
-        /^\s*\{\s*ruleName:\s*"(?<ruleName>[^"]+)"\s*,\s*tagName:\s*"(?<tagName>[^"]+)"\s*,?\s*\}\s*,?\s*$/u;
-
     /** @type {RuleRow[]} */
     const definitions = [];
 
     for (const lineText of sourceText.split(/\r?\n/gu)) {
-        const groups = definitionPattern.exec(lineText)?.groups;
-
-        if (
-            groups === undefined ||
-            groups["ruleName"] === undefined ||
-            groups["tagName"] === undefined
-        ) {
+        const parsedDefinition = parseRequiredTagDefinitionLine(lineText);
+        if (parsedDefinition === null) {
             continue;
         }
 
         definitions.push({
-            description: `require ${groups["tagName"]} tag in TSDoc blocks`,
-            docsPath: docsPathFromRuleName(groups["ruleName"]),
-            ruleName: groups["ruleName"],
+            description: `require ${parsedDefinition.tagName} tag in TSDoc blocks`,
+            docsPath: docsPathFromRuleName(parsedDefinition.ruleName),
+            ruleName: parsedDefinition.ruleName,
         });
     }
 

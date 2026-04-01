@@ -442,6 +442,10 @@ const config: Config = {
                             label: "\ue7d2 ESLint Inspector",
                         },
                         {
+                            href: `https://nick2bad4u.github.io/eslint-plugin-tsdoc-require-2/stylelint-inspector/`,
+                            label: "\ue7d2 Stylelint Inspector",
+                        },
+                        {
                             href: `https://www.npmjs.com/package/${projectName}`,
                             label: "\ue616 NPM",
                         },
@@ -473,7 +477,7 @@ const config: Config = {
             logo: {
                 alt: "eslint-plugin-tsdoc-require-2 logo",
                 href: `https://github.com/${organizationName}/${projectName}`,
-                src: "img/logo.svg",
+                src: "img/logo_192x192.png",
                 width: 60,
                 height: 60,
             },
@@ -517,7 +521,7 @@ const config: Config = {
                             to: "/docs/rules/require/",
                         },
                         {
-                            label: "• required-tags",
+                            label: "• Required Tags",
                             to: "/docs/rules/required-tags/",
                         },
                     ],
@@ -534,35 +538,35 @@ const config: Config = {
                             to: "/docs/rules/presets/",
                         },
                         {
-                            label: "🟡 recommended",
+                            label: "🟡 Recommended",
                             to: "/docs/rules/presets/recommended/",
                         },
                         {
-                            label: "🔵 detailed",
+                            label: "🔵 Detailed",
                             to: "/docs/rules/presets/detailed/",
                         },
                         {
-                            label: "🟣 packages",
+                            label: "🟣 Packages",
                             to: "/docs/rules/presets/packages/",
                         },
                         {
-                            label: "🟢 typedoc",
+                            label: "🟢 TypeDoc",
                             to: "/docs/rules/presets/typedoc/",
                         },
                         {
-                            label: "🟢 typedoc-strict",
+                            label: "🟢 TypeDoc Strict",
                             to: "/docs/rules/presets/typedoc-strict/",
                         },
                         {
-                            label: "🟦 tsdoc",
+                            label: "🟦 TSDoc",
                             to: "/docs/rules/presets/tsdoc/",
                         },
                         {
-                            label: "🟧 jsdoc",
+                            label: "🟧 JSDoc",
                             to: "/docs/rules/presets/jsdoc/",
                         },
                         {
-                            label: "🟥 all",
+                            label: "🟥 All",
                             to: "/docs/rules/presets/all/",
                         },
                     ],
@@ -591,13 +595,13 @@ const config: Config = {
                             label: "• \ue7d2 ESLint Inspector",
                         },
                         {
+                            href: `https://nick2bad4u.github.io/eslint-plugin-tsdoc-require-2/stylelint-inspector/`,
+                            label: "• \ue7d2 Stylelint Inspector",
+                        },
+                        {
                             href: `https://github.com/${organizationName}/${projectName}/issues`,
                             className: "navbar-dropdown-divider-before",
                             label: "• \uf188 Issues",
-                        },
-                        {
-                            href: `https://www.npmjs.com/package/${projectName}`,
-                            label: "• \ue616 NPM",
                         },
                     ],
                 },
@@ -626,7 +630,7 @@ const config: Config = {
                 alt: "eslint-plugin-tsdoc-require-2 logo",
                 height: 48,
                 href: baseUrl,
-                src: "img/logo.svg",
+                src: "img/logo_192x192.png",
                 width: 48,
             },
             title: "eslint-plugin-tsdoc-require-2",

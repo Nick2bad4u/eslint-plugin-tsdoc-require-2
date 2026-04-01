@@ -154,6 +154,13 @@ export default function Home(): React.JSX.Element {
                                     </Link>
                                 </div>
 
+                                <GitHubStats
+                                    className={clsx(
+                                        styles.heroLiveBadges,
+                                        "github-stats"
+                                    )}
+                                />
+
                                 <ul className={styles.heroBadgeRow}>
                                     {heroBadges.map((badge) => (
                                         <li
@@ -190,7 +197,7 @@ export default function Home(): React.JSX.Element {
                                 <img
                                     alt="eslint-plugin-tsdoc-require-2 logo"
                                     className={styles.heroPanelLogo}
-                                    src="/img/logo.svg"
+                                    src="/img/logo_192x192.png"
                                 />
                                 <div className={styles.heroStats}>
                                     {heroStats.map((stat) => (
@@ -255,26 +262,6 @@ export default function Home(): React.JSX.Element {
                                 </article>
                             </Link>
                         ))}
-                    </div>
-                </section>
-
-                <section className={styles.liveStatsSection}>
-                    <div className="container">
-                        <div className={styles.liveStatsHeader}>
-                            <p className={styles.liveStatsKicker}>
-                                Repository snapshot
-                            </p>
-                            <p className={styles.liveStatsDescription}>
-                                Live repository metrics pulled from GitHub.
-                            </p>
-                        </div>
-
-                        <GitHubStats
-                            className={clsx(
-                                styles.liveBadgeList,
-                                "github-stats"
-                            )}
-                        />
                     </div>
                 </section>
             </main>
