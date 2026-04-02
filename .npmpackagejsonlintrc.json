@@ -160,7 +160,8 @@
                 "Nick2bad4u",
                 "Typpi",
                 "Nick",
-                "Nick2bad4u <20943337+Nick2bad4u@users.noreply.github.com> (https://nick2bad4u.github.io/eslint-plugin-tsdoc-require-2)"
+                "Nick2bad4u <20943337+Nick2bad4u@users.noreply.github.com> (https://nick2bad4u.github.io/eslint-plugin-tsdoc-require-2-2)",
+                "Nick2bad4u <20943337+Nick2bad4u@users.noreply.github.com> (https://github.com/Nick2bad4u)"
             ]
         ],
         "valid-values-engines": "off",
@@ -170,7 +171,8 @@
                 "MIT",
                 "Unlicense",
                 "UnLicense",
-                "UNLICENSED"
+                "UNLICENSED",
+                "Apache-2.0"
             ]
         ],
         "valid-values-name-scope": "off",

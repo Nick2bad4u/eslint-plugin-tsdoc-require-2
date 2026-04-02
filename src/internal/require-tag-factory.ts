@@ -39,7 +39,6 @@ type TagRuleModule = ESLintUtils.RuleModule<
 
 /** RuleCreator instance for all required-tag rules in this plugin. */
 const createTagRule: ReturnType<typeof ESLintUtils.RuleCreator<RuleDocs>> =
-    // eslint-disable-next-line total-functions/no-hidden-type-assertions -- RuleCreator generic is required to support plugin-specific docs.recommended metadata field.
     ESLintUtils.RuleCreator<RuleDocs>(
         (ruleName) =>
             `https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/docs/rules/required-tags.md#${ruleName}`

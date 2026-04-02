@@ -124,7 +124,6 @@ const assertUnreachable = (value: never): never => {
     throw new Error(`Unexpected node type: ${String(value)}`);
 };
 
-// eslint-disable-next-line total-functions/no-hidden-type-assertions -- RuleCreator generic is required so `meta.docs.recommended` is strongly typed and accepted in the inline metadata literal.
 const createRule = ESLintUtils.RuleCreator<RuleDocs>(
     (ruleName) =>
         `https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/docs/rules/${ruleName}.md`
