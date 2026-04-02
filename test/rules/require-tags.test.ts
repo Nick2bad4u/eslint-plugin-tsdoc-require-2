@@ -27,6 +27,9 @@ for (const { ruleName, tagName } of requiredTagDefinitions) {
         {
             code: "export function withoutDoc(value: string): string { return value; }",
         },
+        { code: `export * from "foo";` },
+        { code: `export * as foo from "bar";` },
+        { code: `export { Foo } from "foo";` },
     ];
 
     if (ruleName === "require-link") {
@@ -55,6 +58,58 @@ for (const { ruleName, tagName } of requiredTagDefinitions) {
 
     ruleTester.run(typedRuleName, ruleModule, {
         invalid: [
+            {
+                code: `/** @description missing */\nclass MyClass {}\nexport { MyClass };`,
+                errors: [
+                    {
+                        data: {
+                            entityKind: "class",
+                            entityName: "MyClass",
+                            tagName,
+                        },
+                        messageId: "missingTag",
+                    },
+                ],
+            },
+            {
+                code: `/** @description missing */\nexport default class {}\n`,
+                errors: [
+                    {
+                        data: {
+                            entityKind: "class",
+                            entityName: "<default export>",
+                            tagName,
+                        },
+                        messageId: "missingTag",
+                    },
+                ],
+            },
+            {
+                code: `/** @description missing */\nexport default function() {}\n`,
+                errors: [
+                    {
+                        data: {
+                            entityKind: "function",
+                            entityName: "<default export>",
+                            tagName,
+                        },
+                        messageId: "missingTag",
+                    },
+                ],
+            },
+            {
+                code: `/** @description missing */\nexport default {}\n`,
+                errors: [
+                    {
+                        data: {
+                            entityKind: "object",
+                            entityName: "<default export>",
+                            tagName,
+                        },
+                        messageId: "missingTag",
+                    },
+                ],
+            },
             {
                 code: invalidWithoutTag,
                 errors: [

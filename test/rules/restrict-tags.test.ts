@@ -6,6 +6,58 @@ const ruleTester = createTypedRuleTester();
 ruleTester.run("restrict-tags", restrictTagsRule, {
     invalid: [
         {
+            code: `/** @typedef MyType */\nexport default class MyClass {}`,
+            errors: [
+                {
+                    data: {
+                        entityKind: "class",
+                        entityName: "MyClass",
+                        tagName: "@typedef",
+                    },
+                    messageId: "disallowedTag",
+                },
+            ],
+        },
+        {
+            code: `/** @typedef MyType */\nclass MyClass {}\nexport default MyClass;`,
+            errors: [
+                {
+                    data: {
+                        entityKind: "class",
+                        entityName: "MyClass",
+                        tagName: "@typedef",
+                    },
+                    messageId: "disallowedTag",
+                },
+            ],
+        },
+        {
+            code: `/** @typedef MyType */\nexport default { a: 1 };`,
+            errors: [
+                {
+                    data: {
+                        entityKind: "object",
+                        entityName: "<default export>",
+                        tagName: "@typedef",
+                    },
+                    messageId: "disallowedTag",
+                },
+            ],
+        },
+        {
+            code: `/** @typedef MyType */\nclass MyClass {}\nexport { MyClass };`,
+            errors: [
+                {
+                    data: {
+                        entityKind: "class",
+                        entityName: "MyClass",
+                        tagName: "@typedef",
+                    },
+                    messageId: "disallowedTag",
+                },
+            ],
+        },
+        {
             code: `/**
  * Creates a value.
  * @typedef ResultShape
@@ -79,6 +131,15 @@ function internalCreateValue(): number {
         },
     ],
     valid: [
+        {
+            code: `export * from "foo";`,
+        },
+        {
+            code: `export * as foo from "bar";`,
+        },
+        {
+            code: `export { Foo } from "foo";`,
+        },
         {
             code: `/**
  * Creates a value.

@@ -6,6 +6,30 @@ const ruleTester = createTypedRuleTester();
 ruleTester.run("require", requireRule, {
     invalid: [
         {
+            code: `class UndocumentedClass {}\nexport { UndocumentedClass };`,
+            errors: [
+                {
+                    data: {
+                        entityKind: "class",
+                        entityName: "UndocumentedClass",
+                    },
+                    messageId: "missingTSDoc",
+                },
+            ],
+        },
+        {
+            code: `export default class {}`,
+            errors: [
+                {
+                    data: {
+                        entityKind: "class",
+                        entityName: "<default export>",
+                    },
+                    messageId: "missingTSDoc",
+                },
+            ],
+        },
+        {
             code: "export class MyClass {}",
             errors: [
                 {
@@ -226,6 +250,15 @@ export { localValue };
         },
     ],
     valid: [
+        {
+            code: `export * from "foo";`,
+        },
+        {
+            code: `export * as foo from "bar";`,
+        },
+        {
+            code: `export { Foo } from "foo";`,
+        },
         {
             code: `
 /** Public class docs. */
