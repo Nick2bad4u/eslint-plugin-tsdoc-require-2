@@ -18,10 +18,10 @@ export default [
 
 ## Rules in this preset
 
-- `tsdoc-require-2/require`
-- `tsdoc-require-2/require-param`
-- `tsdoc-require-2/require-remarks`
-- `tsdoc-require-2/require-returns`
-- `tsdoc-require-2/require-throws`
-- `tsdoc-require-2/require-type-param`
-- `tsdoc-require-2/restrict-tags`
+- [`tsdoc-require-2/require`](../require.md)
+- [`tsdoc-require-2/require-param`](../required-tags/require-param.md)
+- [`tsdoc-require-2/require-remarks`](../required-tags/require-remarks.md)
+- [`tsdoc-require-2/require-returns`](../required-tags/require-returns.md)
+- [`tsdoc-require-2/require-throws`](../required-tags/require-throws.md)
+- [`tsdoc-require-2/require-type-param`](../required-tags/require-type-param.md)
+- [`tsdoc-require-2/restrict-tags`](../restrict-tags.md)

@@ -8,15 +8,10 @@ import clsx from "clsx";
 import GitHubStats from "../components/GitHubStats";
 import styles from "./index.module.css";
 
-type HeroBadge = {
-    readonly description: string;
-    readonly icon: string;
-    readonly label: string;
-};
-
 type HeroStat = {
     readonly description: string;
     readonly headline: string;
+    readonly icon: string;
 };
 
 type HomeCard = {
@@ -26,41 +21,28 @@ type HomeCard = {
     readonly to: string;
 };
 
-const heroBadges = [
-    {
-        description:
-            "Comment presence and required-tag enforcement for TypeScript declarations.",
-        icon: "📘",
-        label: "Documentation enforcement",
-    },
-    {
-        description:
-            "Preset coverage from recommended through typedoc-strict, tsdoc, and jsdoc.",
-        icon: "🧩",
-        label: "Preset matrix",
-    },
-    {
-        description:
-            "Contract-validated docs plus generated TypeDoc API reference.",
-        icon: "📚",
-        label: "Docs-focused DX",
-    },
-] as const satisfies readonly HeroBadge[];
-
 const heroStats = [
     {
-        description: "core + required-tag rules",
-        headline: "59 rules",
+        description:
+            "Core, required-tag, and restriction rules for real-world TS projects.",
+        headline: "59 Rules",
+        icon: "📏",
     },
     {
-        description: "ready-to-apply config profiles",
-        headline: "8 presets",
+        description:
+            "Ready-to-apply profiles from lightweight rollout to strict enforcement.",
+        headline: "8 Presets",
+        icon: "🎛️",
     },
     {
-        description: "for every supported rule",
-        headline: "Complete docs",
+        description:
+            "Clear examples and practical guidance for every supported rule.",
+        headline: "Complete Docs",
+        icon: "📚",
     },
 ] as const satisfies readonly HeroStat[];
+
+const heroBadges = heroStats;
 
 const homeCards = [
     {
@@ -162,32 +144,34 @@ export default function Home(): React.JSX.Element {
                                 />
 
                                 <ul className={styles.heroBadgeRow}>
-                                    {heroBadges.map((badge) => (
+                                    {heroBadges.map((stat) => (
                                         <li
                                             className={styles.heroBadge}
-                                            key={badge.label}
+                                            key={stat.headline}
                                         >
-                                            <span
-                                                className={styles.heroBadgeIcon}
+                                            <Heading
+                                                as="h2"
+                                                className={
+                                                    styles.heroBadgeLabel
+                                                }
                                             >
-                                                {badge.icon}
-                                            </span>
-                                            <div>
-                                                <strong
+                                                <span
+                                                    aria-hidden="true"
                                                     className={
-                                                        styles.heroBadgeLabel
+                                                        styles.heroBadgeIcon
                                                     }
                                                 >
-                                                    {badge.label}
-                                                </strong>
-                                                <p
-                                                    className={
-                                                        styles.heroBadgeDescription
-                                                    }
-                                                >
-                                                    {badge.description}
-                                                </p>
-                                            </div>
+                                                    {stat.icon}
+                                                </span>
+                                                {stat.headline}
+                                            </Heading>
+                                            <p
+                                                className={
+                                                    styles.heroBadgeDescription
+                                                }
+                                            >
+                                                {stat.description}
+                                            </p>
                                         </li>
                                     ))}
                                 </ul>
@@ -197,38 +181,14 @@ export default function Home(): React.JSX.Element {
                                 <img
                                     alt="eslint-plugin-tsdoc-require-2 logo"
                                     className={styles.heroPanelLogo}
-                                    src="/img/logo_192x192.png"
+                                    src="/eslint-plugin-tsdoc-require-2/img/logo_512x512.png"
                                 />
-                                <div className={styles.heroStats}>
-                                    {heroStats.map((stat) => (
-                                        <div
-                                            className={styles.heroStatCard}
-                                            key={stat.headline}
-                                        >
-                                            <Heading
-                                                as="h2"
-                                                className={
-                                                    styles.heroStatHeading
-                                                }
-                                            >
-                                                {stat.headline}
-                                            </Heading>
-                                            <p
-                                                className={
-                                                    styles.heroStatDescription
-                                                }
-                                            >
-                                                {stat.description}
-                                            </p>
-                                        </div>
-                                    ))}
-                                </div>
                             </aside>
                         </div>
                     </div>
                 </section>
 
-                <section className="container">
+                <section className={clsx("container", styles.postHeroSection)}>
                     <Heading as="h2" className={styles.sectionTitle}>
                         Navigate the documentation quickly
                     </Heading>

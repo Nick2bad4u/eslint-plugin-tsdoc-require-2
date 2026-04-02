@@ -18,7 +18,7 @@ export default [
 
 ## Rules in this preset
 
-- `tsdoc-require-2/require`
-- `tsdoc-require-2/require-param`
-- `tsdoc-require-2/require-returns`
-- `tsdoc-require-2/require-throws`
+- [`tsdoc-require-2/require`](../require.md)
+- [`tsdoc-require-2/require-param`](../required-tags/require-param.md)
+- [`tsdoc-require-2/require-returns`](../required-tags/require-returns.md)
+- [`tsdoc-require-2/require-throws`](../required-tags/require-throws.md)

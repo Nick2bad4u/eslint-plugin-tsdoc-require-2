@@ -1,13 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
-  <title id="title">eslint-plugin-tsdoc-require-2 logo</title>
-  <desc id="desc">Stylized hexagon containing TF initials.</desc>
-  <defs>
-    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#4f46e5" />
-      <stop offset="100%" stop-color="#0ea5e9" />
-    </linearGradient>
-  </defs>
-  <rect width="128" height="128" rx="20" fill="url(#g)" />
-  <path d="M23 30h82v14H70v54H56V44H23V30Z" fill="#fff" />
-  <path d="M70 52h35v12H82v34H70V52Z" fill="#fff" opacity="0.92" />
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg version="1.0" width="270pt" height="270pt" viewBox="0 0 270 270" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(0,270)scale(.15,.15)" fill="#108938">
+    <path id="path1" d="M 900 -1800 l -900 0 0 900 0 900 900 0 900 0 0 -900 0 -900 -900 0 z m 276 780 l 82 0 14 5 14 6 -12 127 -13 127 4 4 4 3 101 -71 101 -71 12 0 13 0 43 76 43 76 -8 7 -9 7 -105 48 -105 48 -8 7 -7 7 120 54 120 53 0 7 0 7 -46 77 -46 76 -3 0 -4 0 -107 -76 -106 -75 -3 3 -4 3 13 129 12 128 -11 4 -12 5 -89 -3 -89 -3 3 -35 3 -35 8 -95 9 -95 -3 -3 -3 -4 -108 76 -107 77 -9 -9 -9 -9 -39 -68 -40 -67 0 -8 0 -7 120 -53 119 -53 -4 -7 -4 -6 -108 -49 -108 -49 -9 -7 -9 -8 43 -75 44 -76 12 0 13 0 101 71 101 71 4 -3 3 -4 -9 -100 -9 -100 -4 -26 -5 -27 6 -6 6 -6 83 0 z " />
+  </g>
 </svg>

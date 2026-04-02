@@ -3,16 +3,7 @@ import type { SidebarsConfig } from "@docusaurus/plugin-content-docs";
 const sidebars: SidebarsConfig = {
     docs: [
         {
-            id: "intro",
-            label: "🚀 Overview",
-            type: "doc",
-        },
-        {
-            id: "getting-started",
-            label: "🧭 Getting Started",
-            type: "doc",
-        },
-        {
+            className: "sb-cat-developer",
             collapsed: false,
             label: "🛠️ Developer",
             link: {
@@ -24,21 +15,25 @@ const sidebars: SidebarsConfig = {
             type: "category",
             items: [
                 {
+                    className: "sb-doc-site-contract",
                     id: "developer/index",
-                    label: "📚 Developer docs",
+                    label: "📚 Developer Docs",
                     type: "doc",
                 },
                 {
+                    className: "sb-doc-site-contract",
                     id: "developer/docusaurus-site-contract",
-                    label: "🧭 Docusaurus site contract",
+                    label: "🧭 Docusaurus Site Contract",
                     type: "doc",
                 },
                 {
+                    className: "sb-doc-site-contract",
                     id: "developer/deploy-pages-seo-and-indexnow",
                     label: "🌐 Pages SEO + IndexNow",
                     type: "doc",
                 },
                 {
+                    className: "sb-cat-api-overview",
                     collapsed: true,
                     label: "📘 API Reference (TypeDoc)",
                     link: {
@@ -58,10 +53,11 @@ const sidebars: SidebarsConfig = {
             ],
         },
         {
+            className: "sb-cat-dev-links",
             collapsed: true,
-            label: "🔗 External links",
+            label: "🔗 External Links",
             link: {
-                title: "External links",
+                title: "External Links",
                 type: "generated-index",
             },
             type: "category",

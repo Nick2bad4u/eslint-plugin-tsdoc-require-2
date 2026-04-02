@@ -2,7 +2,7 @@
 /* stylelint-disable defensive-css/require-named-grid-lines, scales/font-sizes */
 
 .mainContent {
-    background: linear-gradient(180deg, #052e16 0%, #0f172a 100%);
+    background: linear-gradient(180deg, #052e16 0%, #0f2a11 100%);
     min-height: 100vh;
     padding: 1.75rem 0 3rem;
 }
@@ -168,6 +168,7 @@
     border-width: 1px;
     border-style: solid;
     border-radius: 0.78rem;
+    min-block-size: 2.85rem;
     box-shadow:
         0 9px 18px -12px rgb(15 23 42 / 88%),
         inset 0 1px 0 rgb(255 255 255 / 22%);
@@ -179,6 +180,44 @@
         box-shadow 170ms ease,
         filter 170ms ease,
         transform 170ms ease;
+}
+
+.heroActionButton::before {
+    position: absolute;
+    background: linear-gradient(
+        115deg,
+        transparent 33%,
+        rgb(255 255 255 / 26%) 50%,
+        transparent 67%
+    );
+    content: "";
+    inset: -55% -120%;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-60%) rotate(12deg);
+    transition:
+        opacity 190ms ease,
+        transform 520ms ease;
+}
+
+.heroActionButton:hover,
+.heroActionButton:focus {
+    box-shadow:
+        0 14px 24px -14px rgb(15 23 42 / 92%),
+        inset 0 1px 0 rgb(255 255 255 / 26%);
+    filter: saturate(1.06) brightness(1.03);
+    transform: translateY(-1px);
+}
+
+.heroActionButton:hover::before,
+.heroActionButton:focus::before {
+    opacity: 0.8;
+    transform: translateX(56%) rotate(12deg);
+}
+
+.heroActionButton:focus-visible {
+    outline: 2px solid rgb(186 230 253 / 92%);
+    outline-offset: 2px;
 }
 
 .heroActionButton:hover,
@@ -203,21 +242,37 @@
         rgb(18 139 56 / 92%)
     );
     color: rgb(240 253 244);
+
+    &:hover,
+    &:focus {
+        border-color: rgb(224 231 255 / 50%);
+        color: rgb(242 246 255);
+    }
 }
 
 .heroActionSecondary {
     border-color: rgb(134 239 172 / 40%);
     background: linear-gradient(
         145deg,
-        rgb(187 247 208 / 22%),
-        rgb(134 239 172 / 12%)
+        rgb(21 128 61 / 58%),
+        rgb(20 83 45 / 52%)
     );
-    color: rgb(220 252 231);
+    color: rgb(236 253 245);
+
+    &:hover,
+    &:focus {
+        border-color: rgb(191 219 254 / 50%);
+        color: rgb(238 246 255);
+    }
 }
 
 .heroLiveBadges {
     margin-block-start: 0.6rem;
     max-inline-size: 100%;
+    display: grid;
+    grid-auto-flow: column;
+    list-style-type: none;
+    padding-inline-start: 0;
 }
 
 .heroBadgeRow {
@@ -225,87 +280,24 @@
     gap: 0.75rem;
     grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
     margin-block-start: 0.82rem;
+    list-style-type: none;
+    grid-auto-flow: column;
+    padding-inline-start: 0;
 }
 
 .heroBadge {
-    padding: 0.72rem 0.84rem;
+    padding: 0.78rem 0.9rem;
     border: 1px solid rgb(187 247 208 / 28%);
     border-radius: 0.88rem;
     margin: 0;
     background: rgb(20 83 45 / 28%);
+    min-block-size: 6.1rem;
 }
 
 .heroBadgeLabel {
     display: inline-flex;
     align-items: center;
-    margin: 0;
-    font-size: 0.82rem;
-    font-weight: 700;
     gap: 0.42rem;
-    letter-spacing: 0.01em;
-}
-
-.heroBadgeIcon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.45rem;
-    background: rgb(22 163 74 / 30%);
-    block-size: 1.4rem;
-    font-size: 0.9rem;
-    inline-size: 1.4rem;
-}
-
-.heroBadgeDescription {
-    margin: 0.36rem 0 0;
-    color: rgb(220 252 231);
-    font-size: 0.77rem;
-    line-height: 1.5;
-}
-
-.heroPanel {
-    position: relative;
-    display: flex;
-    overflow: hidden;
-    align-items: center;
-    align-self: stretch;
-    justify-content: center;
-    padding: 1rem;
-    border: 1px solid rgb(187 247 208 / 28%);
-    border-radius: 1rem;
-    margin: 0;
-    background:
-        linear-gradient(155deg, rgb(6 78 59 / 45%), rgb(6 78 59 / 22%)),
-        rgb(20 83 45 / 30%);
-    min-block-size: 11rem;
-}
-
-.heroPanelLogo {
-    display: block;
-    block-size: auto;
-    filter: drop-shadow(0 10px 18px rgb(15 23 42 / 45%));
-    inline-size: clamp(9.5rem, 20vi, 13rem);
-}
-
-.heroStats {
-    display: grid;
-    gap: 0.85rem;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    margin-block-start: 0.82rem;
-}
-
-.heroStatCard {
-    display: grid;
-    align-items: start;
-    padding: 0.78rem 0.9rem;
-    border: 1px solid rgb(187 247 208 / 26%);
-    border-radius: 0.8rem;
-    background: rgb(20 83 45 / 28%);
-    gap: 0.22rem;
-    min-block-size: 6.1rem;
-}
-
-.heroStatHeading {
     margin: 0;
     font-size: 1.04rem;
     font-weight: 800;
@@ -313,11 +305,86 @@
     line-height: 1.25;
 }
 
-.heroStatDescription {
-    margin: 0;
+.heroBadgeIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.45rem;
+    background: rgb(22 163 74 / 24%);
+    block-size: 1.45rem;
+    font-size: 0.9rem;
+    inline-size: 1.45rem;
+}
+
+.heroBadgeDescription {
+    margin: 0.36rem 0 0;
     color: rgb(220 252 231);
     font-size: 0.8rem;
     line-height: 1.5;
+}
+
+.heroPanel {
+    align-items: center;
+    align-self: stretch;
+    backdrop-filter: blur(10px);
+    background: linear-gradient(155deg, #0f172a73, #0f172a38), #1e293b47;
+    border: 1px solid #ffffff40;
+    border-radius: 1rem;
+    box-shadow:
+        0 20px 30px -26px #0f172ad9,
+        inset 0 1px 0 #ffffff26;
+    display: flex;
+    isolation: isolate;
+    justify-content: center;
+    margin: 0;
+    min-block-size: 11rem;
+    overflow: hidden;
+    padding: 1rem;
+    position: relative;
+}
+
+.heroPanel::before {
+    position: absolute;
+    background: linear-gradient(
+        112deg,
+        transparent 34%,
+        rgb(255 255 255 / 42%) 50%,
+        transparent 66%
+    );
+    content: "";
+    inset: -55% -120%;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-60%) rotate(14deg);
+    transition:
+        opacity 220ms ease,
+        transform 620ms ease;
+}
+
+.heroPanel:hover::before,
+.heroPanel:focus-within::before {
+    opacity: 0.82;
+    transform: translateX(54%) rotate(14deg);
+}
+
+.heroPanelLogo {
+    block-size: auto;
+    display: block;
+    filter: drop-shadow(0 10px 18px rgb(15 23 42/45%));
+    inline-size: clamp(11.5rem, 24vi, 17rem);
+    transition:
+        filter 0.21s,
+        transform 0.21s;
+
+    .heroPanel:hover &,
+    .heroPanel:focus-within & {
+        filter: drop-shadow(0 14px 22px rgb(15 23 42 / 52%)) brightness(1.05);
+        transform: translateY(-2px) scale(1.01);
+    }
+}
+
+.postHeroSection {
+    padding-block-start: clamp(1.75rem, 3.4vi, 2.6rem);
 }
 
 .sectionTitle {
@@ -409,11 +476,6 @@
         margin-inline: auto;
         max-inline-size: 21rem;
     }
-
-    .heroStats {
-        grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
-        margin-block-start: 1.2rem;
-    }
 }
 
 @media (width <= 640px) {
@@ -427,10 +489,6 @@
     }
 
     .heroBadgeRow {
-        grid-template-columns: 1fr;
-    }
-
-    .heroStats {
         grid-template-columns: 1fr;
     }
 

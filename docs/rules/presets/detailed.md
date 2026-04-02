@@ -18,5 +18,5 @@ export default [
 
 ## Rules in this preset
 
-- `tsdoc-require-2/require`
-- `tsdoc-require-2/require-remarks`
+- [`tsdoc-require-2/require`](../require.md)
+- [`tsdoc-require-2/require-remarks`](../required-tags/require-remarks.md)

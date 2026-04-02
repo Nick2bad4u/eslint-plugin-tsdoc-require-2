@@ -18,4 +18,4 @@ export default [
 
 ## Rules in this preset
 
-- `tsdoc-require-2/require`
+- [`tsdoc-require-2/require`](../require.md)

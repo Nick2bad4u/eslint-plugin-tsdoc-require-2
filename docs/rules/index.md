@@ -12,3 +12,5 @@ title: Rules Overview
 - [`restrict-tags`](./restrict-tags.md): allow/deny selected tags.
 
 For preset guidance, see [Presets](./presets/index.md).
+
+To configure the plugin quickly, see [Getting Started](./getting-started.md).

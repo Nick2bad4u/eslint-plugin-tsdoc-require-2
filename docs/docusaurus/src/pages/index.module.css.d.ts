@@ -42,6 +42,7 @@ declare const styles: {
     readonly liveStatsLink: string;
     readonly liveStatsSection: string;
     readonly mainContent: string;
+    readonly postHeroSection: string;
     readonly sectionSubtitle: string;
     readonly sectionTitle: string;
 };

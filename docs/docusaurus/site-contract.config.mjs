@@ -45,7 +45,7 @@ const siteContract = defineDocusaurusSiteContract({
                     labelPattern: /Docs/v,
                     minDropdownItems: 2,
                     position: "left",
-                    toPattern: /^\/docs\/?$/v,
+                    toPattern: /^\/docs\/rules\/?$/v,
                     type: "dropdown",
                 },
                 {

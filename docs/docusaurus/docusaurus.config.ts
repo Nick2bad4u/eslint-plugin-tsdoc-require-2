@@ -148,7 +148,7 @@ const config: Config = {
     baseUrl,
     baseUrlIssueBanner: true,
     deploymentBranch: "gh-pages",
-    favicon: "img/logo.svg",
+    favicon: "img/favicon-32x32.png",
     // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
     future: futureConfig,
     clientModules: [modernEnhancementsClientModule],
@@ -449,10 +449,6 @@ const config: Config = {
                             href: `https://www.npmjs.com/package/${projectName}`,
                             label: "\ue616 NPM",
                         },
-                        {
-                            href: `https://github.com/${organizationName}/${projectName}/blob/main/docs/rules/restrict-tags.md`,
-                            label: "\uf071 restrict-tags",
-                        },
                     ],
                     title: "📁 Project",
                 },
@@ -467,8 +463,12 @@ const config: Config = {
                             label: "\uf188 Report Issues",
                         },
                         {
-                            href: `https://www.npmjs.com/package/${projectName}`,
-                            label: "\ue616 NPM",
+                            href: `https://github.com/${organizationName}/${projectName}/security`,
+                            label: "\ue70a Security",
+                        },
+                        {
+                            href: `https://github.com/${organizationName}/${projectName}/blob/main/CHANGELOG.md`,
+                            label: "\ueb1f Changelog",
                         },
                     ],
                     title: "⚙️ Support",
@@ -477,7 +477,7 @@ const config: Config = {
             logo: {
                 alt: "eslint-plugin-tsdoc-require-2 logo",
                 href: `https://github.com/${organizationName}/${projectName}`,
-                src: "img/logo_192x192.png",
+                src: "img/logo_60x60.png",
                 width: 60,
                 height: 60,
             },
@@ -489,19 +489,20 @@ const config: Config = {
             hideOnScroll: true,
             items: [
                 {
-                    activeBaseRegex: "^/docs(?:/)?$",
+                    activeBaseRegex:
+                        "^/docs/rules(?:/(?:getting-started)?(?:/)?$)",
                     label: "📚 Docs",
                     position: "left",
-                    to: "/docs/",
+                    to: "/docs/rules/",
                     type: "dropdown",
                     items: [
                         {
                             label: "• Overview",
-                            to: "/docs/",
+                            to: "/docs/rules/",
                         },
                         {
                             label: "• Getting Started",
-                            to: "/docs/getting-started/",
+                            to: "/docs/rules/getting-started/",
                         },
                     ],
                 },
@@ -542,7 +543,7 @@ const config: Config = {
                             to: "/docs/rules/presets/recommended/",
                         },
                         {
-                            label: "🔵 Detailed",
+                            label: "⬜ Detailed",
                             to: "/docs/rules/presets/detailed/",
                         },
                         {
@@ -554,7 +555,7 @@ const config: Config = {
                             to: "/docs/rules/presets/typedoc/",
                         },
                         {
-                            label: "🟢 TypeDoc Strict",
+                            label: "🟫 TypeDoc Strict",
                             to: "/docs/rules/presets/typedoc-strict/",
                         },
                         {
@@ -628,10 +629,10 @@ const config: Config = {
             ],
             logo: {
                 alt: "eslint-plugin-tsdoc-require-2 logo",
-                height: 48,
+                height: 32,
                 href: baseUrl,
-                src: "img/logo_192x192.png",
-                width: 48,
+                src: "img/favicon-32x32.png",
+                width: 32,
             },
             title: "eslint-plugin-tsdoc-require-2",
         },

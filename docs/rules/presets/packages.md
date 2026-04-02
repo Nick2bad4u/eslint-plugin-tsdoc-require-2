@@ -18,6 +18,6 @@ export default [
 
 ## Rules in this preset
 
-- `tsdoc-require-2/require`
-- `tsdoc-require-2/require-package-documentation`
-- `tsdoc-require-2/require-remarks`
+- [`tsdoc-require-2/require`](../require.md)
+- [`tsdoc-require-2/require-package-documentation`](../required-tags/require-package-documentation.md)
+- [`tsdoc-require-2/require-remarks`](../required-tags/require-remarks.md)

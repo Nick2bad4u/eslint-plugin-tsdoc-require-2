@@ -10,6 +10,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repositoryRoot = path.resolve(__dirname, "..");
 const readmePath = path.join(repositoryRoot, "README.md");
+const presetsOverviewPath = path.join(
+    repositoryRoot,
+    "docs",
+    "rules",
+    "presets",
+    "index.md"
+);
 const requiredTagRulesPath = path.join(
     repositoryRoot,
     "src",
@@ -175,16 +182,17 @@ const buildPresetMatrix = (requiredTagRuleNames) => {
 /**
  * @param {string} text
  * @param {string} replacementBody
+ * @param {string} fileLabel
  *
  * @returns {string}
  */
-const replaceBetweenMarkers = (text, replacementBody) => {
+const replaceBetweenMarkers = (text, replacementBody, fileLabel) => {
     const beginIndex = text.indexOf(BEGIN_MARKER);
     const endIndex = text.indexOf(END_MARKER);
 
     if (beginIndex === -1 || endIndex === -1 || endIndex < beginIndex) {
         throw new Error(
-            `Could not find valid marker pair ${BEGIN_MARKER} / ${END_MARKER} in README.md`
+            `Could not find valid marker pair ${BEGIN_MARKER} / ${END_MARKER} in ${fileLabel}`
         );
     }
 
@@ -199,31 +207,63 @@ const main = async () => {
     const args = new Set(process.argv.slice(2));
     const checkOnly = args.has("--check");
 
-    const [readmeText, requiredTagRulesText] = await Promise.all([
+    const [
+        readmeText,
+        presetsOverviewText,
+        requiredTagRulesText,
+    ] = await Promise.all([
         readFile(readmePath, "utf8"),
+        readFile(presetsOverviewPath, "utf8"),
         readFile(requiredTagRulesPath, "utf8"),
     ]);
 
     const requiredTagRuleNames =
         parseRequiredTagRuleNames(requiredTagRulesText);
     const matrix = buildPresetMatrix(requiredTagRuleNames);
-    const updatedReadme = replaceBetweenMarkers(readmeText, matrix);
+    const updatedReadme = replaceBetweenMarkers(
+        readmeText,
+        matrix,
+        "README.md"
+    );
+    const updatedPresetsOverview = replaceBetweenMarkers(
+        presetsOverviewText,
+        matrix,
+        "docs/rules/presets/index.md"
+    );
 
-    if (updatedReadme === readmeText) {
-        console.log("README presets matrix is already up-to-date.");
+    const readmeChanged = updatedReadme !== readmeText;
+    const presetsOverviewChanged =
+        updatedPresetsOverview !== presetsOverviewText;
+
+    if (!readmeChanged && !presetsOverviewChanged) {
+        console.log(
+            "README and presets overview matrices are already up-to-date."
+        );
         return;
     }
 
     if (checkOnly) {
-        console.error(
-            "README presets matrix is out-of-date. Run: node ./scripts/sync-presets-rules-matrix.mjs"
-        );
+        if (readmeChanged) {
+            console.error(
+                "README presets matrix is out-of-date. Run: node ./scripts/sync-presets-rules-matrix.mjs"
+            );
+        }
+
+        if (presetsOverviewChanged) {
+            console.error(
+                "docs/rules/presets/index.md presets matrix is out-of-date. Run: node ./scripts/sync-presets-rules-matrix.mjs"
+            );
+        }
+
         process.exitCode = 1;
         return;
     }
 
-    await writeFile(readmePath, updatedReadme, "utf8");
-    console.log("Updated README presets matrix.");
+    await Promise.all([
+        writeFile(readmePath, updatedReadme, "utf8"),
+        writeFile(presetsOverviewPath, updatedPresetsOverview, "utf8"),
+    ]);
+    console.log("Updated README and presets overview matrices.");
 };
 
 await main();
