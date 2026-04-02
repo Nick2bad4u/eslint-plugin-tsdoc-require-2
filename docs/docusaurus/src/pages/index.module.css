@@ -389,13 +389,14 @@
 
 .sectionTitle {
     margin: 0;
+    color: rgb(240 253 244);
     font-size: clamp(1.55rem, 2.6vi, 2rem);
     text-wrap: balance;
 }
 
 .sectionSubtitle {
     margin: 0.55rem 0 1rem;
-    color: var(--ifm-color-emphasis-700);
+    color: rgb(209 250 229 / 85%);
     line-height: 1.625;
     max-inline-size: 52rem;
 }
@@ -403,11 +404,15 @@
 .cardGrid {
     display: grid;
     gap: 1rem;
+    align-items: stretch;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
 .card {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    block-size: 100%;
     padding: 1.1rem;
     border: 1px solid rgb(22 163 74 / 30%);
     border-radius: 0.95rem;
@@ -459,12 +464,21 @@
 }
 
 .cardDescription {
-    color: var(--ifm-color-emphasis-800);
     margin-block-end: 0.8rem;
+    color: var(--ifm-color-emphasis-800);
+    flex-grow: 1;
 }
 
 .cardLink {
+    text-decoration: none;
     font-weight: 600;
+    display: block;
+    block-size: 100%;
+
+    &:hover,
+    &:focus {
+        text-decoration: none;
+    }
 }
 
 @media (width <= 1024px) {
