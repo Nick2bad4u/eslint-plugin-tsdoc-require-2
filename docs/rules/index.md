@@ -1,45 +1,18 @@
 ---
 slug: /
-title: Rules Overview
+title: Rules
+description: Explore the comprehensive set of rules provided by eslint-plugin-tsdoc-require-2 to enforce TSDoc/JSDoc documentation standards in your TypeScript codebase.
 ---
 
-# tsdoc-require-2/index
+# Rules
 
-> **Rule catalog ID:** R000
+`eslint-plugin-tsdoc-require-2` provides a robust, highly configurable set of rules to enforce TSDoc/JSDoc comments and specific documentation tags on TypeScript declarations.
 
-## Targeted pattern scope
+The rules are divided into three primary modules, designed to be used together to cover documentation completeness, structural consistency, and tag restrictions.
 
-This is an overview page.
-
-## What this rule reports
-
-Provides a summary.
-
-## Why this rule exists
-
-Navigation.
-
-## ❌ Incorrect
-
-```ts
-// Not applicable
-```
-
-## ✅ Correct
-
-```ts
-// Not applicable
-```
-
-## Further reading
-
-- [Docs](./require.md)
-
-`eslint-plugin-tsdoc-require-2` ships three rule groups:
-
-- [`require`](./require.md): enforce that targeted declarations have TSDoc comments.
-- [`required-tags`](./required-tags.md): enforce specific required tags.
-- [`restrict-tags`](./restrict-tags.md): allow/deny selected tags.
+- [**`require`**](./require.md): Enforces that targeted declarations have TSDoc/JSDoc block comments.
+- [**`required-tags`**](./required-tags.md): A composite rule engine that groups over 50 specific tag checks under one unified rule. It runs each enabled tag rule (`require-param`, `require-returns`, etc.) on valid AST blocks.
+- [**`restrict-tags`**](./restrict-tags.md): A rule that allows you to deny or allow-list specific TSDoc/JSDoc tags, preventing use of unsupported or non-standard tags across your codebase.
 
 For preset guidance, see [Presets](./presets/index.md).
 
