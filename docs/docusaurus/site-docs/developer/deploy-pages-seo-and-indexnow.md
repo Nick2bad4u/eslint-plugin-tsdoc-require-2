@@ -130,5 +130,3 @@ If you ever need a full replay, the `submit-sitemap` helper still exists as a ma
 
 - [Developer docs index](./index.md)
 - [Docusaurus config](https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/docs/docusaurus/docusaurus.config.ts)
-- [Deploy workflow](https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/.github/workflows/deploy-docusaurus.yml)
-- [Manual IndexNow workflow](https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/.github/workflows/run-indexnow.yml)

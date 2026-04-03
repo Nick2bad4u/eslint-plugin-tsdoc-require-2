@@ -22,8 +22,11 @@
  */
 
 /* You can override the default Infima variables here. */
+
 /* --------------------------------------------- */
+
 /* Rules sidebar accent bars (typefest-style)    */
+
 /* --------------------------------------------- */
 
 @font-face {
@@ -160,7 +163,7 @@
 
 .theme-doc-sidebar-menu .menu__link:hover,
 .theme-doc-sidebar-menu .menu__link:focus {
-    background-color: rgb(39 38 63 / 0.1);
+    background-color: rgb(39 38 63 / 10%);
     text-decoration: none;
 }
 
@@ -200,18 +203,9 @@
     border-inline-start-color: var(--sb-accent-started);
 }
 
-.sb-doc-rule-overview > .menu__link {
-    border-inline-start-color: var(--sb-accent-rules);
-}
-
-.sb-doc-rule-core > .menu__link {
-    border-inline-start-color: var(--sb-accent-rules-ts);
-}
-
-.sb-doc-rule-family > .menu__link {
-    border-inline-start-color: var(--sb-accent-rules-required-tags);
-}
-
+.sb-doc-rule-overview > .menu__link,
+.sb-doc-rule-core > .menu__link,
+.sb-doc-rule-family > .menu__link,
 .sb-cat-developer > .menu__link {
     border-inline-start-color: var(--sb-accent-developer);
 }
@@ -540,10 +534,7 @@
 /* required-tags palette */
 .sb-cat-rules-required-tags
     .theme-doc-sidebar-item-link-level-3:nth-child(6n + 1)
-    > .menu__link {
-    border-inline-start-color: #a855f7;
-}
-
+    > .menu__link,
 .sb-cat-rules-required-tags
     .sb-doc-required-tag.sb-required-tag-variant-0
     > .menu__link,
@@ -553,10 +544,7 @@
 
 .sb-cat-rules-required-tags
     .theme-doc-sidebar-item-link-level-3:nth-child(6n + 2)
-    > .menu__link {
-    border-inline-start-color: #8b5cf6;
-}
-
+    > .menu__link,
 .sb-cat-rules-required-tags
     .sb-doc-required-tag.sb-required-tag-variant-1
     > .menu__link,
@@ -566,10 +554,7 @@
 
 .sb-cat-rules-required-tags
     .theme-doc-sidebar-item-link-level-3:nth-child(6n + 3)
-    > .menu__link {
-    border-inline-start-color: #7c3aed;
-}
-
+    > .menu__link,
 .sb-cat-rules-required-tags
     .sb-doc-required-tag.sb-required-tag-variant-2
     > .menu__link,
@@ -579,10 +564,7 @@
 
 .sb-cat-rules-required-tags
     .theme-doc-sidebar-item-link-level-3:nth-child(6n + 4)
-    > .menu__link {
-    border-inline-start-color: #d946ef;
-}
-
+    > .menu__link,
 .sb-cat-rules-required-tags
     .sb-doc-required-tag.sb-required-tag-variant-3
     > .menu__link,
@@ -592,10 +574,7 @@
 
 .sb-cat-rules-required-tags
     .theme-doc-sidebar-item-link-level-3:nth-child(6n + 5)
-    > .menu__link {
-    border-inline-start-color: #ec4899;
-}
-
+    > .menu__link,
 .sb-cat-rules-required-tags
     .sb-doc-required-tag.sb-required-tag-variant-4
     > .menu__link,
@@ -605,10 +584,7 @@
 
 .sb-cat-rules-required-tags
     .theme-doc-sidebar-item-link-level-3:nth-child(6n)
-    > .menu__link {
-    border-inline-start-color: #c026d3;
-}
-
+    > .menu__link,
 .sb-cat-rules-required-tags
     .sb-doc-required-tag.sb-required-tag-variant-5
     > .menu__link,

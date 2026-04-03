@@ -2,7 +2,9 @@
 
 Restrict which tags are allowed in TSDoc blocks using allow/deny lists.
 
-## Rule Details
+> **Rule catalog ID:** R002
+
+## Targeted pattern scope
 
 This rule checks supported TypeScript declarations and default exports that already have TSDoc block comments.
 
@@ -11,9 +13,35 @@ It supports two modes:
 - `deny`: configured tags are disallowed.
 - `allow`: only configured tags are allowed.
 
+## What this rule reports
+
+Reports when forbidden tags are used.
+
+## Why this rule exists
+
 Use this rule to enforce compatibility constraints such as denying TypeDoc compatibility-only tags (`@augments`, `@typedef`, etc.) in strict TSDoc workflows.
 
-## Options
+## ❌ Incorrect
+
+```ts
+/**
+ * @foo forbidden
+ */
+export const x = 1;
+```
+
+## ✅ Correct
+
+```ts
+/**
+ * @param ok allowed
+ */
+export const x = 1;
+```
+
+## Additional examples
+
+### Options
 
 ```ts
 type Options = [
@@ -67,7 +95,7 @@ Default options:
 ]
 ```
 
-## ❌ Incorrect (default deny mode)
+### Incorrect (default deny mode)
 
 ```ts
 /**
@@ -79,7 +107,7 @@ export function calculate(): number {
 }
 ```
 
-## ✅ Correct (default deny mode)
+### Correct (default deny mode)
 
 ```ts
 /**
@@ -91,7 +119,7 @@ export function calculate(): number {
 }
 ```
 
-## ❌ Incorrect (allow mode)
+### Incorrect (allow mode)
 
 ```ts
 /**
@@ -110,7 +138,7 @@ With options:
 ["error", { mode: "allow", tags: ["@remarks"] }]
 ```
 
-## ✅ Correct (allow mode)
+### Correct (allow mode)
 
 ```ts
 /**
@@ -128,7 +156,7 @@ With options:
 ["error", { mode: "allow", tags: ["@remarks"] }]
 ```
 
-## Further Reading
+## Further reading
 
 - [TSDoc](https://tsdoc.org)
 - [TypeDoc Tags](https://typedoc.org/documents/Tags.html)

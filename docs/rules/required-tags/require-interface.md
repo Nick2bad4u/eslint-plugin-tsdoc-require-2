@@ -14,6 +14,8 @@ This rule accepts the same options as [`tsdoc-require-2/require`](../require.md)
 - `exportMode`: choose whether to check exported declarations, non-exported top-level declarations, or both.
 - `includeNonExported`: legacy alias for `exportMode: "all"`.
 
+<!-- -->
+
 ```ts
 type Options = [
     {

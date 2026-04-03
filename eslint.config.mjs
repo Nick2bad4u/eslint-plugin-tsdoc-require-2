@@ -103,16 +103,16 @@ const jsonSchemaValidatorRules = enableJsonSchemaValidation
     ? { "json-schema-validator/no-invalid": "error" }
     : {};
 
-
 const noExplicitTypeExportsPlugin = fixupPluginRules(
     /** @type {import("eslint").ESLint.Plugin} */ (noExplicitTypeExports)
 );
-const preferArrowPlugin = fixupPluginRules(/** @type {import("eslint").ESLint.Plugin} */ (pluginPreferArrow));
+const preferArrowPlugin = fixupPluginRules(
+    /** @type {import("eslint").ESLint.Plugin} */ (pluginPreferArrow)
+);
 const writeGoodCommentsPlugin = fixupPluginRules(pluginWriteGood);
 const pluginLoadableImports = fixupPluginRules(
     /** @type {import("eslint").ESLint.Plugin} */ (loadbleImportsPlugin)
 );
-
 
 const require = createRequire(import.meta.url);
 // eslint-disable-next-line unicorn/prefer-import-meta-properties -- n/no-unsupported-features reports import.meta.dirname as unsupported in this config context.
@@ -528,7 +528,7 @@ export default defineConfig([
             "@docusaurus/no-untranslated-text": "off",
             "@docusaurus/prefer-docusaurus-heading": "warn",
             "@docusaurus/string-literal-i18n-messages": "off",
-            
+
             "@eslint-react/no-duplicate-key": "warn",
             "@eslint-react/no-missing-component-display-name": "warn",
             "@eslint-react/no-missing-context-display-name": "warn",
@@ -629,7 +629,7 @@ export default defineConfig([
             "require-jsdoc": pluginJSDoc,
             security: pluginSecurity,
             sonarjs: sonarjs,
-                                    "tsdoc-require-2": tsdocRequire,
+            "tsdoc-require-2": tsdocRequire,
             unicorn: eslintPluginUnicorn,
             "unused-imports": pluginUnusedImports,
         },
@@ -657,13 +657,12 @@ export default defineConfig([
             ...comments.recommended.rules,
             ...pluginCanonical.configs.recommended.rules,
 
-            
             ...eslintPluginNoUseExtendNative.configs.recommended.rules,
 
             ...pluginMicrosoftSdl.configs.required.rules,
             ...listeners.configs.strict?.rules,
             ...moduleInterop.configs.recommended.rules,
-                        "@eslint-community/eslint-comments/no-restricted-disable": "warn",
+            "@eslint-community/eslint-comments/no-restricted-disable": "warn",
             // Deprecated rule - turned off
             "@eslint-community/eslint-comments/no-unused-disable": "off",
             "@eslint-community/eslint-comments/no-use": "off",
@@ -1251,7 +1250,7 @@ export default defineConfig([
             "promise/spec-only": "warn",
             "security/detect-non-literal-fs-filename": "off",
             "security/detect-object-injection": "off",
-                                    "unused-imports/no-unused-imports": "error",
+            "unused-imports/no-unused-imports": "error",
             "unused-imports/no-unused-vars": "error",
         },
     },
@@ -2425,7 +2424,7 @@ export default defineConfig([
             regexp: pluginRegexp,
             security: pluginSecurity,
             sonarjs: sonarjs,
-                        unicorn: eslintPluginUnicorn,
+            unicorn: eslintPluginUnicorn,
             "unused-imports": pluginUnusedImports,
             "write-good-comments": writeGoodCommentsPlugin,
         },

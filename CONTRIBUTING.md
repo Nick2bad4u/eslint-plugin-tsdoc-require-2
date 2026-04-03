@@ -1,4 +1,4 @@
-# Contributing to eslint-plugin-tsdoc-require-2-2
+# Contributing to eslint-plugin-tsdoc-require-2
 
 Thanks for contributing. This project focuses on ESLint rules, presets, docs, and tooling for GitHub Actions workflow quality, security, and maintainability.
 

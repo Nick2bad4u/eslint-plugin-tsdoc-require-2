@@ -12,4 +12,4 @@ Docs in this section target maintainers of **eslint-plugin-tsdoc-require-2** and
 
 - [Docusaurus Site Contract](./docusaurus-site-contract.md)
 - [Deploy Pages + SEO + IndexNow](./deploy-pages-seo-and-indexnow.md)
-- [TypeDoc API](/docs/developer/api/)
+- [TypeDoc API](./api/index.md)
