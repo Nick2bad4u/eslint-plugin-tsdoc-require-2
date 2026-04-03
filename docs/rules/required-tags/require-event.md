@@ -14,46 +14,44 @@ This rule accepts the same options as [`tsdoc-require-2/require`](../require.md)
 - `exportMode`: choose whether to check exported declarations, non-exported top-level declarations, or both.
 - `includeNonExported`: legacy alias for `exportMode: "all"`.
 
-<!-- -->
+  ```ts
+  type Options = [
+      {
+          enforceFor?: Array<
+              | "class"
+              | "enum"
+              | "function"
+              | "interface"
+              | "namespace"
+              | "object"
+              | "type"
+              | "variable"
+          >;
+          exportMode?: "all" | "exported" | "non-exported";
+          includeNonExported?: boolean;
+      },
+  ];
+  ```
 
-```ts
-type Options = [
-    {
-        enforceFor?: Array<
-            | "class"
-            | "enum"
-            | "function"
-            | "interface"
-            | "namespace"
-            | "object"
-            | "type"
-            | "variable"
-        >;
-        exportMode?: "all" | "exported" | "non-exported";
-        includeNonExported?: boolean;
-    },
-];
-```
+  Default options:
 
-Default options:
-
-```ts
-[
-    {
-        enforceFor: [
-            "class",
-            "enum",
-            "function",
-            "interface",
-            "namespace",
-            "object",
-            "type",
-            "variable",
-        ],
-        exportMode: "exported",
-    },
-]
-```
+  ```ts
+  [
+      {
+          enforceFor: [
+              "class",
+              "enum",
+              "function",
+              "interface",
+              "namespace",
+              "object",
+              "type",
+              "variable",
+          ],
+          exportMode: "exported",
+      },
+  ]
+  ```
 
 ## ❌ Incorrect
 

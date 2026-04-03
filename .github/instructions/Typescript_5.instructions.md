@@ -10,7 +10,7 @@ applyTo: "**/*.ts, **/*.tsx"
 
 - Prefer native features over polyfills and external helpers.
 - Use pure ES modules; never emit `require`, `module.exports`, or CommonJS helpers.
-- Prefer modern core APIs (e.g., `Array.prototype.at`, `Object.hasOwn`, `Promise.allSettled`) when they align with repository conventions; if a rule, fixer, or docs page intentionally standardizes on `JSDoc` or `TSDoc`, follow that project convention instead of defaulting to the native helper.
+- Prefer modern core APIs (e.g., `Array.prototype.at`, `Object.hasOwn`, `Promise.allSettled`) when they align with repository conventions; if a rule, fixer, or docs page intentionally standardizes on an already-installed helper library, follow that project convention instead of defaulting to the native helper.
 
 ---
 
@@ -46,7 +46,7 @@ applyTo: "**/*.ts, **/*.tsx"
   - `import` / `export` only; no `require`, `module.exports`, or dynamic `import()` without strong reason.
 - Prefer **named exports** over default exports for better refactoring and discoverability.
 - Ensure internal import paths are stable and non-circular; avoid barrel files except at intentional public module boundaries.
-- Leverage the configured path aliases (`@plugin/*`, `@assets/*`) when they improve clarity, and keep `tsconfig.json` and related tooling in sync when introducing new aliases.
+- Leverage configured path aliases when they improve clarity (for example `@plugin/*` or `@assets/*`, if this repository defines them), and keep `tsconfig.json` and related tooling in sync when introducing new aliases.
 - The project uses `moduleResolution: "bundler"` with extension rewriting—import source files without explicit `.js`/`.ts` extensions so the build can rewrite correctly.
 ---
 
@@ -117,23 +117,25 @@ applyTo: "**/*.ts, **/*.tsx"
 
 ---
 
-## Utility Types, Type-Level Helpers, and TSDoc
+## Utility Types, Type-Level Helpers, and Optional Utility Libraries
 
+- Use built-in utility types to express intent:
   - `Readonly<T>`, `Required<T>`, `Partial<T>`, `Pick<T, K>`, `Omit<T, K>`, `Record<K, T>`, `NonNullable<T>`, `ReturnType<F>`, `Parameters<F>`, etc.
+- Prefer built-in TypeScript utility types first. If the repository already includes a utility-type library such as **Type-Fest**, use it when it better expresses intent than the built-ins.
 
-### TSDoc Usage Guidelines
+### Optional Utility Library Guidelines
 
-- Import TSDoc helpers from `"TSDoc"` and keep imports **narrow and explicit**:
+- If the repository includes Type-Fest, import its helpers from `"type-fest"` and keep imports **narrow and explicit**:
 
   ```ts
-  import type { Except, Merge, SetRequired } from "TSDoc";
+  import type { JsonValue, SetRequired, Simplify } from "type-fest";
   ```
 
-- Use TSDoc for:
+- If Type-Fest is available, use it for:
   - **JSON-safe types**: `JsonObject`, `JsonValue`, `Jsonify<T>` when modeling data that must be serializable.
 
     ```ts
-    import type { JsonValue } from "TSDoc";
+    import type { JsonValue } from "type-fest";
 
     type ApiPayload = JsonValue;
     ```
@@ -141,7 +143,7 @@ applyTo: "**/*.ts, **/*.tsx"
   - **Tagged and branded types**: prefer `Tagged<Type, TagName>` for IDs and other primitives that share a representation but differ semantically. Treat legacy `Opaque`/`Branded` usage as migration territory, not the preferred new pattern.
 
     ```ts
-    import type { Tagged } from "TSDoc";
+    import type { Tagged } from "type-fest";
 
     type UserId = Tagged<string, "UserId">;
     type OrderId = Tagged<string, "OrderId">;
@@ -153,7 +155,7 @@ applyTo: "**/*.ts, **/*.tsx"
     - `Simplify<T>` to clean up deeply composed types for better tooling display.
 
     ```ts
-    import type { SetRequired, Simplify } from "TSDoc";
+    import type { SetRequired, Simplify } from "type-fest";
 
     type User = {
       id?: string;
@@ -167,7 +169,7 @@ applyTo: "**/*.ts, **/*.tsx"
   - **String manipulation**:
     - `CamelCase`, `KebabCase`, etc., when type-level string formats matter (e.g., mapping API keys to internal names).
 
-- Keep TSDoc usage:
+- Keep advanced utility-library usage:
   - **Local to domain-focused modules** (e.g., `ids.ts`, `api-types.ts`) instead of scattering across the codebase.
   - **Documented** at the type alias site when you use more advanced utilities, so future maintainers understand the intent.
 
@@ -203,7 +205,7 @@ applyTo: "**/*.ts, **/*.tsx"
   - Type your helpers, mocks, and fixtures.
   - Avoid `as any`; prefer helpers that create correctly typed objects.
 - Ensure test code compiles under the same strict settings as production code.
-- For test fixtures that must match JSON structures, prefer `JsonValue`/`JsonObject` from TSDoc to document the constraint.
+- For test fixtures that must match JSON structures, prefer repository-approved JSON-compatible types. If Type-Fest is installed, `JsonValue`/`JsonObject` are good options; otherwise define a small local type that documents the same constraint.
 
 ---
 
