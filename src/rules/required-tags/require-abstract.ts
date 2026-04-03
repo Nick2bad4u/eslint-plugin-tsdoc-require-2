@@ -1,7 +1,6 @@
 import {
     createRequireTagRuleListener,
     createTagRule,
-    defaultRuleOptions,
     enforceableEntityKinds,
     optionSchema,
     type TagRuleContext,
@@ -18,7 +17,6 @@ const RequireAbstractRule: TagRuleModule = createTagRule<
     create(context: TagRuleContext) {
         return createRequireTagRuleListener(context, "@abstract");
     },
-    defaultOptions: defaultRuleOptions,
     meta: {
         defaultOptions: [
             {

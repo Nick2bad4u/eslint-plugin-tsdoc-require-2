@@ -66,13 +66,6 @@ const enforceableEntityKinds = [
 
 const defaultEnforceFor: readonly EntityKind[] = [...enforceableEntityKinds];
 
-const defaultRuleOptions: Options = [
-    {
-        enforceFor: defaultEnforceFor,
-        exportMode: "exported",
-    },
-];
-
 const optionSchema: JSONSchema.JSONSchema4 = {
     additionalProperties: false,
     properties: {
@@ -502,7 +495,6 @@ const requireRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
             },
         };
     },
-    defaultOptions: defaultRuleOptions,
     meta: {
         defaultOptions: [
             {
