@@ -1,10 +1,40 @@
-# required-tags
+# tsdoc-require-2/required-tags
+
+> **Rule catalog ID:** R100
+
+## Targeted pattern scope
+
+This family of rules targets TSDoc blocks.
+
+## What this rule reports
+
+Reports missing required tags.
+
+## Why this rule exists
+
+Enforces consistency.
+
+## ❌ Incorrect
+
+```ts
+// See individual rule docs
+```
+
+## ✅ Correct
+
+```ts
+// See individual rule docs
+```
+
+
 
 Require specific TSDoc tags to exist in TSDoc blocks for supported TypeScript declarations and default exports.
 
 These rules only report declarations that already have a TSDoc block. Pair them with [`tsdoc-require-2/require`](./require.md) when you also want to require the comment itself.
 
-## Rules in this family
+## Additional examples
+
+### Rules in this family
 
 - [`tsdoc-require-2/require-abstract`](./required-tags/require-abstract.md)
 - [`tsdoc-require-2/require-alpha`](./required-tags/require-alpha.md)
@@ -63,7 +93,7 @@ These rules only report declarations that already have a TSDoc block. Pair them 
 - [`tsdoc-require-2/require-use-declared-type`](./required-tags/require-use-declared-type.md)
 - [`tsdoc-require-2/require-virtual`](./required-tags/require-virtual.md)
 
-## Shared options
+### Shared options
 
 Each rule accepts the same option shape:
 
@@ -113,3 +143,7 @@ Default options:
 `"namespace"` covers both `namespace Foo {}` and `declare module "pkg" {}` declarations.
 
 For behavior and examples, open each individual rule document linked above.
+
+## Further reading
+
+- [TSDoc](https://tsdoc.org)

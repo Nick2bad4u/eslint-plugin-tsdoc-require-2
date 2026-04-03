@@ -221,7 +221,7 @@ const ruleDocHeadingDefaults = {
         detectionBoundaries: true,
     },
     helperDocPathPattern:
-        /(^|\/)docs\/rules\/(?!index\.md$|required-tags\.md$|overview\.md$|getting-started\.md$|presets\/)[^/]+\.md$/u,
+        /(^|\/)docs\/rules\/(?!overview\.md$|getting-started\.md$|presets\/)[^/]+\.md$/u,
     requirePackageDocumentation: false,
     requirePackageDocumentationLabel: false,
     requireRuleCatalogId: true,
