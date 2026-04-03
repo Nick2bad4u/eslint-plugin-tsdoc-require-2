@@ -86,7 +86,7 @@ jobs:
               with:
                   token: ${{ env.CODECOV_TOKEN }}
                   slug: Nick2bad4u/eslint-plugin-tsdoc-require-2
-                  files: ./coverage/lcov.info
+                  files: coverage/lcov.info
                   flags: unit,${{ matrix.codecov_flag }}
                   name: vitest-unit-coverage-${{ matrix.codecov_flag }}
                   fail_ci_if_error: true
