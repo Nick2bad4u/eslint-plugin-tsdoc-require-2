@@ -620,10 +620,6 @@ const config: Config = {
                             label: "• API Reference",
                             to: "/docs/developer/api/",
                         },
-                        {
-                            label: "• Docusaurus Site Contract",
-                            to: "/docs/developer/docusaurus-site-contract/",
-                        },
                     ],
                 },
             ],
