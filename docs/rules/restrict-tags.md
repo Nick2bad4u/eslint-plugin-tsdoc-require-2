@@ -6,96 +6,40 @@ Restrict which tags are allowed in TSDoc blocks using allow/deny lists.
 
 ## Targeted pattern scope
 
-This rule checks supported TypeScript declarations and default exports that already have TSDoc block comments.
+This rule checks supported TypeScript declarations and default exports **that already have TSDoc block comments**.
 
-It supports two modes:
-
-- `deny`: configured tags are disallowed.
-- `allow`: only configured tags are allowed.
+By default, it runs on exported declarations and default exports. You can widen or narrow scope with `exportMode` and `enforceFor`.
 
 ## What this rule reports
 
-Reports when forbidden tags are used.
+This rule supports two modes:
+
+- `deny`: configured tags are forbidden.
+- `allow`: only configured tags are permitted.
+
+Default mode is `deny`, with a default blocked set focused on TypeDoc compatibility tags:
+
+- `@augments`
+- `@callback`
+- `@extends`
+- `@jsx`
+- `@satisfies`
+- `@type`
+- `@typedef`
+- `@yields`
 
 ## Why this rule exists
 
-Use this rule to enforce compatibility constraints such as denying TypeDoc compatibility-only tags (`@augments`, `@typedef`, etc.) in strict TSDoc workflows.
+A docs policy needs both **required information** and **controlled vocabulary**.
+
+`restrict-tags` prevents drift from your chosen documentation standard by blocking unsupported tags or enforcing an explicit allow-list.
+
+Use it with:
+
+- [`tsdoc-require-2/require`](./require.md) to enforce comment presence.
+- [`require-*` rules](./required-tags.md) to enforce mandatory tags.
 
 ## ❌ Incorrect
-
-```ts
-/**
- * @foo forbidden
- */
-export const x = 1;
-```
-
-## ✅ Correct
-
-```ts
-/**
- * @param ok allowed
- */
-export const x = 1;
-```
-
-## Additional examples
-
-### Options
-
-```ts
-type Options = [
-    {
-        enforceFor?: Array<
-            | "class"
-            | "enum"
-            | "function"
-            | "interface"
-            | "namespace"
-            | "object"
-            | "type"
-            | "variable"
-        >;
-        exportMode?: "all" | "exported" | "non-exported";
-        includeNonExported?: boolean;
-        mode?: "allow" | "deny";
-        tags?: Array<`@${string}`>;
-    },
-];
-```
-
-Default options:
-
-```ts
-[
-    {
-        enforceFor: [
-            "class",
-            "enum",
-            "function",
-            "interface",
-            "namespace",
-            "object",
-            "type",
-            "variable",
-        ],
-        exportMode: "exported",
-        mode: "deny",
-        tags: [
-            "@augments",
-            "@callback",
-            "@extends",
-            "@jsx",
-            "@satisfies",
-            "@type",
-            "@typedef",
-            "@yields",
-        ],
-    },
-]
-```
-
-### Incorrect (default deny mode)
 
 ```ts
 /**
@@ -103,11 +47,13 @@ Default options:
  * @typedef ResultShape
  */
 export function calculate(): number {
-    return 1;
+  return 1;
 }
 ```
 
-### Correct (default deny mode)
+With default configuration (`mode: "deny"`).
+
+## ✅ Correct
 
 ```ts
 /**
@@ -115,11 +61,78 @@ export function calculate(): number {
  * @remarks Uses plain TSDoc tags.
  */
 export function calculate(): number {
-    return 1;
+  return 1;
 }
 ```
 
-### Incorrect (allow mode)
+With default configuration (`mode: "deny"`).
+
+## Behavior and migration notes
+
+- This rule does not require comments on its own; it only validates tags found inside existing TSDoc blocks.
+- In `allow` mode, any tag not listed in `tags` is reported.
+- If you combine `allow` mode with required-tag rules, include all required tags in the allow-list or the rules will conflict.
+- Keep `enforceFor` and `exportMode` aligned with `require` and `require-*` rules for consistent policy.
+
+## Additional examples
+
+### Options
+
+```ts
+type Options = [
+  {
+    enforceFor?: Array<
+      | "class"
+      | "enum"
+      | "function"
+      | "interface"
+      | "namespace"
+      | "object"
+      | "type"
+      | "variable"
+    >;
+    exportMode?: "all" | "exported" | "non-exported";
+    includeNonExported?: boolean;
+    mode?: "allow" | "deny";
+    tags?: Array<`@${string}`>;
+  },
+];
+```
+
+Default options:
+
+```ts
+[
+  {
+    enforceFor: [
+      "class",
+      "enum",
+      "function",
+      "interface",
+      "namespace",
+      "object",
+      "type",
+      "variable",
+    ],
+    exportMode: "exported",
+    mode: "deny",
+    tags: [
+      "@augments",
+      "@callback",
+      "@extends",
+      "@jsx",
+      "@satisfies",
+      "@type",
+      "@typedef",
+      "@yields",
+    ],
+  },
+]
+```
+
+### Allow mode example
+
+#### Invalid in allow mode
 
 ```ts
 /**
@@ -128,17 +141,17 @@ export function calculate(): number {
  * @deprecated Use newCalculate instead.
  */
 export function calculate(): number {
-    return 1;
+  return 1;
 }
 ```
 
-With options:
+With:
 
 ```ts
 ["error", { mode: "allow", tags: ["@remarks"] }]
 ```
 
-### Correct (allow mode)
+#### Valid in allow mode
 
 ```ts
 /**
@@ -146,17 +159,45 @@ With options:
  * @remarks Useful details.
  */
 export function calculate(): number {
-    return 1;
+  return 1;
 }
 ```
 
-With options:
+With:
 
 ```ts
 ["error", { mode: "allow", tags: ["@remarks"] }]
 ```
 
+## ESLint flat config example
+
+```ts
+import tsdocRequire from "eslint-plugin-tsdoc-require-2";
+
+export default [
+  tsdocRequire.configs.tsdoc,
+  {
+    rules: {
+      "tsdoc-require-2/restrict-tags": [
+        "error",
+        {
+          mode: "deny",
+          tags: ["@typedef", "@callback"],
+        },
+      ],
+    },
+  },
+];
+```
+
+## When not to use it
+
+If your team intentionally allows free-form mixtures of TSDoc, JSDoc, and TypeDoc tags, this rule can create unnecessary friction.
+
+In that case, keep required-tag rules only for tags you truly need.
+
 ## Further reading
 
 - [TSDoc](https://tsdoc.org)
-- [TypeDoc Tags](https://typedoc.org/documents/Tags.html)
+- [TypeDoc tags reference](https://typedoc.org/documents/Tags.html)
+- [Rule family: required-tags](./required-tags.md)

@@ -2,9 +2,17 @@
 
 Require the `@module` tag in TSDoc blocks for supported TypeScript declarations.
 
-## Rule Details
+## Rule details
 
-This rule reports supported declarations and default exports when a TSDoc block exists but does not contain `@module`. Use `enforceFor: ["namespace"]` when you only want to target TypeScript `namespace` and `declare module` declarations. Pair it with [`tsdoc-require-2/require`](../require.md) when you also want to require the TSDoc block itself.
+This rule reports declarations that already have TSDoc but do not contain `@module`.
+
+It does not create a TSDoc block. Pair it with [`tsdoc-require-2/require`](../require.md) when you also want to require comments.
+
+For module-focused behavior, use `enforceFor: ["namespace"]` to target TypeScript `namespace` and `declare module` declarations.
+
+## Why use it
+
+`@module` improves package-level discoverability in generated documentation.
 
 ## Options
 
@@ -14,44 +22,27 @@ This rule accepts the same options as [`tsdoc-require-2/require`](../require.md)
 - `exportMode`: choose whether to check exported declarations, non-exported top-level declarations, or both.
 - `includeNonExported`: legacy alias for `exportMode: "all"`.
 
-  ```ts
-  type Options = [
-      {
-          enforceFor?: Array<
-              | "class"
-              | "enum"
-              | "function"
-              | "interface"
-              | "namespace"
-              | "object"
-              | "type"
-              | "variable"
-          >;
-          exportMode?: "all" | "exported" | "non-exported";
-          includeNonExported?: boolean;
-      },
-  ];
-  ```
+Flat config example (module-only scope):
 
-  Default options:
+```ts
+import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
-  ```ts
-  [
-      {
-          enforceFor: [
-              "class",
-              "enum",
-              "function",
-              "interface",
-              "namespace",
-              "object",
-              "type",
-              "variable",
-          ],
-          exportMode: "exported",
-      },
-  ]
-  ```
+export default [
+    {
+        plugins: {
+            "tsdoc-require-2": tsdocRequire,
+        },
+        rules: {
+            "tsdoc-require-2/require-module": [
+                "error",
+                {
+                    enforceFor: ["namespace"],
+                },
+            ],
+        },
+    },
+];
+```
 
 ## ❌ Incorrect
 
@@ -76,11 +67,11 @@ export namespace ApiDocs {
 }
 ```
 
-## When Not To Use It
+## When not to use it
 
 Disable this rule if your documentation convention does not require `@module` on the declarations targeted by your configuration.
 
-## Further Reading
+## Further reading
 
 - [TSDoc](https://tsdoc.org)
 - [TypeDoc Tags](https://typedoc.org/documents/Tags.html)

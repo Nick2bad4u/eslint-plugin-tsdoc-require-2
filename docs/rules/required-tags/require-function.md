@@ -2,9 +2,15 @@
 
 Require the `@function` tag in TSDoc blocks for supported TypeScript declarations.
 
-## Rule Details
+## Rule details
 
-This rule reports supported declarations and default exports when a TSDoc block exists but does not contain `@function`. It does not create the TSDoc block itself, so pair it with [`tsdoc-require-2/require`](../require.md) when you also want to require the comment.
+This rule reports declarations that already have TSDoc but do not contain `@function`.
+
+It does not create a TSDoc block. Pair it with [`tsdoc-require-2/require`](../require.md) when you also want to require comments.
+
+## Why use it
+
+`@function` can help teams and doc generators that expect explicit declaration-kind tags.
 
 ## Options
 
@@ -14,53 +20,34 @@ This rule accepts the same options as [`tsdoc-require-2/require`](../require.md)
 - `exportMode`: choose whether to check exported declarations, non-exported top-level declarations, or both.
 - `includeNonExported`: legacy alias for `exportMode: "all"`.
 
-  ```ts
-  type Options = [
-      {
-          enforceFor?: Array<
-              | "class"
-              | "enum"
-              | "function"
-              | "interface"
-              | "namespace"
-              | "object"
-              | "type"
-              | "variable"
-          >;
-          exportMode?: "all" | "exported" | "non-exported";
-          includeNonExported?: boolean;
-      },
-  ];
-  ```
+Flat config example (function-only scope):
 
-  Default options:
+```ts
+import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
-  ```ts
-  [
-      {
-          enforceFor: [
-              "class",
-              "enum",
-              "function",
-              "interface",
-              "namespace",
-              "object",
-              "type",
-              "variable",
-          ],
-          exportMode: "exported",
-      },
-  ]
-  ```
+export default [
+    {
+        plugins: {
+            "tsdoc-require-2": tsdocRequire,
+        },
+        rules: {
+            "tsdoc-require-2/require-function": [
+                "error",
+                { enforceFor: ["function"] },
+            ],
+        },
+    },
+];
+```
 
 ## ❌ Incorrect
 
 ```ts
 /**
- * Performs a tagged operation.
+ * Creates a stable slug for a title.
  */
-export function taggedFunction(value: string): string {
-    return value;
+export function toSlug(value: string): string {
+    return value.trim().toLowerCase();
 }
 ```
 
@@ -68,19 +55,19 @@ export function taggedFunction(value: string): string {
 
 ```ts
 /**
- * Performs a tagged operation.
+ * Creates a stable slug for a title.
  * @function
  */
-export function taggedFunction(value: string): string {
-    return value;
+export function toSlug(value: string): string {
+    return value.trim().toLowerCase();
 }
 ```
 
-## When Not To Use It
+## When not to use it
 
 Disable this rule if your documentation convention does not require `@function` on the declarations targeted by your configuration.
 
-## Further Reading
+## Further reading
 
 - [TSDoc](https://tsdoc.org)
 - [TypeDoc Tags](https://typedoc.org/documents/Tags.html)

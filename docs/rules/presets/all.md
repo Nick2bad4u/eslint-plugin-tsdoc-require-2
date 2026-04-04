@@ -2,6 +2,24 @@
 
 Enables every rule provided by this plugin, including all require-tag rules and `restrict-tags`.
 
+## What this preset is for
+
+Use `all` for auditing or policy design, not as a day-one default.
+
+Good use cases:
+
+- evaluating full rule coverage on an existing codebase
+- running one-time migration assessments
+- building a custom strict preset by starting from maximum coverage
+
+## Why this preset is risky as a default
+
+`all` enables niche tag requirements that most teams do not want globally.
+
+If enabled immediately in an established repository, expect a large number of violations and higher maintenance cost.
+
+A safer pattern is to start with `recommended`, `tsdoc`, or `typedoc-strict`, then add individual rules intentionally.
+
 ## Config key
 
 `tsdocRequire.configs.all`
@@ -15,6 +33,10 @@ export default [
     tsdocRequire.configs.all,
 ];
 ```
+
+## Adoption tip
+
+During migration, run this preset as warnings first and promote selected rules to errors after cleanup.
 
 ## Rules in this preset
 

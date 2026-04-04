@@ -1,46 +1,61 @@
 ---
 slug: /
-title: Rules Overview
+title: Rules
+description: Explore the comprehensive set of rules provided by eslint-plugin-tsdoc-require-2 to enforce TSDoc/JSDoc documentation standards in your TypeScript codebase.
 ---
 
-# tsdoc-require-2/index
+# Rules
 
-> **Rule catalog ID:** R000
+`eslint-plugin-tsdoc-require-2` enforces API documentation with three complementary rule families.
 
-## Targeted pattern scope
+## Rule family overview
 
-This is an overview page.
+| Family | Purpose | Start here when |
+| --- | --- | --- |
+| [`require`](./require.md) | Require a TSDoc block (`/** ... */`) on selected declarations. | You need a documentation baseline first. |
+| [`required-tags`](./required-tags.md) | Require specific tags (for example `@param`, `@returns`, `@remarks`) through individual `require-*` rules. | You want documentation completeness and consistency. |
+| [`restrict-tags`](./restrict-tags.md) | Allow-list or deny-list tags to control vocabulary and compatibility. | You need a strict tag policy (for example strict TSDoc vs loose JSDoc/TypeDoc tags). |
 
-## What this rule reports
+## How the families work together
 
-Provides a summary.
+Use them in this order:
 
-## Why this rule exists
+1. **Presence**: `require` ensures docs exist.
+2. **Completeness**: `require-*` rules ensure required tags exist.
+3. **Vocabulary**: `restrict-tags` ensures only approved tags are used.
 
-Navigation.
+This sequencing reduces confusion because tag rules only matter once comments exist.
 
-## ❌ Incorrect
+## Practical configuration pattern
+
+Use a preset for the baseline, then add focused overrides.
 
 ```ts
-// Not applicable
+import tsdocRequire from "eslint-plugin-tsdoc-require-2";
+
+export default [
+	tsdocRequire.configs.recommended,
+	{
+		rules: {
+			"tsdoc-require-2/require-param": ["error", { enforceFor: ["function"] }],
+			"tsdoc-require-2/require-returns": ["error", { enforceFor: ["function"] }],
+			"tsdoc-require-2/restrict-tags": [
+				"error",
+				{
+					mode: "deny",
+					tags: ["@typedef", "@callback"],
+				},
+			],
+		},
+	},
+];
 ```
 
-## ✅ Correct
+## Where to start
 
-```ts
-// Not applicable
-```
-
-## Further reading
-
-- [Docs](./require.md)
-
-`eslint-plugin-tsdoc-require-2` ships three rule groups:
-
-- [`require`](./require.md): enforce that targeted declarations have TSDoc comments.
-- [`required-tags`](./required-tags.md): enforce specific required tags.
-- [`restrict-tags`](./restrict-tags.md): allow/deny selected tags.
-
-For preset guidance, see [Presets](./presets/index.md).
-
-To configure the plugin quickly, see [Getting Started](./getting-started.md).
+- New adoption: [Getting Started](./getting-started.md)
+- Preset selection: [Presets Overview](./presets/index.md)
+- Rule family details:
+	- [`tsdoc-require-2/require`](./require.md)
+	- [`tsdoc-require-2/required-tags` family](./required-tags.md)
+	- [`tsdoc-require-2/restrict-tags`](./restrict-tags.md)

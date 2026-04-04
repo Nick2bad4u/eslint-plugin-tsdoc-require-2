@@ -175,19 +175,35 @@ const rulesSidebar: SidebarsConfig = {
             label: "🎛️ Presets",
             type: "category",
         },
-        toDocItem("index", "sb-doc-rule-overview", "📜 Rules Overview"),
-        toDocItem("require", "sb-doc-rule-core", "🧰 require"),
-        toDocItem("required-tags", "sb-doc-rule-family", "🏷️ required-tags"),
         {
-            className: "sb-cat-rules-required-tags",
-            collapsed: true,
-            items: requiredTagRuleDocIds.map((docId, itemIndex) =>
-                toRequiredTagDocItem(docId, itemIndex)
-            ),
-            label: "✨ Required Tags Rules",
+            className: "sb-cat-rules-overview",
+            collapsed: false,
+            label: "📜 Rules",
             type: "category",
+            link: { type: "doc", id: "index" },
+            items: [
+                toDocItem("require", "sb-doc-rule-core", "🧰 require"),
+                toDocItem(
+                    "required-tags",
+                    "sb-doc-rule-family",
+                    "🏷️ required-tags"
+                ),
+                {
+                    className: "sb-cat-rules-required-tags",
+                    collapsed: true,
+                    items: requiredTagRuleDocIds.map((docId, itemIndex) =>
+                        toRequiredTagDocItem(docId, itemIndex)
+                    ),
+                    label: "✨ Required Tags Rules",
+                    type: "category",
+                },
+                toDocItem(
+                    "restrict-tags",
+                    "sb-doc-rule-core",
+                    "🚫 restrict-tags"
+                ),
+            ],
         },
-        toDocItem("restrict-tags", "sb-doc-rule-core", "🚫 restrict-tags"),
     ],
 };
 

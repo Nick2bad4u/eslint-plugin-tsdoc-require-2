@@ -10,213 +10,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repositoryRoot = path.resolve(__dirname, "..");
 const readmePath = path.join(repositoryRoot, "README.md");
-const requiredTagRulesPath = path.join(
-    repositoryRoot,
-    "src",
-    "rules",
-    "require-tag-rules.ts"
-);
 
 const BEGIN_MARKER = "<!-- BEGIN_RULES_TABLE -->";
 const END_MARKER = "<!-- END_RULES_TABLE -->";
 
-/**
- * @type {readonly [
- *     "recommended",
- *     "detailed",
- *     "packages",
- *     "typedoc",
- *     "typedoc-strict",
- *     "tsdoc",
- *     "jsdoc",
- *     "all",
- * ]}
- */
-const PRESET_NAMES = [
-    "recommended",
-    "detailed",
-    "packages",
-    "typedoc",
-    "typedoc-strict",
-    "tsdoc",
-    "jsdoc",
-    "all",
-];
-
-/**
- * @param {string} ruleName
- *
- * @returns {string}
- */
-const docsPathFromRuleName = (ruleName) =>
-    `docs/rules/required-tags/${ruleName}.md`;
-
-const requiredTagRuleNamePattern = /ruleName:\s*"(?<ruleName>[^"\r\n]+)"/u;
-const requiredTagTagNamePattern = /tagName:\s*"(?<tagName>[^"\r\n]+)"/u;
-
-/**
- * @param {string} lineText
- *
- * @returns {{
- *     ruleName: string;
- *     tagName: string;
- * } | null}
- */
-const parseRequiredTagDefinitionLine = (lineText) => {
-    const ruleName =
-        requiredTagRuleNamePattern.exec(lineText)?.groups?.["ruleName"];
-    const tagName =
-        requiredTagTagNamePattern.exec(lineText)?.groups?.["tagName"];
-
-    if (ruleName === undefined || tagName === undefined) {
-        return null;
-    }
-
-    return {
-        ruleName,
-        tagName,
-    };
-};
-
-/**
- * @typedef RuleRow
- *
- * @property {string} ruleName ESLint rule name without the plugin prefix.
- * @property {string} docsPath Repository-relative markdown doc path.
- * @property {string} description Short rule description used in the README
- *   table.
- */
-
-/**
- * @param {string} sourceText
- *
- * @returns {RuleRow[]}
- */
-const parseRequiredTagDefinitions = (sourceText) => {
-    /** @type {RuleRow[]} */
-    const definitions = [];
-
-    for (const lineText of sourceText.split(/\r?\n/gu)) {
-        const parsedDefinition = parseRequiredTagDefinitionLine(lineText);
-        if (parsedDefinition === null) {
-            continue;
-        }
-
-        definitions.push({
-            description: `require ${parsedDefinition.tagName} tag in TSDoc blocks`,
-            docsPath: docsPathFromRuleName(parsedDefinition.ruleName),
-            ruleName: parsedDefinition.ruleName,
-        });
-    }
-
-    return definitions;
-};
-
-/**
- * @param {readonly string[]} ruleNames
- *
- * @returns {{
- *     recommended: ReadonlySet<string>;
- *     detailed: ReadonlySet<string>;
- *     packages: ReadonlySet<string>;
- *     typedoc: ReadonlySet<string>;
- *     "typedoc-strict": ReadonlySet<string>;
- *     tsdoc: ReadonlySet<string>;
- *     jsdoc: ReadonlySet<string>;
- *     all: ReadonlySet<string>;
- * }}
- */
-const getPresetMembership = (ruleNames) => {
-    const allRuleNames = new Set(ruleNames);
-
-    return {
-        all: allRuleNames,
-        detailed: new Set(["require", "require-remarks"]),
-        packages: new Set([
-            "require",
-            "require-package-documentation",
-            "require-remarks",
-        ]),
-        typedoc: new Set([
-            "require",
-            "require-class",
-            "require-enum",
-            "require-function",
-            "require-interface",
-        ]),
-        "typedoc-strict": new Set([
-            "require",
-            "require-class",
-            "require-enum",
-            "require-function",
-            "require-interface",
-            "require-module",
-            "require-remarks",
-            "restrict-tags",
-        ]),
-        tsdoc: new Set([
-            "require",
-            "require-param",
-            "require-remarks",
-            "require-returns",
-            "require-throws",
-            "require-type-param",
-            "restrict-tags",
-        ]),
-        jsdoc: new Set([
-            "require",
-            "require-param",
-            "require-returns",
-            "require-throws",
-        ]),
-        recommended: new Set(["require"]),
-    };
-};
-
-/**
- * @param {boolean} enabled
- *
- * @returns {string}
- */
-const toCheckmark = (enabled) => (enabled ? "✅" : "—");
-
-/**
- * @param {RuleRow} rule
- *
- * @returns {string}
- */
-const toRuleLink = ({ docsPath, ruleName }) =>
-    `[\`tsdoc-require-2/${ruleName}\`](./${docsPath})`;
-
-/**
- * @param {readonly RuleRow[]} rules
- *
- * @returns {string}
- */
-const buildRulesTable = (rules) => {
-    const header = [
-        "| Rule | Description | Recommended | Detailed | Packages | TypeDoc | TypeDoc Strict | TSDoc | JSDoc | All |",
-        "| --- | --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
-    ];
-
-    const membership = getPresetMembership(rules.map((rule) => rule.ruleName));
-
-    const rows = rules.map((rule) => {
-        const cells = [
-            toRuleLink(rule),
-            rule.description,
-            ...PRESET_NAMES.map((presetName) => {
-                const presetMembers = membership[presetName];
-
-                return toCheckmark(presetMembers.has(rule.ruleName));
-            }),
-        ];
-
-        return `| ${cells.join(" | ")} |`;
-    });
-
-    return [...header, ...rows].join("\n");
-};
+const rulesSectionBody = [
+    "- Rule coverage by preset is documented in the [Preset matrix](#preset-matrix) above.",
+    "- For full rule documentation links, see [Rule docs](#rule-docs).",
+].join("\n");
 
 /**
  * @param {string} text
@@ -245,50 +46,24 @@ const main = async () => {
     const args = new Set(process.argv.slice(2));
     const checkOnly = args.has("--check");
 
-    const [readmeText, requiredTagRulesText] = await Promise.all([
-        readFile(readmePath, "utf8"),
-        readFile(requiredTagRulesPath, "utf8"),
-    ]);
-
-    const requiredTagRules = parseRequiredTagDefinitions(requiredTagRulesText);
-    requiredTagRules.sort((left, right) =>
-        left.ruleName.localeCompare(right.ruleName)
-    );
-
-    const allRules = [
-        {
-            description:
-                "require TSDoc comments for supported TypeScript declarations and default exports, with configurable export scope.",
-            docsPath: "docs/rules/require.md",
-            ruleName: "require",
-        },
-        {
-            description:
-                "restrict specific TSDoc/JSDoc tags in TSDoc blocks using allow/deny lists with configurable declaration scope.",
-            docsPath: "docs/rules/restrict-tags.md",
-            ruleName: "restrict-tags",
-        },
-        ...requiredTagRules,
-    ];
-
-    const table = buildRulesTable(allRules);
-    const updatedReadme = replaceBetweenMarkers(readmeText, table);
+    const readmeText = await readFile(readmePath, "utf8");
+    const updatedReadme = replaceBetweenMarkers(readmeText, rulesSectionBody);
 
     if (updatedReadme === readmeText) {
-        console.log("README rules table is already up-to-date.");
+        console.log("README rules section is already up-to-date.");
         return;
     }
 
     if (checkOnly) {
         console.error(
-            "README rules table is out-of-date. Run: node ./scripts/sync-readme-rules-table.mjs"
+            "README rules section is out-of-date. Run: node ./scripts/sync-readme-rules-table.mjs"
         );
         process.exitCode = 1;
         return;
     }
 
     await writeFile(readmePath, updatedReadme, "utf8");
-    console.log("Updated README rules table.");
+    console.log("Updated README rules section.");
 };
 
 await main();

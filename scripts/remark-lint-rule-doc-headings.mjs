@@ -120,7 +120,7 @@ const optionalDetailAllowedParentHeadings = new Set([
 ]);
 
 const defaultHelperDocPathPattern =
-    /(^|\/)docs\/rules\/(?!overview\.md$|getting-started\.md$|presets\/)[^/]+\.md$/u;
+    /(^|\/)docs\/rules\/(?!overview\.md$|index\.md$|getting-started\.md$|presets\/)[^/]+\.md$/u;
 const defaultRuleCatalogIdLinePattern = /^> \*\*Rule catalog ID:\*\* R\d{3}$/u;
 const defaultPackageDocumentationLabelPattern =
     /^[^\r\n]+ package documentation:$/mu;
