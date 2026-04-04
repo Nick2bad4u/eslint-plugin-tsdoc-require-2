@@ -55,12 +55,15 @@ const parseRequiredTagRuleNames = (sourceText) => {
 /**
  * @typedef PresetDefinition
  *
- * @property {string} configKey
- * @property {string} description
- * @property {string} emoji
- * @property {string} name
- * @property {readonly string[]} rules
- * @property {string} slug
+ * @property {string} configKey Exported config accessor (for example
+ *   `tsdocRequire.configs.recommended`).
+ * @property {string} description Short human-readable preset summary for legend
+ *   output.
+ * @property {string} emoji Emoji used in the preset legend and table cells.
+ * @property {string} name Stable preset identifier used for membership maps.
+ * @property {readonly string[]} rules Rule names included directly by the
+ *   preset (the `all` preset is expanded separately).
+ * @property {string} slug Website/docs slug used for preset links.
  */
 
 const websiteRulesBaseUrl =
