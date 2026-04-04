@@ -6,7 +6,9 @@ Require TSDoc comments for supported TypeScript declarations and default exports
 
 ## Targeted pattern scope
 
-By default, this rule reports exported declarations that do not have a TSDoc block comment (`/** ... */`) directly above them.
+By default, this rule reports supported **exported** declarations that do not have a TSDoc block comment (`/** ... */`) directly above them.
+
+It evaluates top-level declarations and handles both inline exports and export specifiers.
 
 ## What this rule reports
 
@@ -21,11 +23,19 @@ It checks:
 - exported variables
 - default exports (including default-exported identifiers)
 
+For default exports, supported expression forms include function/class expressions, object expressions, and arrow functions.
+
 When `exportMode: "all"` is enabled, the same checks also apply to non-exported top-level declarations. When `exportMode: "non-exported"` is enabled, only non-exported top-level declarations are checked.
 
 ## Why this rule exists
 
-Why this matters: if exported APIs are undocumented, consumers have to inspect implementation details instead of reading a stable contract.
+If exported APIs are undocumented, consumers have to infer contracts from implementation details.
+
+This rule is the foundation for the plugin’s policy model:
+
+- [`required-tags`](./required-tags.md) rules validate comment content.
+- [`restrict-tags`](./restrict-tags.md) validates tag vocabulary.
+- `require` ensures those checks have an actual comment block to validate.
 
 ## ❌ Incorrect
 
@@ -59,6 +69,13 @@ export { Shape };
 const createUser = () => ({ id: "1" });
 export default createUser;
 ```
+
+## Behavior and migration notes
+
+- Start with `exportMode: "exported"` to enforce public API docs first.
+- Expand to `"all"` when internal top-level declarations should also be documented.
+- Keep `exportMode` and `enforceFor` aligned with `require-*` and `restrict-tags` rules so documentation policy remains consistent.
+- `includeNonExported` remains supported as a legacy alias for `exportMode: "all"`, but new configurations should prefer `exportMode`.
 
 ## Additional examples
 

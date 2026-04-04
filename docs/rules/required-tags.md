@@ -4,35 +4,120 @@
 
 ## Targeted pattern scope
 
-This family of rules targets TSDoc blocks.
+This page documents the **required-tag rule family** (`require-*`).
+
+Each `require-*` rule checks declarations that already have TSDoc and reports when its specific tag is missing.
+
+Examples:
+
+- `tsdoc-require-2/require-param` requires `@param`
+- `tsdoc-require-2/require-returns` requires `@returns`
+- `tsdoc-require-2/require-remarks` requires `@remarks`
 
 ## What this rule reports
 
-Reports missing required tags.
+For each enabled `require-*` rule, reports declarations where:
+
+- a TSDoc block exists, and
+- the required tag for that rule does not appear in the block.
+
+Like [`tsdoc-require-2/require`](./require.md), required-tag rules support declaration targeting (`enforceFor`) and export scope (`exportMode` / `includeNonExported`).
 
 ## Why this rule exists
 
-Enforces consistency.
+Comment presence alone does not guarantee useful docs.
+
+Required-tag rules let you enforce documentation contracts such as:
+
+- every documented function has `@param` / `@returns`
+- every package entry has `@packageDocumentation`
+- every declaration includes `@remarks` for implementation context
+
+Together, these rules turn documentation from optional prose into a consistent API contract.
 
 ## ❌ Incorrect
 
 ```ts
-// See individual rule docs
+/**
+ * Creates a user record.
+ */
+export function createUser(name: string): string {
+  return name;
+}
 ```
+
+With:
+
+```ts
+["error", { enforceFor: ["function"] }]
+```
+
+for `tsdoc-require-2/require-param` and `tsdoc-require-2/require-returns`.
 
 ## ✅ Correct
 
 ```ts
-// See individual rule docs
+/**
+ * Creates a user record.
+ * @param name - User display name.
+ * @returns Persisted user ID.
+ */
+export function createUser(name: string): string {
+  return name;
+}
 ```
 
+## Behavior and migration notes
 
-
-Require specific TSDoc tags to exist in TSDoc blocks for supported TypeScript declarations and default exports.
-
-These rules only report declarations that already have a TSDoc block. Pair them with [`tsdoc-require-2/require`](./require.md) when you also want to require the comment itself.
+- No single runtime rule key named `tsdoc-require-2/required-tags` exists; enable individual `require-*` rules.
+- Required-tag rules only validate comments that exist. Pair them with [`tsdoc-require-2/require`](./require.md).
+- If you also enable [`tsdoc-require-2/restrict-tags`](./restrict-tags.md) in `allow` mode, include all required tags in the allow-list to avoid policy conflicts.
+- Keep `enforceFor` and `exportMode` aligned across `require`, `require-*`, and `restrict-tags` for predictable results.
 
 ## Additional examples
+
+### Shared options
+
+Each `require-*` rule accepts the same option shape:
+
+```ts
+type Options = [
+  {
+    enforceFor?: Array<
+      | "class"
+      | "enum"
+      | "function"
+      | "interface"
+      | "namespace"
+      | "object"
+      | "type"
+      | "variable"
+    >;
+    exportMode?: "all" | "exported" | "non-exported";
+    includeNonExported?: boolean;
+  },
+];
+```
+
+Default options:
+
+```ts
+[
+  {
+    enforceFor: [
+      "class",
+      "enum",
+      "function",
+      "interface",
+      "namespace",
+      "object",
+      "type",
+      "variable",
+    ],
+    exportMode: "exported",
+  },
+]
+```
 
 ### Rules in this family
 
@@ -93,57 +178,31 @@ These rules only report declarations that already have a TSDoc block. Pair them 
 - [`tsdoc-require-2/require-use-declared-type`](./required-tags/require-use-declared-type.md)
 - [`tsdoc-require-2/require-virtual`](./required-tags/require-virtual.md)
 
-### Shared options
-
-Each rule accepts the same option shape:
+## ESLint flat config example
 
 ```ts
-type Options = [
-    {
-        enforceFor?: Array<
-            | "class"
-            | "enum"
-            | "function"
-            | "interface"
-            | "namespace"
-            | "object"
-            | "type"
-            | "variable"
-        >;
-        exportMode?: "all" | "exported" | "non-exported";
-        includeNonExported?: boolean;
+import tsdocRequire from "eslint-plugin-tsdoc-require-2";
+
+export default [
+  tsdocRequire.configs.recommended,
+  {
+    rules: {
+      "tsdoc-require-2/require-param": ["error", { enforceFor: ["function"] }],
+      "tsdoc-require-2/require-returns": ["error", { enforceFor: ["function"] }],
+      "tsdoc-require-2/require-throws": ["error", { enforceFor: ["function"] }],
     },
+  },
 ];
 ```
 
-Default options:
+## When not to use it
 
-```ts
-[
-    {
-        enforceFor: [
-            "class",
-            "enum",
-            "function",
-            "interface",
-            "namespace",
-            "object",
-            "type",
-            "variable",
-        ],
-        exportMode: "exported",
-    },
-]
-```
+If your team prefers free-form narrative comments and does not want tag-level structure, required-tag rules may add noise.
 
-- `enforceFor`: limits which declaration kinds are checked.
-- `exportMode`: chooses whether to check exported declarations, non-exported top-level declarations, or both.
-- `includeNonExported`: legacy alias for `exportMode: "all"`.
-
-`"namespace"` covers both `namespace Foo {}` and `declare module "pkg" {}` declarations.
-
-For behavior and examples, open each individual rule document linked above.
+In that case, keep `tsdoc-require-2/require` enabled and only add the strict tag rules that provide clear value.
 
 ## Further reading
 
 - [TSDoc](https://tsdoc.org)
+- [Rule family: require](./require.md)
+- [Rule family: restrict-tags](./restrict-tags.md)

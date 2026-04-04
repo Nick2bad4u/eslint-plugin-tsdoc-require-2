@@ -103,8 +103,6 @@
         "contrib:generate": "all-contributors generate",
         "docs:api": "npm run --workspace docs/docusaurus docs:api",
         "docs:build": "npm run build:eslint-inspector && npm run build:stylelint-inspector && npm run --workspace docs/docusaurus build",
-        "docs:check-site-contract": "node packages/docusaurus-site-contract/cli.mjs --config docs/docusaurus/site-contract.config.mjs",
-        "docs:site-contract:init": "node packages/docusaurus-site-contract/cli.mjs init --root .",
         "docs:start": "npm run --workspace docs/docusaurus start",
         "lint": "cross-env NODE_OPTIONS=--max_old_space_size=16384 eslint --cache --cache-strategy content --cache-location .cache/.eslintcache",
         "lint:action": "npm run lint:actions",

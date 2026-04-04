@@ -1,29 +1,45 @@
 # tsdoc-require-2/require-param
 
-Require the `@param` tag in TSDoc blocks for exported declarations.
+Require the `@param` tag in TSDoc blocks for targeted declarations.
 
 ## Rule details
 
-By default, this rule reports exported declarations (and supported default exports) that have TSDoc but are missing `@param`. Set `includeNonExported: true` to also check non-exported top-level declarations.
+This rule reports declarations that already have TSDoc but are missing `@param`.
 
-It supports the same options as [`tsdoc-require-2/require`](../require.md):
+It does not create a TSDoc block. Pair it with [`tsdoc-require-2/require`](../require.md) when you also want to require comments.
 
-- `enforceFor`: choose which declaration kinds are checked.
-- `includeNonExported`: when `true`, also check non-exported top-level declarations (default: `false`).
+## Why use it
+
+`@param` documents input meaning and reduces ambiguity at call sites.
 
 ## Options
 
-```json
-{
-  "rules": {
-    "tsdoc-require-2/require-param": [
-      "error",
-      {
-        "enforceFor": ["class", "function", "interface", "type", "enum", "variable", "object"]
-      }
-    ]
-  }
-}
+This rule supports the same options as [`tsdoc-require-2/require`](../require.md):
+
+- `enforceFor`
+- `exportMode`
+- `includeNonExported` (legacy alias for `exportMode: "all"`)
+
+Flat config example (function-focused scope):
+
+```ts
+import tsdocRequire from "eslint-plugin-tsdoc-require-2";
+
+export default [
+  {
+    plugins: {
+      "tsdoc-require-2": tsdocRequire,
+    },
+    rules: {
+      "tsdoc-require-2/require-param": [
+        "error",
+        {
+          enforceFor: ["function"],
+        },
+      ],
+    },
+  },
+];
 ```
 
 ## Examples
@@ -32,10 +48,10 @@ It supports the same options as [`tsdoc-require-2/require`](../require.md):
 
 ```ts
 /**
- * Performs a task.
+ * Converts input to a stable ID.
  */
-export function runTask(value: string): string {
-  return value;
+export function toStableId(value: string): string {
+  return value.trim().toLowerCase();
 }
 ```
 
@@ -43,15 +59,19 @@ export function runTask(value: string): string {
 
 ```ts
 /**
- * Performs a task.
- * @param
+ * Converts input to a stable ID.
+ * @param value - Raw identifier input.
  */
-export function runTask(value: string): string {
-  return value;
+export function toStableId(value: string): string {
+  return value.trim().toLowerCase();
 }
 ```
 
+## Behavior notes
+
+This rule checks tag presence. It does not validate one `@param` entry per function parameter.
+
 ## Further reading
 
-- TSDoc tag reference: <https://tsdoc.org/pages/tags/param/>
-- Rule index: [required-tags](../required-tags.md)
+- [TSDoc tag reference: @param](https://tsdoc.org/pages/tags/param/)
+- [required-tags family overview](../required-tags.md)

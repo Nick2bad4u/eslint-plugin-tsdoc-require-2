@@ -535,7 +535,7 @@ const config: Config = {
                     type: "dropdown",
                     items: [
                         {
-                            label: "• Preset Reference",
+                            label: "📘 Preset Reference",
                             to: "/docs/rules/presets/",
                         },
                         {

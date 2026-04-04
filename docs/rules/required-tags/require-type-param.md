@@ -1,29 +1,45 @@
 # tsdoc-require-2/require-type-param
 
-Require the `@typeParam` tag in TSDoc blocks for exported declarations.
+Require the `@typeParam` tag in TSDoc blocks for targeted declarations.
 
 ## Rule details
 
-By default, this rule reports exported declarations (and supported default exports) that have TSDoc but are missing `@typeParam`. Set `includeNonExported: true` to also check non-exported top-level declarations.
+This rule reports declarations that already have TSDoc but are missing `@typeParam`.
 
-It supports the same options as [`tsdoc-require-2/require`](../require.md):
+It does not create a TSDoc block. Pair it with [`tsdoc-require-2/require`](../require.md) when you also want to require comments.
 
-- `enforceFor`: choose which declaration kinds are checked.
-- `includeNonExported`: when `true`, also check non-exported top-level declarations (default: `false`).
+## Why use it
+
+`@typeParam` makes generic contracts easier to understand for callers and maintainers.
 
 ## Options
 
-```json
-{
-  "rules": {
-    "tsdoc-require-2/require-type-param": [
-      "error",
-      {
-        "enforceFor": ["class", "function", "interface", "type", "enum", "variable", "object"]
-      }
-    ]
-  }
-}
+This rule supports the same options as [`tsdoc-require-2/require`](../require.md):
+
+- `enforceFor`
+- `exportMode`
+- `includeNonExported` (legacy alias for `exportMode: "all"`)
+
+Flat config example (generic declarations only):
+
+```ts
+import tsdocRequire from "eslint-plugin-tsdoc-require-2";
+
+export default [
+  {
+    plugins: {
+      "tsdoc-require-2": tsdocRequire,
+    },
+    rules: {
+      "tsdoc-require-2/require-type-param": [
+        "error",
+        {
+          enforceFor: ["class", "function", "interface", "type"],
+        },
+      ],
+    },
+  },
+];
 ```
 
 ## Examples
@@ -32,10 +48,10 @@ It supports the same options as [`tsdoc-require-2/require`](../require.md):
 
 ```ts
 /**
- * Performs a task.
+ * Wraps data in a typed container.
  */
-export function runTask(value: string): string {
-  return value;
+export function wrap<T>(value: T): { value: T } {
+  return { value };
 }
 ```
 
@@ -43,15 +59,19 @@ export function runTask(value: string): string {
 
 ```ts
 /**
- * Performs a task.
- * @typeParam
+ * Wraps data in a typed container.
+ * @typeParam T - Value type stored in the wrapper.
  */
-export function runTask(value: string): string {
-  return value;
+export function wrap<T>(value: T): { value: T } {
+  return { value };
 }
 ```
 
+## Behavior notes
+
+This rule checks tag presence. It does not verify one `@typeParam` tag per generic parameter.
+
 ## Further reading
 
-- TSDoc tag reference: <https://tsdoc.org/pages/tags/typeparam/>
-- Rule index: [required-tags](../required-tags.md)
+- [TSDoc tag reference: @typeParam](https://tsdoc.org/pages/tags/typeparam/)
+- [required-tags family overview](../required-tags.md)

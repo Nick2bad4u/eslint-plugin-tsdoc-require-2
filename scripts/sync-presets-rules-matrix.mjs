@@ -53,117 +53,207 @@ const parseRequiredTagRuleNames = (sourceText) => {
 };
 
 /**
+ * @typedef PresetDefinition
+ *
+ * @property {string} configKey
+ * @property {string} description
+ * @property {string} emoji
+ * @property {string} name
+ * @property {readonly string[]} rules
+ * @property {string} slug
+ */
+
+const websiteRulesBaseUrl =
+    "https://nick2bad4u.github.io/eslint-plugin-tsdoc-require-2/docs/rules";
+
+const presetDefinitions = [
+    {
+        configKey: "tsdocRequire.configs.recommended",
+        description: "Minimal baseline TSDoc enforcement.",
+        emoji: "🟢",
+        name: "recommended",
+        rules: ["require"],
+        slug: "recommended",
+    },
+    {
+        configKey: "tsdocRequire.configs.detailed",
+        description: "Require comments plus @remarks.",
+        emoji: "🟡",
+        name: "detailed",
+        rules: ["require", "require-remarks"],
+        slug: "detailed",
+    },
+    {
+        configKey: "tsdocRequire.configs.packages",
+        description: "Package docs baseline with @packageDocumentation.",
+        emoji: "🟠",
+        name: "packages",
+        rules: [
+            "require",
+            "require-remarks",
+            "require-package-documentation",
+        ],
+        slug: "packages",
+    },
+    {
+        configKey: "tsdocRequire.configs.typedoc",
+        description: "Conservative TypeDoc declaration-kind tags.",
+        emoji: "🔵",
+        name: "typedoc",
+        rules: [
+            "require",
+            "require-class",
+            "require-enum",
+            "require-function",
+            "require-interface",
+        ],
+        slug: "typedoc",
+    },
+    {
+        configKey: 'tsdocRequire.configs["typedoc-strict"]',
+        description: "Strict TypeDoc with module/remarks and tag restrictions.",
+        emoji: "🔴",
+        name: "typedoc-strict",
+        rules: [
+            "require",
+            "require-class",
+            "require-enum",
+            "require-function",
+            "require-interface",
+            "require-module",
+            "require-remarks",
+            "restrict-tags",
+        ],
+        slug: "typedoc-strict",
+    },
+    {
+        configKey: "tsdocRequire.configs.tsdoc",
+        description:
+            "TSDoc-focused baseline with function/type tags plus tag restrictions.",
+        emoji: "🟣",
+        name: "tsdoc",
+        rules: [
+            "require",
+            "require-param",
+            "require-remarks",
+            "require-returns",
+            "require-throws",
+            "require-type-param",
+            "restrict-tags",
+        ],
+        slug: "tsdoc",
+    },
+    {
+        configKey: "tsdocRequire.configs.jsdoc",
+        description: "JSDoc-style function-tag baseline.",
+        emoji: "🟦",
+        name: "jsdoc",
+        rules: [
+            "require",
+            "require-param",
+            "require-returns",
+            "require-throws",
+        ],
+        slug: "jsdoc",
+    },
+    {
+        configKey: "tsdocRequire.configs.all",
+        description:
+            "All plugin rules. Use for audits and deliberate strictness.",
+        emoji: "⚫",
+        name: "all",
+        rules: [],
+        slug: "all",
+    },
+];
+
+/**
+ * @param {string} slug
+ *
+ * @returns {string}
+ */
+const toPresetDocPath = (slug) => `${websiteRulesBaseUrl}/presets/${slug}`;
+
+/**
  * @param {string} ruleName
  *
  * @returns {string}
  */
-const toRuleLink = (ruleName) => `\`tsdoc-require-2/${ruleName}\``;
+const toRuleDocPath = (ruleName) => {
+    if (ruleName === "require") {
+        return `${websiteRulesBaseUrl}/require`;
+    }
+
+    if (ruleName === "restrict-tags") {
+        return `${websiteRulesBaseUrl}/restrict-tags`;
+    }
+
+    return `${websiteRulesBaseUrl}/required-tags/${ruleName}`;
+};
 
 /**
- * @typedef PresetRow
+ * @param {string} ruleName
  *
- * @property {string} name Preset config name exposed by the plugin.
- * @property {string} purpose Human-readable purpose shown in README.
- * @property {string[]} rules Rule names included in the preset.
+ * @returns {string}
  */
+const toRuleLink = (ruleName) =>
+    `[` + `\`tsdoc-require-2/${ruleName}\`` + `](${toRuleDocPath(ruleName)})`;
+
+/**
+ * @param {string} _ruleName
+ *
+ * @returns {"—"}
+ */
+const toFixLegendValue = (_ruleName) => "—";
 
 /**
  * @param {readonly string[]} requiredTagRuleNames
  *
+ * @returns {{
+ *     allRuleNames: readonly string[];
+ *     presetMembership: Readonly<Record<string, ReadonlySet<string>>>;
+ * }}
+ */
+const buildPresetMembership = (requiredTagRuleNames) => {
+    const allRuleNames = [
+        "require",
+        "restrict-tags",
+        ...requiredTagRuleNames,
+    ].toSorted((left, right) => left.localeCompare(right));
+
+    /** @type {Record<string, ReadonlySet<string>>} */
+    const presetMembership = {};
+
+    for (const preset of presetDefinitions) {
+        if (preset.name === "all") {
+            presetMembership[preset.name] = new Set(allRuleNames);
+            continue;
+        }
+
+        presetMembership[preset.name] = new Set(preset.rules);
+    }
+
+    return {
+        allRuleNames,
+        presetMembership,
+    };
+};
+
+/**
  * @returns {string[]}
  */
-const buildPresetRows = (requiredTagRuleNames) => {
-    const allRuleNames = ["require", ...requiredTagRuleNames];
+const buildPresetLegendLines = () => [
+    "- `Fix` legend:",
+    "  - `🔧` = autofixable",
+    "  - `💡` = suggestions available",
+    "  - `—` = report only",
+    "- `Preset key` legend:",
+    ...presetDefinitions.map((preset) => {
+        const presetPath = toPresetDocPath(preset.slug);
 
-    /** @type {PresetRow[]} */
-    const presets = [
-        {
-            name: "recommended",
-            purpose: "Minimal baseline TSDoc enforcement.",
-            rules: ["require"],
-        },
-        {
-            name: "detailed",
-            purpose: "General code docs baseline with remarks included.",
-            rules: ["require", "require-remarks"],
-        },
-        {
-            name: "packages",
-            purpose: "Library/package-focused baseline for package entry docs.",
-            rules: [
-                "require",
-                "require-remarks",
-                "require-package-documentation",
-            ],
-        },
-        {
-            name: "typedoc",
-            purpose:
-                "Conservative TypeDoc-oriented baseline using declaration-kind tags that can be inferred safely.",
-            rules: [
-                "require",
-                "require-class",
-                "require-enum",
-                "require-function",
-                "require-interface",
-            ],
-        },
-        {
-            name: "typedoc-strict",
-            purpose:
-                "Stricter TypeDoc preset with module/remarks requirements plus compatibility-tag restrictions.",
-            rules: [
-                "require",
-                "require-class",
-                "require-enum",
-                "require-function",
-                "require-interface",
-                "require-module",
-                "require-remarks",
-                "restrict-tags",
-            ],
-        },
-        {
-            name: "tsdoc",
-            purpose:
-                "TSDoc-focused baseline with scoped function/type-parameter tags and compatibility-tag restrictions.",
-            rules: [
-                "require",
-                "require-param",
-                "require-remarks",
-                "require-returns",
-                "require-throws",
-                "require-type-param",
-                "restrict-tags",
-            ],
-        },
-        {
-            name: "jsdoc",
-            purpose: "JSDoc-leaning baseline for function documentation tags.",
-            rules: [
-                "require",
-                "require-param",
-                "require-returns",
-                "require-throws",
-            ],
-        },
-        {
-            name: "all",
-            purpose:
-                "Enable every rule shipped by this plugin. (NOT RECOMMENDED)",
-            rules: ["restrict-tags", ...allRuleNames],
-        },
-    ];
-
-    return presets.map((preset) => {
-        const includedRules =
-            preset.name === "all"
-                ? "**All plugin rules**"
-                : preset.rules.map(toRuleLink).join(", ");
-
-        return `| \`${preset.name}\` | ${preset.rules.length} | ${includedRules} | ${preset.purpose} |`;
-    });
-};
+        return `  - [${preset.emoji}](${presetPath}) — [\`${preset.configKey}\`](${presetPath}) — ${preset.description}`;
+    }),
+];
 
 /**
  * @param {readonly string[]} requiredTagRuleNames
@@ -171,12 +261,33 @@ const buildPresetRows = (requiredTagRuleNames) => {
  * @returns {string}
  */
 const buildPresetMatrix = (requiredTagRuleNames) => {
-    const header = [
-        "| Preset | Rule count | Included rules | Typical use case |",
-        "| --- | ---: | --- | --- |",
+    const { allRuleNames, presetMembership } =
+        buildPresetMembership(requiredTagRuleNames);
+
+    const tableHeader = [
+        "| Rule | Fix | Preset key |",
+        "| --- | :---: | --- |",
     ];
 
-    return [...header, ...buildPresetRows(requiredTagRuleNames)].join("\n");
+    const tableRows = allRuleNames.map((ruleName) => {
+        const presetLinks = presetDefinitions
+            .filter((preset) => presetMembership[preset.name]?.has(ruleName))
+            .map(
+                (preset) => `[${preset.emoji}](${toPresetDocPath(preset.slug)})`
+            )
+            .join(" ");
+
+        return `| ${toRuleLink(ruleName)} | ${toFixLegendValue(ruleName)} | ${presetLinks} |`;
+    });
+
+    return [
+        "### Preset matrix",
+        "",
+        ...buildPresetLegendLines(),
+        "",
+        ...tableHeader,
+        ...tableRows,
+    ].join("\n");
 };
 
 /**
