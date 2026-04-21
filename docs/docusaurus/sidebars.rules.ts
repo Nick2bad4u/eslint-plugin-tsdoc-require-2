@@ -128,7 +128,7 @@ const toRequiredTagDocItem = (docId: string, itemIndex: number) => {
     );
 };
 
-const rulesSidebar: SidebarsConfig = {
+const rulesSidebar = {
     rules: [
         {
             className: "sb-cat-guides",
@@ -205,6 +205,6 @@ const rulesSidebar: SidebarsConfig = {
             ],
         },
     ],
-};
+} satisfies SidebarsConfig;
 
 export default rulesSidebar;

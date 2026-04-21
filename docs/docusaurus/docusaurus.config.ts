@@ -65,7 +65,7 @@ const resolveOptionalModule = (moduleSpecifier: string): string | undefined => {
 };
 
 /**
- * Optional ESM entry used to avoid webpack warnings from VS Code language
+ * Optional ESM entry used to avoid webpack warnings from VS Code CSS language
  * service packages.
  */
 const vscodeCssLanguageServiceEsmEntry = resolveOptionalModule(
@@ -90,29 +90,49 @@ const vscodeLanguageServerTypesEsmEntry = resolveOptionalModule(
  * packages are actually installed in the current workspace.
  */
 const suppressKnownWebpackWarningsPlugin: PluginModule = () => {
-    if (
-        vscodeCssLanguageServiceEsmEntry === undefined ||
-        vscodeLanguageServerTypesEsmEntry === undefined
-    ) {
-        return null;
-    }
-
     return {
         configureWebpack() {
             return {
                 ignoreWarnings: [
-                    {
-                        message:
-                            /Critical dependency: require function is used in a way in which dependencies cannot be statically extracted/u,
-                        module: /vscode-languageserver-types[\\/]lib[\\/]umd[\\/]main\.js/u,
+                    /**
+                     * Suppress the known webpack critical-dependency warning
+                     * emitted by the UMD build of vscode-languageserver-types.
+                     *
+                     * We already alias to the ESM entry when available, but
+                     * some transitive resolution paths still surface the UMD
+                     * warning during docs builds. This is third-party noise,
+                     * not a site-level problem.
+                     */
+                    (warning: unknown) => {
+                        const warningRecord = warning as
+                            | Readonly<Record<string, unknown>>
+                            | undefined;
+                        const warningMessage = warningRecord?.["message"];
+
+                        return (
+                            typeof warningMessage === "string" &&
+                            warningMessage.includes(
+                                "Critical dependency: require function is used in a way in which dependencies cannot be statically extracted"
+                            )
+                        );
                     },
                 ],
                 resolve: {
                     alias: {
-                        "vscode-css-languageservice$":
-                            vscodeCssLanguageServiceEsmEntry,
-                        "vscode-languageserver-types$":
-                            vscodeLanguageServerTypesEsmEntry,
+                        ...(vscodeCssLanguageServiceEsmEntry === undefined
+                            ? {}
+                            : {
+                                  "vscode-css-languageservice$":
+                                      vscodeCssLanguageServiceEsmEntry,
+                              }),
+                        ...(vscodeLanguageServerTypesEsmEntry === undefined
+                            ? {}
+                            : {
+                                  "vscode-languageserver-types$":
+                                      vscodeLanguageServerTypesEsmEntry,
+                                  "vscode-languageserver-types/lib/umd/main.js$":
+                                      vscodeLanguageServerTypesEsmEntry,
+                              }),
                     },
                 },
             };
@@ -125,7 +145,7 @@ const suppressKnownWebpackWarningsPlugin: PluginModule = () => {
 const futureConfig = {
     ...(enableExperimentalFaster
         ? {
-              experimental_faster: {
+              faster: {
                   mdxCrossCompilerCache: true,
                   rspackBundler: true,
                   rspackPersistentCache: true,
@@ -139,16 +159,20 @@ const futureConfig = {
         // (CssMinimizer parsing errors -> large chunks of CSS dropped), which
         // makes many Infima (--ifm-*) variables undefined across the site.
         // Re-enable only after verifying the build output CSS is valid.
+        siteStorageNamespacing: true,
+        fasterByDefault: true,
+        removeLegacyPostBuildHeadAttribute: true,
+        mdx1CompatDisabledByDefault: true,
         useCssCascadeLayers: false,
     },
 } satisfies Config["future"];
 
 /** Full Docusaurus site configuration exported to the build/runtime. */
-const config: Config = {
+const config = {
     baseUrl,
     baseUrlIssueBanner: true,
     deploymentBranch: "gh-pages",
-    favicon: "img/favicon-32x32.png",
+    favicon: "img/favicon.ico",
     // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
     future: futureConfig,
     clientModules: [modernEnhancementsClientModule],
@@ -398,14 +422,6 @@ const config: Config = {
                 content: "eslint-plugin-tsdoc-require-2",
                 property: "og:site_name",
             },
-            {
-                content: socialCardImageUrl,
-                property: "og:image",
-            },
-            {
-                content: socialCardImageUrl,
-                name: "twitter:image",
-            },
         ],
         footer: {
             copyright: footerCopyright,
@@ -510,7 +526,7 @@ const config: Config = {
                     activeBaseRegex: "^/docs/rules(?:/(?!presets(?:/|$)).*)?$",
                     label: "📜 Rules",
                     position: "left",
-                    to: "/docs/rules/",
+                    to: "/docs/rules/require/",
                     type: "dropdown",
                     items: [
                         {
@@ -518,11 +534,11 @@ const config: Config = {
                             to: "/docs/rules/",
                         },
                         {
-                            label: "• require",
+                            label: "• Require TS/JSDoc Comments",
                             to: "/docs/rules/require/",
                         },
                         {
-                            label: "• Required Tags",
+                            label: "• Required Tags for TS/JSDoc Comments",
                             to: "/docs/rules/required-tags/",
                         },
                     ],
@@ -692,6 +708,6 @@ const config: Config = {
     title: "eslint-plugin-tsdoc-require-2",
     trailingSlash: false,
     url: siteOrigin,
-};
+} satisfies Config;
 
 export default config;

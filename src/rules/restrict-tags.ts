@@ -5,6 +5,7 @@ import {
     AST_TOKEN_TYPES,
     ESLintUtils,
 } from "@typescript-eslint/utils";
+import { arrayAt, arrayJoin, isDefined, isEmpty, setHas } from "ts-extras";
 
 type EntityKind =
     | "class"
@@ -221,7 +222,7 @@ const getTSDocCommentNode = (
     node: Readonly<TSESTree.Node>
 ): null | TSESTree.Comment => {
     const comments = sourceCode.getCommentsBefore(node);
-    const nearestComment = comments.at(-1);
+    const nearestComment = arrayAt(comments, -1);
 
     if (nearestComment === undefined) {
         return null;
@@ -361,7 +362,7 @@ const extractTagNames = (commentText: string): ReadonlySet<`@${string}`> => {
 
     for (const match of commentText.matchAll(tagPattern)) {
         const rawTagName = match.groups?.["tagName"];
-        if (rawTagName === undefined) {
+        if (!isDefined(rawTagName)) {
             continue;
         }
 
@@ -387,7 +388,7 @@ const restrictTagsRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
         const declarationsByName = new Map<string, Target>();
         const checkedTargets = new Set<string>();
         const sourceCode = context.sourceCode;
-        const ruleOption = context.options.at(0);
+        const ruleOption = arrayAt(context.options, 0);
         const enabledKinds = new Set<EntityKind>(
             ruleOption?.enforceFor ?? defaultEnforceFor
         );
@@ -397,12 +398,12 @@ const restrictTagsRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
         const allowedTags = [...configuredTagSet];
 
         const checkTarget = (target: Readonly<Target>): void => {
-            if (!enabledKinds.has(target.kind)) {
+            if (!setHas(enabledKinds, target.kind)) {
                 return;
             }
 
             const targetKey = createTargetKey(target);
-            if (checkedTargets.has(targetKey)) {
+            if (setHas(checkedTargets, targetKey)) {
                 return;
             }
 
@@ -422,7 +423,7 @@ const restrictTagsRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
 
             const foundTags = extractTagNames(commentNode.value);
             for (const tagName of foundTags) {
-                const isConfiguredTag = configuredTagSet.has(tagName);
+                const isConfiguredTag = setHas(configuredTagSet, tagName);
 
                 if (restrictMode === "deny" && isConfiguredTag) {
                     context.report({
@@ -440,10 +441,9 @@ const restrictTagsRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
                 if (restrictMode === "allow" && !isConfiguredTag) {
                     context.report({
                         data: {
-                            allowedTags:
-                                allowedTags.length === 0
-                                    ? "<none>"
-                                    : allowedTags.join(", "),
+                            allowedTags: isEmpty(allowedTags)
+                                ? "<none>"
+                                : arrayJoin(allowedTags, ", "),
                             entityKind: target.kind,
                             entityName: getEntityDisplayName(target.name),
                             tagName,
@@ -473,7 +473,7 @@ const restrictTagsRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
             declaration: Readonly<SupportedDeclaration>
         ): void => {
             for (const target of declarationTargets(declaration)) {
-                if (target.name === undefined) {
+                if (!isDefined(target.name)) {
                     continue;
                 }
 
@@ -485,7 +485,7 @@ const restrictTagsRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
             identifier: Readonly<TSESTree.Identifier>
         ): void => {
             const target = declarationsByName.get(identifier.name);
-            if (target !== undefined) {
+            if (isDefined(target)) {
                 checkTarget(target);
             }
         };

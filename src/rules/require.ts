@@ -5,6 +5,7 @@ import {
     AST_TOKEN_TYPES,
     ESLintUtils,
 } from "@typescript-eslint/utils";
+import { arrayAt, isDefined, setHas } from "ts-extras";
 
 type EntityKind =
     | "class"
@@ -191,7 +192,7 @@ const hasTSDocComment = (
     node: Readonly<TSESTree.Node>
 ): boolean => {
     const comments = sourceCode.getCommentsBefore(node);
-    const nearestComment = comments.at(-1);
+    const nearestComment = arrayAt(comments, -1);
 
     if (nearestComment === undefined) {
         return false;
@@ -330,19 +331,19 @@ const requireRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
         const declarationsByName = new Map<string, Target>();
         const checkedTargets = new Set<string>();
         const sourceCode = context.sourceCode;
-        const ruleOption = context.options.at(0);
+        const ruleOption = arrayAt(context.options, 0);
         const enabledKinds = new Set<EntityKind>(
             ruleOption?.enforceFor ?? defaultEnforceFor
         );
         const exportMode = resolveExportMode(ruleOption);
 
         const checkTarget = (target: Readonly<Target>): void => {
-            if (!enabledKinds.has(target.kind)) {
+            if (!setHas(enabledKinds, target.kind)) {
                 return;
             }
 
             const targetKey = createTargetKey(target);
-            if (checkedTargets.has(targetKey)) {
+            if (setHas(checkedTargets, targetKey)) {
                 return;
             }
 
@@ -380,7 +381,7 @@ const requireRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
             declaration: Readonly<SupportedDeclaration>
         ): void => {
             for (const target of declarationTargets(declaration)) {
-                if (target.name === undefined) {
+                if (!isDefined(target.name)) {
                     continue;
                 }
 
@@ -392,7 +393,7 @@ const requireRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
             identifier: Readonly<TSESTree.Identifier>
         ): void => {
             const target = declarationsByName.get(identifier.name);
-            if (target !== undefined) {
+            if (isDefined(target)) {
                 checkTarget(target);
             }
         };

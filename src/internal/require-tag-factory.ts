@@ -5,6 +5,7 @@ import {
     AST_TOKEN_TYPES,
     ESLintUtils,
 } from "@typescript-eslint/utils";
+import { arrayAt, isDefined, setHas } from "ts-extras";
 
 /** Supported declaration kinds enforced by require/required-tag rules. */
 type EntityKind =
@@ -161,7 +162,7 @@ const assertUnreachable = (value: never): never => {
 };
 
 const isWordCharacter = (character: string | undefined): boolean => {
-    if (character === undefined) {
+    if (!isDefined(character)) {
         return false;
     }
 
@@ -264,7 +265,7 @@ const getTSDocCommentNode = (
     node: Readonly<TSESTree.Node>
 ): null | TSESTree.Comment => {
     const comments = sourceCode.getCommentsBefore(node);
-    const nearestComment = comments.at(-1);
+    const nearestComment = arrayAt(comments, -1);
 
     if (nearestComment === undefined) {
         return null;
@@ -413,19 +414,19 @@ const createRequireTagRuleListener = (
     const declarationsByName = new Map<string, Target>();
     const checkedTargets = new Set<string>();
     const sourceCode = context.sourceCode;
-    const ruleOption = context.options.at(0);
+    const ruleOption = arrayAt(context.options, 0);
     const enabledKinds = new Set<EntityKind>(
         ruleOption?.enforceFor ?? defaultEnforceFor
     );
     const exportMode = resolveExportMode(ruleOption);
 
     const checkTarget = (target: Readonly<Target>): void => {
-        if (!enabledKinds.has(target.kind)) {
+        if (!setHas(enabledKinds, target.kind)) {
             return;
         }
 
         const targetKey = createTargetKey(target);
-        if (checkedTargets.has(targetKey)) {
+        if (setHas(checkedTargets, targetKey)) {
             return;
         }
 
@@ -469,7 +470,7 @@ const createRequireTagRuleListener = (
         declaration: Readonly<SupportedDeclaration>
     ): void => {
         for (const target of declarationTargets(declaration)) {
-            if (target.name === undefined) {
+            if (!isDefined(target.name)) {
                 continue;
             }
 
@@ -481,7 +482,7 @@ const createRequireTagRuleListener = (
         identifier: Readonly<TSESTree.Identifier>
     ): void => {
         const target = declarationsByName.get(identifier.name);
-        if (target !== undefined) {
+        if (isDefined(target)) {
             checkTarget(target);
         }
     };

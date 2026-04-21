@@ -71,6 +71,11 @@ const homeCards = [
 const homepageDescription =
     "Explore eslint-plugin-tsdoc-require-2 documentation, presets, and rule references for enforcing TSDoc and JSDoc quality in modern TypeScript projects.";
 
+/**
+ * Home page for the eslint-plugin-tsdoc-require-2 documentation site.
+ *
+ * @returns The rendered homepage layout with hero section, stats, and cards.
+ */
 export default function Home(): React.JSX.Element {
     return (
         <Layout
@@ -181,7 +186,7 @@ export default function Home(): React.JSX.Element {
                                 <img
                                     alt="eslint-plugin-tsdoc-require-2 logo"
                                     className={styles.heroPanelLogo}
-                                    src="/eslint-plugin-tsdoc-require-2/img/logo_512x512.png"
+                                    src="img/logo_512x512.png"
                                 />
                             </aside>
                         </div>

@@ -1,5 +1,4 @@
 /** eslint-disable css/use-baseline */
-/* stylelint-disable defensive-css/require-named-grid-lines, scales/font-sizes -- simple grid layout; we need dynamic clamps */
 
 .mainContent {
     padding: 1.75rem 0 3rem;

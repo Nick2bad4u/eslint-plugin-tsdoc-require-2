@@ -1,6 +1,6 @@
 import type { SidebarsConfig } from "@docusaurus/plugin-content-docs";
 
-const sidebars: SidebarsConfig = {
+const sidebars = {
     docs: [
         {
             className: "sb-cat-developer",
@@ -85,6 +85,6 @@ const sidebars: SidebarsConfig = {
             ],
         },
     ],
-};
+} satisfies SidebarsConfig;
 
 export default sidebars;

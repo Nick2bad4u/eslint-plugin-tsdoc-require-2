@@ -14,11 +14,13 @@ const getPresetRules = (presetName: string): Record<string, unknown> => {
         throw new TypeError(`Missing flat config preset: ${presetName}`);
     }
 
-    return preset.rules as Record<string, unknown>;
+    return preset.rules;
 };
 
 describe("plugin presets", () => {
     it("keeps recommended preset minimal", () => {
+        expect.hasAssertions();
+
         const rules = getPresetRules("recommended");
 
         expect(rules["tsdoc-require-2/require"]).toBe("error");
@@ -26,6 +28,8 @@ describe("plugin presets", () => {
     });
 
     it("enables require + require-remarks in detailed preset", () => {
+        expect.hasAssertions();
+
         const rules = getPresetRules("detailed");
 
         expect(rules["tsdoc-require-2/require"]).toBe("error");
@@ -36,6 +40,8 @@ describe("plugin presets", () => {
     });
 
     it("enables package documentation trio in packages preset", () => {
+        expect.hasAssertions();
+
         const rules = getPresetRules("packages");
 
         expect(rules["tsdoc-require-2/require"]).toBe("error");
@@ -46,22 +52,24 @@ describe("plugin presets", () => {
     });
 
     it("enables a conservative typedoc baseline with scoped kind tags", () => {
+        expect.hasAssertions();
+
         const rules = getPresetRules("typedoc");
 
         expect(rules["tsdoc-require-2/require"]).toBe("error");
-        expect(rules["tsdoc-require-2/require-class"]).toEqual([
+        expect(rules["tsdoc-require-2/require-class"]).toStrictEqual([
             "error",
             { enforceFor: ["class"] },
         ]);
-        expect(rules["tsdoc-require-2/require-enum"]).toEqual([
+        expect(rules["tsdoc-require-2/require-enum"]).toStrictEqual([
             "error",
             { enforceFor: ["enum"] },
         ]);
-        expect(rules["tsdoc-require-2/require-function"]).toEqual([
+        expect(rules["tsdoc-require-2/require-function"]).toStrictEqual([
             "error",
             { enforceFor: ["function"] },
         ]);
-        expect(rules["tsdoc-require-2/require-interface"]).toEqual([
+        expect(rules["tsdoc-require-2/require-interface"]).toStrictEqual([
             "error",
             { enforceFor: ["interface"] },
         ]);
@@ -70,19 +78,21 @@ describe("plugin presets", () => {
     });
 
     it("enables typedoc-strict with compatibility-tag restrictions", () => {
+        expect.hasAssertions();
+
         const rules = getPresetRules("typedoc-strict");
 
         expect(rules["tsdoc-require-2/require"]).toBe("error");
-        expect(rules["tsdoc-require-2/require-class"]).toEqual([
+        expect(rules["tsdoc-require-2/require-class"]).toStrictEqual([
             "error",
             { enforceFor: ["class"] },
         ]);
-        expect(rules["tsdoc-require-2/require-module"]).toEqual([
+        expect(rules["tsdoc-require-2/require-module"]).toStrictEqual([
             "error",
             { enforceFor: ["namespace"] },
         ]);
         expect(rules["tsdoc-require-2/require-remarks"]).toBe("error");
-        expect(rules["tsdoc-require-2/restrict-tags"]).toEqual([
+        expect(rules["tsdoc-require-2/restrict-tags"]).toStrictEqual([
             "error",
             {
                 mode: "deny",
@@ -101,23 +111,25 @@ describe("plugin presets", () => {
     });
 
     it("enables tsdoc preset with scoped function/type-parameter tags", () => {
+        expect.hasAssertions();
+
         const rules = getPresetRules("tsdoc");
 
         expect(rules["tsdoc-require-2/require"]).toBe("error");
         expect(rules["tsdoc-require-2/require-remarks"]).toBe("error");
-        expect(rules["tsdoc-require-2/require-param"]).toEqual([
+        expect(rules["tsdoc-require-2/require-param"]).toStrictEqual([
             "error",
             { enforceFor: ["function"] },
         ]);
-        expect(rules["tsdoc-require-2/require-returns"]).toEqual([
+        expect(rules["tsdoc-require-2/require-returns"]).toStrictEqual([
             "error",
             { enforceFor: ["function"] },
         ]);
-        expect(rules["tsdoc-require-2/require-throws"]).toEqual([
+        expect(rules["tsdoc-require-2/require-throws"]).toStrictEqual([
             "error",
             { enforceFor: ["function"] },
         ]);
-        expect(rules["tsdoc-require-2/require-type-param"]).toEqual([
+        expect(rules["tsdoc-require-2/require-type-param"]).toStrictEqual([
             "error",
             {
                 enforceFor: [
@@ -128,7 +140,7 @@ describe("plugin presets", () => {
                 ],
             },
         ]);
-        expect(rules["tsdoc-require-2/restrict-tags"]).toEqual([
+        expect(rules["tsdoc-require-2/restrict-tags"]).toStrictEqual([
             "error",
             {
                 mode: "deny",
@@ -147,18 +159,20 @@ describe("plugin presets", () => {
     });
 
     it("enables jsdoc preset with function-focused tags", () => {
+        expect.hasAssertions();
+
         const rules = getPresetRules("jsdoc");
 
         expect(rules["tsdoc-require-2/require"]).toBe("error");
-        expect(rules["tsdoc-require-2/require-param"]).toEqual([
+        expect(rules["tsdoc-require-2/require-param"]).toStrictEqual([
             "error",
             { enforceFor: ["function"] },
         ]);
-        expect(rules["tsdoc-require-2/require-returns"]).toEqual([
+        expect(rules["tsdoc-require-2/require-returns"]).toStrictEqual([
             "error",
             { enforceFor: ["function"] },
         ]);
-        expect(rules["tsdoc-require-2/require-throws"]).toEqual([
+        expect(rules["tsdoc-require-2/require-throws"]).toStrictEqual([
             "error",
             { enforceFor: ["function"] },
         ]);
@@ -166,6 +180,8 @@ describe("plugin presets", () => {
     });
 
     it("enables every plugin rule in all preset", () => {
+        expect.hasAssertions();
+
         const rules = getPresetRules("all");
 
         for (const { ruleName } of requiredTagDefinitions) {
