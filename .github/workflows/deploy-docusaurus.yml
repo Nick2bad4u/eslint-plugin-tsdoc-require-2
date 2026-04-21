@@ -63,18 +63,6 @@ jobs:
             - name: Build Docusaurus site
               run: npm run docs:build
 
-            - name: Write IndexNow key file into built site output
-              env:
-                  INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
-              run: |
-                  if [ -z "${INDEXNOW_KEY}" ]; then
-                    echo "::notice title=IndexNow key file skipped::Set the INDEXNOW_KEY repository secret if you want the published site to expose an IndexNow verification file."
-                    exit 0
-                  fi
-
-                  node scripts/indexnow.mjs write-key-file \
-                    --output docs/docusaurus/build/indexnow-key.txt
-
             - name: List TypeDoc output directories
               run: |
                   echo "TypeDoc output directories:"

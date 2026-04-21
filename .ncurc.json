@@ -3,7 +3,6 @@
     "cache": true,
     "cacheClear": false,
     "cacheExpiration": 60,
-    "cacheFile": ".cache/.ncu-cache.json",
     "color": true,
     "concurrency": 8,
     "configFileName": ".ncurc.json",
@@ -52,5 +51,5 @@
     "timeout": 0,
     "upgrade": true,
     "verbose": false,
-    "workspaces": false
+    "workspaces": true
 }

@@ -20,15 +20,46 @@ const maxWorkerCount =
     Number.isFinite(parsedMaxWorkers) && parsedMaxWorkers > 0
         ? parsedMaxWorkers
         : 1;
+/** Raw flag controlling optional hanging-process reporter activation. */
+const rawHangingReporterFlag =
+    process.env["TYPEFEST_VITEST_HANGING_PROCESS_REPORTER"] ??
+    process.env["VITEST_HANGING_PROCESS_REPORTER"] ??
+    "false";
+/** Raw flag controlling optional Vitest typecheck execution. */
+const rawVitestTypecheckFlag = process.env["VITEST_TYPECHECK"] ?? "true";
+/** Normalized `true` when hanging-process reporter is explicitly enabled. */
+const shouldEnableHangingProcessReporter = [
+    "1",
+    "on",
+    "true",
+    "yes",
+].includes(rawHangingReporterFlag.toLowerCase());
+/** Normalized `true` when Vitest typecheck execution is explicitly enabled. */
+const shouldEnableVitestTypecheck = [
+    "1",
+    "on",
+    "true",
+    "yes",
+].includes(rawVitestTypecheckFlag.toLowerCase());
+/** Shared reporter list for test runs with optional hanging-process diagnostics. */
+const vitestReporters = shouldEnableHangingProcessReporter
+    ? ["default", "hanging-process"]
+    : ["default"];
 /** Shared glob exclusions for generated/cache directories. */
 const testExcludePatterns = [
     "**/.cache/**",
+    "**/.stryker-tmp/**",
     "**/coverage/**",
     "**/dist/**",
     "**/node_modules/**",
 ];
 /** Canonical test file include patterns for unit/integration suites. */
 const testFilePatterns = ["test/**/*.{test,spec}.{ts,tsx,js,mjs,cjs,mts,cts}"];
+/** Canonical include patterns for Vitest type-test discovery. */
+const typecheckTestFilePatterns = [
+    "**/*.{test,spec}-d.{ts,tsx,mts,cts}",
+    "**/*.{test,spec}.{ts,tsx,mts,cts}",
+];
 
 /**
  * Vitest configuration for eslint-plugin-tsdoc-require-2.
@@ -123,7 +154,7 @@ const vitestConfig: ReturnType<typeof defineConfig> = defineConfig({
 
             reportOnFailure: true,
             reportsDirectory: "./coverage",
-            skipFull: false, // Don't skip full coverage collection
+            skipFull: true, // Don't skip full coverage collection
             // NOTE: Coverage thresholds adjusted after empirical analysis of current
             // instrumentation (November 2025). JSX-heavy components and patched CSS
             // modules generate synthetic branches that Vitest counts but cannot be
@@ -169,7 +200,6 @@ const vitestConfig: ReturnType<typeof defineConfig> = defineConfig({
         },
         env: {
             NODE_ENV: "test",
-
             PACKAGE_VERSION: process.env["PACKAGE_VERSION"] ?? "unknown",
         },
         environment: "node",
@@ -199,7 +229,8 @@ const vitestConfig: ReturnType<typeof defineConfig> = defineConfig({
         // Always run test files in parallel locally for speed.
         // CI disables file-level parallelism for deterministic resource usage.
         fileParallelism: !isCiEnvironment,
-        globals: true,
+        globals: false,
+        hookTimeout: 10_000, // Set hook timeout to 10 seconds
         include: [...testFilePatterns],
         includeTaskLocation: true,
         isolate: true,
@@ -217,17 +248,8 @@ const vitestConfig: ReturnType<typeof defineConfig> = defineConfig({
         pool: "threads", // Use worker threads for better performance
         printConsoleTrace: false, // Disable stack trace printing for cleaner output
         // Improve test output
-        reporters: [
-            "default",
-            // "json",
-            // "verbose",
-            "hanging-process",
-            // "dot",
-            // "tap",
-            // "tap-flat",
-            // "junit",
-            // "html",
-        ],
+        reporters: vitestReporters,
+        restoreMocks: true,
         retry: 0, // No retries to surface issues immediately
         sequence: {
             // Run projects sequentially to avoid resource contention
@@ -237,11 +259,12 @@ const vitestConfig: ReturnType<typeof defineConfig> = defineConfig({
         },
         setupFiles: ["./test/_internal/vitest-setup.ts"],
         slowTestThreshold: 300,
+        teardownTimeout: 10_000, // Set teardown timeout to 10 seconds
         testTimeout: 15_000, // Set Vitest timeout to 15 seconds
         typecheck: {
             allowJs: false,
             checker: "tsc",
-            enabled: true,
+            enabled: shouldEnableVitestTypecheck,
             exclude: [
                 "**/.{idea,git,cache,output,temp}/**",
                 "**/dist*/**",
@@ -249,10 +272,10 @@ const vitestConfig: ReturnType<typeof defineConfig> = defineConfig({
                 ...defaultExclude,
             ],
             ignoreSourceErrors: false,
-            include: ["**/*.{test,spec}-d.?(c|m)[jt]s?(x)"],
+            include: [...typecheckTestFilePatterns],
             only: false,
             spawnTimeout: 10_000,
-            tsconfig: "./tsconfig.json",
+            tsconfig: "./tsconfig.vitest-typecheck.json",
         },
     },
 });
