@@ -183,7 +183,7 @@ function sanitizeMarkdownForMdx(markdownText) {
             return line;
         }
 
-        return line.replace(
+        return line.replaceAll(
             mdxUnsafeCharacterPattern,
             (character) =>
                 mdxEscapeMap[
@@ -208,11 +208,11 @@ function sanitizeMarkdownForMdx(markdownText) {
  */
 function normalizeTypedocMarkdownLinks(markdownText) {
     return markdownText
-        .replace(
+        .replaceAll(
             typedocRelativeIndexMarkdownLinkPattern,
             (_, targetPath, hashSuffix = "") => `](${targetPath}/${hashSuffix})`
         )
-        .replace(
+        .replaceAll(
             typedocRelativeMarkdownLinkPattern,
             (_, targetPath, hashSuffix = "") => `](${targetPath}${hashSuffix})`
         );
@@ -289,7 +289,7 @@ function sanitizeTypedocSidebar(outputDirectoryPath) {
     }
 
     const previousContent = readFileSync(typedocSidebarPath, "utf8");
-    const nextContent = previousContent.replace(
+    const nextContent = previousContent.replaceAll(
         typedocSidebarIdPrefixPattern,
         'id:"'
     );

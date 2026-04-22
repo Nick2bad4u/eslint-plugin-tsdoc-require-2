@@ -706,7 +706,7 @@ const config = {
         ],
     ],
     title: "eslint-plugin-tsdoc-require-2",
-    trailingSlash: false,
+    trailingSlash: true,
     url: siteOrigin,
 } satisfies Config;
 

@@ -73,7 +73,7 @@ jobs:
                   GITHUB_REF: ${{ github.event_name == 'pull_request' && format('refs/heads/{0}', github.head_ref) || github.ref }}
 
             - name: Verify README rules table sync
-              run: npm run sync:readme-rules-table
+              run: npm run sync:readme:rules-table
 
             - name: Typecheck
               run: npm run typecheck
@@ -166,4 +166,4 @@ jobs:
               run: npm install --no-save --force eslint@${{ matrix.eslint-version }} @eslint/js@${{ matrix.eslint-js-version }}
 
             - name: Run ESLint 9 compatibility smoke checks
-              run: npm run lint:compat:eslint9 -- --expect-eslint-major=9
+              run: npm run lint:compat:eslint -- --expect-eslint-major=9
