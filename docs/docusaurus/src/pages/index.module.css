@@ -492,6 +492,10 @@
 }
 
 .card {
+    --card-bg: var(--ifm-card-background-color);
+    --card-shadow-lw: var(--ifm-global-shadow-lw);
+    --card-shadow-md: var(--ifm-global-shadow-md);
+
     position: relative;
     display: flex;
     flex-direction: column;
@@ -505,9 +509,9 @@
             rgb(74 222 128 / 7%) 48%,
             transparent
         ),
-        var(--ifm-card-background-color);
+        var(--card-bg);
     block-size: 100%;
-    box-shadow: var(--ifm-global-shadow-lw);
+    box-shadow: var(--card-shadow-lw);
     transition:
         transform 140ms ease,
         box-shadow 140ms ease,
@@ -516,7 +520,7 @@
     &:hover,
     &:focus {
         border-color: rgb(22 163 74 / 45%);
-        box-shadow: var(--ifm-global-shadow-md);
+        box-shadow: var(--card-shadow-md);
         transform: translateY(-2px);
     }
 
@@ -534,15 +538,15 @@
                 rgb(74 222 128 / 7%) 48%,
                 transparent
             ),
-            var(--ifm-card-background-color);
+            var(--card-bg);
         block-size: 100%;
-        box-shadow: var(--ifm-global-shadow-lw);
+        box-shadow: var(--card-shadow-lw);
         transition: none;
 
         &:hover,
         &:focus {
             border-color: rgb(22 163 74 / 45%);
-            box-shadow: var(--ifm-global-shadow-md);
+            box-shadow: var(--card-shadow-md);
             transform: translateY(-2px);
         }
     }
@@ -574,8 +578,10 @@
 }
 
 .cardDescription {
+    --card-description-color: var(--ifm-color-emphasis-800);
+
     flex-grow: 1;
-    color: var(--ifm-color-emphasis-800);
+    color: var(--card-description-color);
     margin-block-end: 0.8rem;
 }
 
