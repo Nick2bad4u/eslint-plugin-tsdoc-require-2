@@ -21,15 +21,15 @@ type MessageIds = "missingTSDoc";
 
 type Options = [RuleOption];
 
-type RuleDocs = {
+interface RuleDocs {
     recommended: boolean;
-};
+}
 
-type RuleOption = {
+interface RuleOption {
     enforceFor?: readonly EntityKind[];
     exportMode?: ExportMode;
     includeNonExported?: boolean;
-};
+}
 
 type SupportedDeclaration =
     | TSESTree.ClassDeclaration
@@ -47,12 +47,12 @@ type SupportedDefaultExportExpression =
     | TSESTree.FunctionExpression
     | TSESTree.ObjectExpression;
 
-type Target = {
+interface Target {
     commentNode: TSESTree.Node;
     kind: EntityKind;
     name: string | undefined;
     reportNode: TSESTree.Node;
-};
+}
 
 const enforceableEntityKinds = [
     "class",
@@ -114,11 +114,9 @@ const shouldCheckExportedDeclarations = (exportMode: ExportMode): boolean =>
 const shouldCheckNonExportedDeclarations = (exportMode: ExportMode): boolean =>
     exportMode === "all" || exportMode === "non-exported";
 
-const assertUnreachable = (value: never): never => {
-    throw new Error(`Unexpected node type: ${String(value)}`);
-};
+const ruleCreator = ESLintUtils.RuleCreator;
 
-const createRule = ESLintUtils.RuleCreator<RuleDocs>(
+const createRule = ruleCreator<RuleDocs>(
     (ruleName) =>
         `https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/docs/rules/${ruleName}.md`
 );
@@ -157,11 +155,7 @@ const getExpressionKind = (
         return "class";
     }
 
-    if (node.type === AST_NODE_TYPES.ObjectExpression) {
-        return "object";
-    }
-
-    return assertUnreachable(node);
+    return "object";
 };
 
 const getEntityDisplayName = (name: string | undefined): string =>
@@ -206,13 +200,7 @@ const hasTSDocComment = (
         return false;
     }
 
-    const nearestCommentLoc = nearestComment.loc;
-    const nodeLoc = node.loc;
-    if (nearestCommentLoc === null || nodeLoc === null) {
-        return false;
-    }
-
-    const lineGap = nodeLoc.start.line - nearestCommentLoc.end.line;
+    const lineGap = node.loc.start.line - nearestComment.loc.end.line;
     return lineGap >= 0 && lineGap <= 1;
 };
 
@@ -293,24 +281,20 @@ const declarationTargets = (
         ];
     }
 
-    if (declaration.type === AST_NODE_TYPES.VariableDeclaration) {
-        return declaration.declarations.flatMap((declarator) => {
-            if (declarator.id.type !== AST_NODE_TYPES.Identifier) {
-                return [];
-            }
+    return declaration.declarations.flatMap((declarator) => {
+        if (declarator.id.type !== AST_NODE_TYPES.Identifier) {
+            return [];
+        }
 
-            return [
-                {
-                    commentNode: declaration,
-                    kind: "variable" as const,
-                    name: declarator.id.name,
-                    reportNode: declarator,
-                },
-            ];
-        });
-    }
-
-    return assertUnreachable(declaration);
+        return [
+            {
+                commentNode: declaration,
+                kind: "variable" as const,
+                name: declarator.id.name,
+                reportNode: declarator,
+            },
+        ];
+    });
 };
 
 const declarationTargetsWithCommentNode = (
@@ -455,10 +439,6 @@ const requireRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
                 }
 
                 for (const specifier of exportNode.specifiers) {
-                    if (specifier.type !== AST_NODE_TYPES.ExportSpecifier) {
-                        continue;
-                    }
-
                     checkIdentifierExport(specifier.local);
                 }
             },

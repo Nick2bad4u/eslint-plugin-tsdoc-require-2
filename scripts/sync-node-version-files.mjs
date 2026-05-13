@@ -31,6 +31,8 @@ const nvmrcFilePath = fileURLToPath(new URL("../.nvmrc", import.meta.url));
  * @param {unknown} version
  *
  * @returns {string}
+ *
+ * @throws {TypeError} When the input is not an exact `x.y.z` version string.
  */
 const normalizeNodeVersion = (version) => {
     if (typeof version !== "string") {
@@ -67,6 +69,8 @@ const isRecord = (value) => typeof value === "object" && value !== null;
  *     consumedArgumentCount: number;
  *     explicitVersion: string;
  * }}
+ *
+ * @throws {TypeError} When `--version` is provided without a value.
  */
 const readVersionArgumentValue = (argumentList, argumentIndex) => {
     const nextArgument = argumentList[argumentIndex + 1];
@@ -82,13 +86,7 @@ const readVersionArgumentValue = (argumentList, argumentIndex) => {
 };
 
 /**
- * Parse command-line arguments.
- *
- * Supported options:
- *
- * - `--check`: validate file existence and synchronization only
- * - `--check-current`: validate files match current runtime version exactly
- * - `--version x.y.z` or `--version=x.y.z`: explicit version override
+ * Parse command-line arguments into normalized sync options.
  *
  * @param {readonly string[]} argumentList
  *
@@ -97,6 +95,8 @@ const readVersionArgumentValue = (argumentList, argumentIndex) => {
  *     checkCurrent: boolean;
  *     explicitVersion: string | null;
  * }}
+ *
+ * @throws {TypeError} When unknown or incompatible CLI flags are provided.
  */
 const parseArguments = (argumentList) => {
     /** @type {boolean} */
@@ -229,6 +229,8 @@ const compareExactVersions = (leftVersion, rightVersion) => {
  * @param {string | null} minimumEngineVersion
  *
  * @returns {void}
+ *
+ * @throws {RangeError} When the preferred version is below engines.node.
  */
 const assertPreferredVersionSupported = (
     preferredVersion,
@@ -255,6 +257,8 @@ const assertPreferredVersionSupported = (
  * @param {string} filePath
  *
  * @returns {Promise<string | null>}
+ *
+ * @throws {Error} When file reads fail for reasons other than missing files.
  */
 const readOptionalVersionFile = async (filePath) => {
     try {

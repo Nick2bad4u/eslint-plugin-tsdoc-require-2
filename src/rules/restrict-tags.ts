@@ -22,17 +22,17 @@ type MessageIds = "disallowedTag" | "tagNotAllowed";
 type Options = [RuleOption];
 type RestrictMode = "allow" | "deny";
 
-type RuleDocs = {
+interface RuleDocs {
     recommended: boolean;
-};
+}
 
-type RuleOption = {
+interface RuleOption {
     enforceFor?: readonly EntityKind[];
     exportMode?: ExportMode;
     includeNonExported?: boolean;
     mode?: RestrictMode;
     tags?: readonly `@${string}`[];
-};
+}
 
 type SupportedDeclaration =
     | TSESTree.ClassDeclaration
@@ -50,12 +50,12 @@ type SupportedDefaultExportExpression =
     | TSESTree.FunctionExpression
     | TSESTree.ObjectExpression;
 
-type Target = {
+interface Target {
     commentNode: TSESTree.Node;
     kind: EntityKind;
     name: string | undefined;
     reportNode: TSESTree.Node;
-};
+}
 
 const enforceableEntityKinds = [
     "class",
@@ -144,11 +144,9 @@ const shouldCheckExportedDeclarations = (exportMode: ExportMode): boolean =>
 const shouldCheckNonExportedDeclarations = (exportMode: ExportMode): boolean =>
     exportMode === "all" || exportMode === "non-exported";
 
-const assertUnreachable = (value: never): never => {
-    throw new Error(`Unexpected node type: ${String(value)}`);
-};
+const ruleCreator = ESLintUtils.RuleCreator;
 
-const createRule = ESLintUtils.RuleCreator<RuleDocs>(
+const createRule = ruleCreator<RuleDocs>(
     (ruleName) =>
         `https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/docs/rules/${ruleName}.md`
 );
@@ -187,11 +185,7 @@ const getExpressionKind = (
         return "class";
     }
 
-    if (node.type === AST_NODE_TYPES.ObjectExpression) {
-        return "object";
-    }
-
-    return assertUnreachable(node);
+    return "object";
 };
 
 const getEntityDisplayName = (name: string | undefined): string =>
@@ -236,13 +230,7 @@ const getTSDocCommentNode = (
         return null;
     }
 
-    const nearestCommentLoc = nearestComment.loc;
-    const nodeLoc = node.loc;
-    if (nearestCommentLoc === null || nodeLoc === null) {
-        return null;
-    }
-
-    const lineGap = nodeLoc.start.line - nearestCommentLoc.end.line;
+    const lineGap = node.loc.start.line - nearestComment.loc.end.line;
     if (lineGap < 0 || lineGap > 1) {
         return null;
     }
@@ -327,24 +315,20 @@ const declarationTargets = (
         ];
     }
 
-    if (declaration.type === AST_NODE_TYPES.VariableDeclaration) {
-        return declaration.declarations.flatMap((declarator) => {
-            if (declarator.id.type !== AST_NODE_TYPES.Identifier) {
-                return [];
-            }
+    return declaration.declarations.flatMap((declarator) => {
+        if (declarator.id.type !== AST_NODE_TYPES.Identifier) {
+            return [];
+        }
 
-            return [
-                {
-                    commentNode: declaration,
-                    kind: "variable" as const,
-                    name: declarator.id.name,
-                    reportNode: declarator,
-                },
-            ];
-        });
-    }
-
-    return assertUnreachable(declaration);
+        return [
+            {
+                commentNode: declaration,
+                kind: "variable" as const,
+                name: declarator.id.name,
+                reportNode: declarator,
+            },
+        ];
+    });
 };
 
 const declarationTargetsWithCommentNode = (
@@ -357,7 +341,7 @@ const declarationTargetsWithCommentNode = (
     }));
 
 const extractTagNames = (commentText: string): ReadonlySet<`@${string}`> => {
-    const tagPattern = /(?:^|\W)@(?<tagName>[A-Za-z][-0-9A-Za-z]*)/gu;
+    const tagPattern = /(?:^|\W)@(?<tagName>[A-Za-z][\-0-9A-Za-z]*)/gv;
     const extractedTagNames = new Set<`@${string}`>();
 
     for (const match of commentText.matchAll(tagPattern)) {
@@ -547,10 +531,6 @@ const restrictTagsRule: TSESLint.RuleModule<MessageIds, Options> = createRule<
                 }
 
                 for (const specifier of exportNode.specifiers) {
-                    if (specifier.type !== AST_NODE_TYPES.ExportSpecifier) {
-                        continue;
-                    }
-
                     checkIdentifierExport(specifier.local);
                 }
             },

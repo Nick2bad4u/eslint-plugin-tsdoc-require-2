@@ -24,6 +24,8 @@ const rulesSectionBody = [
  * @param {string} replacementBody
  *
  * @returns {string}
+ *
+ * @throws {Error} When README markers are missing or malformed.
  */
 const replaceBetweenMarkers = (text, replacementBody) => {
     const beginIndex = text.indexOf(BEGIN_MARKER);

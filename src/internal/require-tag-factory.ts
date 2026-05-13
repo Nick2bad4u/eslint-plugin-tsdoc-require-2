@@ -22,9 +22,9 @@ type EntityKind =
 type ExportMode = "all" | "exported" | "non-exported";
 
 /** Extra docs metadata shape used by this plugin's RuleCreator. */
-type RuleDocs = {
+interface RuleDocs {
     recommended: boolean;
-};
+}
 
 /** Rule context type alias shared by generated required-tag rules. */
 type TagRuleContext = Readonly<
@@ -38,19 +38,21 @@ type TagRuleModule = ESLintUtils.RuleModule<
     RuleDocs
 >;
 
+const ruleCreator = ESLintUtils.RuleCreator;
+
 /** RuleCreator instance for all required-tag rules in this plugin. */
 const createTagRule: ReturnType<typeof ESLintUtils.RuleCreator<RuleDocs>> =
-    ESLintUtils.RuleCreator<RuleDocs>(
+    ruleCreator<RuleDocs>(
         (ruleName) =>
             `https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/docs/rules/required-tags.md#${ruleName}`
     );
 
 /** Shared options supported by required-tag rules. */
-type RuleOption = {
+interface RuleOption {
     enforceFor?: readonly EntityKind[];
     exportMode?: ExportMode;
     includeNonExported?: boolean;
-};
+}
 
 type SupportedDeclaration =
     | TSESTree.ClassDeclaration
@@ -69,10 +71,10 @@ type SupportedDefaultExportExpression =
     | TSESTree.ObjectExpression;
 
 /** Metadata describing an individual required-tag rule. */
-type TagRuleDefinition = {
+interface TagRuleDefinition {
     readonly ruleName: string;
     readonly tagName: `@${string}`;
-};
+}
 
 /** Message id union used by generated required-tag rules. */
 type TagRuleMessageIds = "missingTag";
@@ -80,12 +82,12 @@ type TagRuleMessageIds = "missingTag";
 /** RuleTester-compatible options tuple for required-tag rules. */
 type TagRuleOptions = [RuleOption];
 
-type Target = {
+interface Target {
     commentNode: TSESTree.Node;
     kind: EntityKind;
     name: string | undefined;
     reportNode: TSESTree.Node;
-};
+}
 
 /** Entity kinds that can be checked by this rule family. */
 const enforceableEntityKinds: readonly EntityKind[] = [
@@ -157,16 +159,12 @@ const shouldCheckExportedDeclarations = (exportMode: ExportMode): boolean =>
 const shouldCheckNonExportedDeclarations = (exportMode: ExportMode): boolean =>
     exportMode === "all" || exportMode === "non-exported";
 
-const assertUnreachable = (value: never): never => {
-    throw new Error(`Unexpected node type: ${String(value)}`);
-};
-
 const isWordCharacter = (character: string | undefined): boolean => {
     if (!isDefined(character)) {
         return false;
     }
 
-    return /\w/u.test(character);
+    return /\w/v.test(character);
 };
 
 const hasRequiredTag = (
@@ -253,11 +251,7 @@ const getExpressionKind = (
         return "class";
     }
 
-    if (node.type === AST_NODE_TYPES.ObjectExpression) {
-        return "object";
-    }
-
-    return assertUnreachable(node);
+    return "object";
 };
 
 const getTSDocCommentNode = (
@@ -279,13 +273,7 @@ const getTSDocCommentNode = (
         return null;
     }
 
-    const nearestCommentLoc = nearestComment.loc;
-    const nodeLoc = node.loc;
-    if (nearestCommentLoc === null || nodeLoc === null) {
-        return null;
-    }
-
-    const lineGap = nodeLoc.start.line - nearestCommentLoc.end.line;
+    const lineGap = node.loc.start.line - nearestComment.loc.end.line;
     if (lineGap < 0 || lineGap > 1) {
         return null;
     }
@@ -370,24 +358,20 @@ const declarationTargets = (
         ];
     }
 
-    if (declaration.type === AST_NODE_TYPES.VariableDeclaration) {
-        return declaration.declarations.flatMap((declarator) => {
-            if (declarator.id.type !== AST_NODE_TYPES.Identifier) {
-                return [];
-            }
+    return declaration.declarations.flatMap((declarator) => {
+        if (declarator.id.type !== AST_NODE_TYPES.Identifier) {
+            return [];
+        }
 
-            return [
-                {
-                    commentNode: declaration,
-                    kind: "variable" as const,
-                    name: declarator.id.name,
-                    reportNode: declarator,
-                },
-            ];
-        });
-    }
-
-    return assertUnreachable(declaration);
+        return [
+            {
+                commentNode: declaration,
+                kind: "variable" as const,
+                name: declarator.id.name,
+                reportNode: declarator,
+            },
+        ];
+    });
 };
 
 const declarationTargetsWithCommentNode = (
@@ -544,10 +528,6 @@ const createRequireTagRuleListener = (
             }
 
             for (const specifier of exportNode.specifiers) {
-                if (specifier.type !== AST_NODE_TYPES.ExportSpecifier) {
-                    continue;
-                }
-
                 checkIdentifierExport(specifier.local);
             }
         },

@@ -28,30 +28,6 @@
 
 /* --------------------------------------------- */
 
-@font-face {
-    font-family: "NerdFontSymbols Nerd Font Symbols";
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src:
-        local("NerdFontSymbols Nerd Font Symbols"),
-        local("Symbols Nerd Font"),
-        url("https://cdn.jsdelivr.net/gh/ryanoasis/nerd-fonts@3.4.0/patched-fonts/NerdFontsSymbolsOnly/SymbolsNerdFont-Regular.ttf")
-            format("truetype");
-}
-
-@font-face {
-    font-family: "Symbols Nerd Font Mono";
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src:
-        local("Symbols Nerd Font Mono"),
-        local("Symbols Nerd Font"),
-        url("https://cdn.jsdelivr.net/gh/ryanoasis/nerd-fonts@3.4.0/patched-fonts/NerdFontsSymbolsOnly/SymbolsNerdFont-Regular.ttf")
-            format("truetype");
-}
-
 :root {
     --ifm-color-primary: #128b38;
     --ifm-color-primary-dark: #0f7a31;
@@ -62,8 +38,7 @@
     --ifm-color-primary-lightest: #4ade80;
     --ifm-code-font-size: 95%;
     --ifm-font-family-base:
-        "Inter var", "Inter", "Segoe UI", "NerdFontSymbols Nerd Font Symbols",
-        system-ui, -apple-system, sans-serif;
+        "Inter var", "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
     --sb-accent-overview: #22c55e;
     --sb-accent-started: #16a34a;
     --sb-accent-developer: #128b38;

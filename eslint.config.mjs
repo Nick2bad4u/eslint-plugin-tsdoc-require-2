@@ -1,10 +1,33 @@
-import nick2bad4u from "eslint-config-nick2bad4u";
+import nickTwoBadFourU from "eslint-config-nick2bad4u";
 
-import tsdocRequire from "./plugin.mjs";
+import plugin from "./plugin.mjs";
+
+/**
+ * Check whether an unknown value is a plain object-like record.
+ *
+ * @param {unknown} value - Value to inspect.
+ *
+ * @returns {value is Record<string, unknown>} True when `value` is object-like.
+ */
+const isRecord = (value) => value !== null && typeof value === "object";
+
+/** @type {Record<string, unknown>} */
+const pluginAllRules = (() => {
+    if (!isRecord(plugin.configs)) {
+        return {};
+    }
+
+    const allConfig = plugin.configs["all"];
+    if (!isRecord(allConfig) || !isRecord(allConfig["rules"])) {
+        return {};
+    }
+
+    return allConfig["rules"];
+})();
 
 /** @type {import("eslint").Linter.Config[]} */
 const config = [
-    ...nick2bad4u.configs.withoutTsdocRequire2,
+    ...nickTwoBadFourU.configs.withoutTsdocRequire2,
 
     // Local Plugin Config
     // This lets us use the plugin's rules in this repository without needing to publish the plugin first.
@@ -12,11 +35,10 @@ const config = [
         files: ["src/**/*.{js,mjs,cjs,ts,mts,cts,tsx,jsx}"],
         name: "Local TSDoc Require",
         plugins: {
-            "tsdoc-require-2": tsdocRequire,
+            "tsdoc-require-2": plugin,
         },
         rules: {
-            // @ts-expect-error -- plugin.mjs is typed as generic ESLint.Plugin.
-            ...tsdocRequire.configs.all.rules,
+            ...pluginAllRules,
 
             "tsdoc-require-2/require": "warn",
             "tsdoc-require-2/require-abstract": "off",

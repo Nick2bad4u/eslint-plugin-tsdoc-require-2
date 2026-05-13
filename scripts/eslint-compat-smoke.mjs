@@ -7,6 +7,8 @@ const EXPECT_FLAG = "--expect-eslint-major=";
  * @param {readonly string[]} argumentsList
  *
  * @returns {number | null}
+ *
+ * @throws {Error} When the expected major version flag is malformed.
  */
 const getExpectedMajorVersion = (argumentsList) => {
     const expectedFlag = argumentsList.find((argument) =>

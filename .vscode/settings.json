@@ -73,5 +73,9 @@
             ","
         ]
     },
+    "sonarlint.connectedMode.project": {
+        "connectionId": "nick2bad4u",
+        "projectKey": "Nick2bad4u_eslint-plugin-tsdoc-require-2"
+    },
     "vitest.rootConfig": "C:\\Users\\Nick\\Dropbox\\PC (2)\\Documents\\GitHub\\eslint-plugin-tsdoc-require-2\\vite.config.ts"
 }

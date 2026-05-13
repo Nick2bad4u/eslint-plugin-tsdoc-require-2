@@ -1,4 +1,7 @@
 import type { ESLint, Linter } from "eslint";
+import type { UnknownRecord } from "type-fest";
+
+import { objectHasOwn, objectValues } from "ts-extras";
 
 import {
     requiredTagDefinitions,
@@ -12,10 +15,10 @@ type FlatConfig = Linter.Config & {
     rules: NonNullable<Linter.Config["rules"]>;
 };
 
-type PresetRuleEntry = {
+interface PresetRuleEntry {
     readonly ruleName: keyof RuleModuleMap;
     readonly value?: NonNullable<FlatConfig["rules"]>[string];
-};
+}
 
 type RuleModuleMap = typeof requiredTagRules & {
     require: typeof requireRule;
@@ -29,7 +32,25 @@ const rules: RuleModuleMap = {
     ...requiredTagRules,
 };
 
-const pluginRules = rules as unknown as NonNullable<ESLint.Plugin["rules"]>;
+type PluginRuleMap = NonNullable<ESLint.Plugin["rules"]>;
+
+const isRecord = (value: unknown): value is UnknownRecord =>
+    typeof value === "object" && value !== null;
+
+const isPluginRuleDefinition = (
+    value: unknown
+): value is PluginRuleMap[string] =>
+    isRecord(value) &&
+    objectHasOwn(value, "create") &&
+    typeof value.create === "function";
+
+const isPluginRuleMap = (value: unknown): value is PluginRuleMap =>
+    isRecord(value) && objectValues(value).every(isPluginRuleDefinition);
+
+const pluginRules: PluginRuleMap = isPluginRuleMap(rules) ? rules : {};
+
+const isRuleName = (value: string): value is keyof RuleModuleMap =>
+    objectHasOwn(rules, value);
 
 /** Plugin object exported to ESLint. */
 const plugin: ESLint.Plugin = {
@@ -64,8 +85,8 @@ const presetRuleEntries = {
     all: [
         createPresetRuleEntry("require"),
         createPresetRuleEntry("restrict-tags"),
-        ...requiredTagDefinitions.map(({ ruleName }) =>
-            createPresetRuleEntry(ruleName as keyof RuleModuleMap)
+        ...requiredTagDefinitions.flatMap(({ ruleName }) =>
+            isRuleName(ruleName) ? [createPresetRuleEntry(ruleName)] : []
         ),
     ],
     detailed: [

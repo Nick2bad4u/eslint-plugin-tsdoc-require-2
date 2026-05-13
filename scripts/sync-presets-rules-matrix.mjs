@@ -299,6 +299,8 @@ const buildPresetMatrix = (requiredTagRuleNames) => {
  * @param {string} fileLabel
  *
  * @returns {string}
+ *
+ * @throws {Error} When required matrix markers are missing or malformed.
  */
 const replaceBetweenMarkers = (text, replacementBody, fileLabel) => {
     const beginIndex = text.indexOf(BEGIN_MARKER);
