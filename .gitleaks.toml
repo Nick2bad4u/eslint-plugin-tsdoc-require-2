@@ -1,10 +1,12 @@
 title = "eslint-plugin-tsdoc-require-2 gitleaks config"
 
 [extend]
-useDefault = true
+path = "node_modules/gitleaks-config-nick2bad4u/gitleaks.toml"
 
 [[allowlists]]
-description = "Allow obvious non-secret placeholders in docs and tests"
-regexTarget = "line"
-paths = [ '''(^|/)(docs|test|tests)/''' ]
-regexes = [ '''(?i)(dummy|example|placeholder|notasecret|changeme)''' ]
+description = "Allow generated documentation artifacts"
+paths = [
+    '''^docs/docusaurus/\.docusaurus/''',
+    '''^docs/docusaurus/build/''',
+    '''^docs/docusaurus/site-docs/developer/api/''',
+]

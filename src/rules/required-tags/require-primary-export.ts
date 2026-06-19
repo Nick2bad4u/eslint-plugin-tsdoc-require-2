@@ -14,9 +14,8 @@ const RequirePrimaryExportRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@primaryExport");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@primaryExport"),
     meta: {
         defaultOptions: [
             {

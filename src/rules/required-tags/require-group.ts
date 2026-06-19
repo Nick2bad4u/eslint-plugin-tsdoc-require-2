@@ -14,9 +14,8 @@ const RequireGroupRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@group");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@group"),
     meta: {
         defaultOptions: [
             {

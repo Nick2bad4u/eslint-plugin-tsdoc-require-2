@@ -14,9 +14,8 @@ const RequireAbstractRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@abstract");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@abstract"),
     meta: {
         defaultOptions: [
             {

@@ -16,20 +16,20 @@ This rule accepts the same options as [`tsdoc-require-2/require`](../require.md)
 
   ```ts
   type Options = [
-      {
-          enforceFor?: Array<
-              | "class"
-              | "enum"
-              | "function"
-              | "interface"
-              | "namespace"
-              | "object"
-              | "type"
-              | "variable"
-          >;
-          exportMode?: "all" | "exported" | "non-exported";
-          includeNonExported?: boolean;
-      },
+   {
+    enforceFor?: Array<
+     | "class"
+     | "enum"
+     | "function"
+     | "interface"
+     | "namespace"
+     | "object"
+     | "type"
+     | "variable"
+    >;
+    exportMode?: "all" | "exported" | "non-exported";
+    includeNonExported?: boolean;
+   },
   ];
   ```
 
@@ -37,20 +37,20 @@ This rule accepts the same options as [`tsdoc-require-2/require`](../require.md)
 
   ```ts
   [
-      {
-          enforceFor: [
-              "class",
-              "enum",
-              "function",
-              "interface",
-              "namespace",
-              "object",
-              "type",
-              "variable",
-          ],
-          exportMode: "exported",
-      },
-  ]
+   {
+    enforceFor: [
+     "class",
+     "enum",
+     "function",
+     "interface",
+     "namespace",
+     "object",
+     "type",
+     "variable",
+    ],
+    exportMode: "exported",
+   },
+  ];
   ```
 
 ## ❌ Incorrect
@@ -60,7 +60,7 @@ This rule accepts the same options as [`tsdoc-require-2/require`](../require.md)
  * Namespace for API surface docs.
  */
 export namespace ApiDocs {
-    export type Id = string;
+ export type Id = string;
 }
 ```
 
@@ -69,10 +69,11 @@ export namespace ApiDocs {
 ```ts
 /**
  * Namespace for API surface docs.
+ *
  * @namespace
  */
 export namespace ApiDocs {
-    export type Id = string;
+ export type Id = string;
 }
 ```
 

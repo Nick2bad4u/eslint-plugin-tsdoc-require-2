@@ -6,16 +6,16 @@ Use one preset as your baseline, then add rule overrides for project-specific po
 
 ## How to choose quickly
 
-| If you want... | Start with |
-| --- | --- |
-| Minimal comment presence enforcement | [`recommended`](./recommended.md) |
-| More narrative context in docs | [`detailed`](./detailed.md) |
-| Package-level docs for published libraries | [`packages`](./packages.md) |
-| JSDoc-style function tag discipline | [`jsdoc`](./jsdoc.md) |
-| TSDoc-first function + type-parameter docs with tag restrictions | [`tsdoc`](./tsdoc.md) |
-| TypeDoc declaration-kind tagging | [`typedoc`](./typedoc.md) |
-| Strict TypeDoc workflow with module/remarks and restricted tags | [`typedoc-strict`](./typedoc-strict.md) |
-| Maximum strictness for audits or experiments | [`all`](./all.md) |
+| If you want...                                                   | Start with                              |
+| ---------------------------------------------------------------- | --------------------------------------- |
+| Minimal comment presence enforcement                             | [`recommended`](./recommended.md)       |
+| More narrative context in docs                                   | [`detailed`](./detailed.md)             |
+| Package-level docs for published libraries                       | [`packages`](./packages.md)             |
+| JSDoc-style function tag discipline                              | [`jsdoc`](./jsdoc.md)                   |
+| TSDoc-first function + type-parameter docs with tag restrictions | [`tsdoc`](./tsdoc.md)                   |
+| TypeDoc declaration-kind tagging                                 | [`typedoc`](./typedoc.md)               |
+| Strict TypeDoc workflow with module/remarks and restricted tags  | [`typedoc-strict`](./typedoc-strict.md) |
+| Maximum strictness for audits or experiments                     | [`all`](./all.md)                       |
 
 ## Preset catalog
 
@@ -142,12 +142,12 @@ Use one preset baseline, then add an override block.
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
 export default [
-  tsdocRequire.configs.tsdoc,
-  {
-    rules: {
-      "tsdoc-require-2/require": ["error", { exportMode: "all" }],
-    },
+ tsdocRequire.configs.tsdoc,
+ {
+  rules: {
+   "tsdoc-require-2/require": ["error", { exportMode: "all" }],
   },
+ },
 ];
 ```
 

@@ -14,9 +14,8 @@ const RequireInternalRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@internal");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@internal"),
     meta: {
         defaultOptions: [
             {

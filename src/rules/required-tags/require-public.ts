@@ -14,9 +14,8 @@ const RequirePublicRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@public");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@public"),
     meta: {
         defaultOptions: [
             {

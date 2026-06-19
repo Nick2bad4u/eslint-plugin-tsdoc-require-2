@@ -14,9 +14,8 @@ const RequireVirtualRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@virtual");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@virtual"),
     meta: {
         defaultOptions: [
             {

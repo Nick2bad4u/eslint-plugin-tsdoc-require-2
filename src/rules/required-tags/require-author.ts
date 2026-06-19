@@ -14,9 +14,8 @@ const RequireAuthorRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@author");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@author"),
     meta: {
         defaultOptions: [
             {

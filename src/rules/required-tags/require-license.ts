@@ -14,9 +14,8 @@ const RequireLicenseRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@license");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@license"),
     meta: {
         defaultOptions: [
             {

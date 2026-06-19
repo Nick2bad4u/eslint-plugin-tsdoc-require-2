@@ -26,17 +26,17 @@ Flat config example (interface-only scope):
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
 export default [
-    {
-        plugins: {
-            "tsdoc-require-2": tsdocRequire,
-        },
-        rules: {
-            "tsdoc-require-2/require-interface": [
-                "error",
-                { enforceFor: ["interface"] },
-            ],
-        },
-    },
+ {
+  plugins: {
+   "tsdoc-require-2": tsdocRequire,
+  },
+  rules: {
+   "tsdoc-require-2/require-interface": [
+    "error",
+    { enforceFor: ["interface"] },
+   ],
+  },
+ },
 ];
 ```
 
@@ -47,7 +47,7 @@ export default [
  * Contract used by the cache layer.
  */
 export interface CacheStore {
-    get(key: string): string | undefined;
+ get(key: string): string | undefined;
 }
 ```
 
@@ -56,10 +56,11 @@ export interface CacheStore {
 ```ts
 /**
  * Contract used by the cache layer.
+ *
  * @interface
  */
 export interface CacheStore {
-    get(key: string): string | undefined;
+ get(key: string): string | undefined;
 }
 ```
 

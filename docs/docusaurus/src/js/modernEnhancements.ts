@@ -7,9 +7,9 @@
 type CleanupFunction = () => void;
 
 /** Mutable holder used to swap active cleanup handlers between route refreshes. */
-type CleanupRef = {
+interface CleanupRef {
     current: CleanupFunction | null;
-};
+}
 
 declare global {
     interface Window {
@@ -33,152 +33,21 @@ const runtimeSidebarKindPrefixes = [
     "Method:",
     "Namespace:",
     "Property:",
-    "Type Alias:",
     "Type:",
+    "Type Alias:",
     "Variable:",
 ] as const;
 
+const nonBreakingSpace = "\u{A0}";
+
 /** Stored mutation record used to restore labels during cleanup. */
-type SidebarLabelMutation = {
+interface SidebarLabelMutation {
     element: HTMLAnchorElement;
     originalLabel: string;
-};
+}
 
 /** Dataset key used to mark links already tokenized by this enhancer. */
 const SIDEBAR_TOKENIZED_DATA_KEY = "sbTokenized";
-
-/**
- * Check whether a node is an {@link HTMLElement}.
- *
- * @param element - DOM element candidate.
- *
- * @returns `true` when element is an `HTMLElement` instance.
- */
-function isHTMLElement(element: Element | null): element is HTMLElement {
-    return element instanceof HTMLElement;
-}
-
-/**
- * Check whether a sidebar link belongs to the runtime API category.
- *
- * @param link - Candidate sidebar link.
- *
- * @returns `true` when link is under `.sb-cat-api-runtime`.
- */
-function isRuntimeSidebarLink(link: HTMLAnchorElement): boolean {
-    return link.closest(".sb-cat-api-runtime") !== null;
-}
-
-/**
- * Check whether a sidebar link belongs to a numbered rules subsection.
- *
- * @param link - Candidate sidebar link.
- *
- * @returns `true` when link is in primary rule-family lists.
- */
-function isNumberedRuleSidebarLink(link: HTMLAnchorElement): boolean {
-    return (
-        link.closest(".sb-cat-rules-require") !== null ||
-        link.closest(".sb-cat-rules-required-tags") !== null
-    );
-}
-
-/**
- * Detect runtime kind prefix in a sidebar label.
- *
- * @param label - Trimmed sidebar label.
- *
- * @returns Matching prefix when present.
- */
-function getRuntimeSidebarKindPrefix(
-    label: string
-): (typeof runtimeSidebarKindPrefixes)[number] | null {
-    for (const prefix of runtimeSidebarKindPrefixes) {
-        if (label.startsWith(`${prefix} `)) {
-            return prefix;
-        }
-    }
-
-    return null;
-}
-
-/**
- * Parse an optional numeric rule prefix from a sidebar label.
- *
- * @param label - Trimmed sidebar label.
- *
- * @returns Number token and remainder when label begins with digits.
- */
-function getRuleNumberPrefix(
-    label: string
-): null | Readonly<{ numberToken: string; remainder: string }> {
-    const match = /^(\d{2,3})\s+(.+)$/.exec(label);
-
-    if (match === null) {
-        return null;
-    }
-
-    const [
-        ,
-        numberToken,
-        remainder,
-    ] = match;
-
-    if (numberToken === undefined || remainder === undefined) {
-        return null;
-    }
-
-    return {
-        numberToken,
-        remainder,
-    };
-}
-
-/**
- * Replace one sidebar link label with a highlighted leading token.
- *
- * @param options - Token replacement parameters.
- */
-function setSidebarLeadingToken(
-    options: Readonly<{
-        link: HTMLAnchorElement;
-        separator?: string;
-        tokenClassName: string;
-        tokenText: string;
-        remainderText: string;
-    }>
-): void {
-    const {
-        link,
-        separator = " ",
-        tokenClassName,
-        tokenText,
-        remainderText,
-    } = options;
-    const token = document.createElement("span");
-
-    token.className = tokenClassName;
-    token.textContent = tokenText;
-    link.dataset[SIDEBAR_TOKENIZED_DATA_KEY] = tokenClassName;
-
-    link.replaceChildren(
-        token,
-        document.createTextNode(`${separator}${remainderText}`)
-    );
-}
-
-/**
- * Check whether a sidebar link was already tokenized by this enhancer pass.
- *
- * @param link - Candidate sidebar link.
- *
- * @returns `true` when already tokenized.
- */
-function isSidebarLinkTokenized(link: HTMLAnchorElement): boolean {
-    const tokenizedValue = link.dataset[SIDEBAR_TOKENIZED_DATA_KEY];
-
-    return tokenizedValue !== undefined && tokenizedValue.length > 0;
-}
 
 /**
  * Enhance sidebar readability by tinting leading label tokens.
@@ -219,7 +88,7 @@ function applySidebarLabelTokenColoring(): CleanupFunction {
                             remainderText,
                             separator: "",
                             tokenClassName: "sb-inline-runtime-kind",
-                            tokenText: `${runtimePrefix}\u00A0`,
+                            tokenText: `${runtimePrefix}${nonBreakingSpace}`,
                         });
                     }
 
@@ -252,7 +121,7 @@ function applySidebarLabelTokenColoring(): CleanupFunction {
             ".theme-doc-sidebar-menu .menu__link"
         );
 
-        processLinks(Array.from(sidebarLinks));
+        processLinks([...sidebarLinks]);
     };
 
     processSidebarMenuLinks();
@@ -285,7 +154,7 @@ function applySidebarLabelTokenColoring(): CleanupFunction {
                   const addedLinks: HTMLAnchorElement[] = [];
 
                   for (const record of records) {
-                      for (const addedNode of Array.from(record.addedNodes)) {
+                      for (const addedNode of record.addedNodes) {
                           if (!(addedNode instanceof HTMLElement)) {
                               continue;
                           }
@@ -298,7 +167,7 @@ function applySidebarLabelTokenColoring(): CleanupFunction {
                               addedNode.querySelectorAll<HTMLAnchorElement>(
                                   "a.menu__link"
                               );
-                          addedLinks.push(...Array.from(nestedLinks));
+                          addedLinks.push(...nestedLinks);
                       }
                   }
 
@@ -334,47 +203,6 @@ function applySidebarLabelTokenColoring(): CleanupFunction {
             delete mutation.element.dataset[SIDEBAR_TOKENIZED_DATA_KEY];
             mutation.element.textContent = mutation.originalLabel;
         }
-    };
-}
-
-/**
- * Create and maintain a top-page scroll progress indicator.
- *
- * @returns Cleanup callback that removes listeners and indicator markup.
- */
-function createScrollIndicator(): CleanupFunction {
-    const indicator = document.createElement("div");
-    indicator.className = "scroll-indicator";
-    indicator.style.cssText = [
-        "position: fixed",
-        "inset-block-start: 0",
-        "inset-inline-start: 0",
-        "z-index: 9999",
-        "height: 3px",
-        "width: 0%",
-        "background: linear-gradient(90deg, var(--ifm-color-primary), var(--ifm-color-primary-light))",
-        "pointer-events: none",
-        "transition: width 80ms linear",
-    ].join(";");
-
-    document.body.append(indicator);
-
-    const update = (): void => {
-        const scrollTop =
-            window.pageYOffset || document.documentElement.scrollTop;
-        const docHeight =
-            document.documentElement.scrollHeight - window.innerHeight;
-        const safeHeight = docHeight > 0 ? docHeight : 1;
-        const scrollPercent = (scrollTop / safeHeight) * 100;
-        indicator.style.width = `${Math.max(0, Math.min(100, scrollPercent))}%`;
-    };
-
-    window.addEventListener("scroll", update, { passive: true });
-    update();
-
-    return (): void => {
-        window.removeEventListener("scroll", update);
-        indicator.remove();
     };
 }
 
@@ -423,12 +251,102 @@ function applyThemeToggleAnimation(): CleanupFunction {
 }
 
 /**
+ * Create and maintain a top-page scroll progress indicator.
+ *
+ * @returns Cleanup callback that removes listeners and indicator markup.
+ */
+function createScrollIndicator(): CleanupFunction {
+    const indicator = document.createElement("div");
+    indicator.className = "scroll-indicator";
+    indicator.style.cssText = [
+        "position: fixed",
+        "inset-block-start: 0",
+        "inset-inline-start: 0",
+        "z-index: 9999",
+        "height: 3px",
+        "width: 0%",
+        "background: linear-gradient(90deg, var(--ifm-color-primary), var(--ifm-color-primary-light))",
+        "pointer-events: none",
+        "transition: width 80ms linear",
+    ].join(";");
+
+    document.body.append(indicator);
+
+    const update = (): void => {
+        const scrollTop =
+            window.pageYOffset || document.documentElement.scrollTop;
+        const docHeight =
+            document.documentElement.scrollHeight - window.innerHeight;
+        const safeHeight = docHeight > 0 ? docHeight : 1;
+        const scrollPercent = (scrollTop / safeHeight) * 100;
+        indicator.style.width = `${Math.max(0, Math.min(100, scrollPercent))}%`;
+    };
+
+    window.addEventListener("scroll", update, { passive: true });
+    update();
+
+    return (): void => {
+        window.removeEventListener("scroll", update);
+        indicator.remove();
+    };
+}
+
+/**
+ * Parse an optional numeric rule prefix from a sidebar label.
+ *
+ * @param label - Trimmed sidebar label.
+ *
+ * @returns Number token and remainder when label begins with digits.
+ */
+function getRuleNumberPrefix(
+    label: string
+): null | Readonly<{ numberToken: string; remainder: string }> {
+    const trimmedLabel = label.trim();
+    const separatorIndex = trimmedLabel.search(/\s/v);
+
+    if (separatorIndex === -1) {
+        return null;
+    }
+
+    const numberToken = trimmedLabel.slice(0, separatorIndex);
+    const remainder = trimmedLabel.slice(separatorIndex).trimStart();
+
+    if (!/^\d{2,3}$/v.test(numberToken) || remainder.length === 0) {
+        return null;
+    }
+
+    return {
+        numberToken,
+        remainder,
+    };
+}
+
+/**
+ * Detect runtime kind prefix in a sidebar label.
+ *
+ * @param label - Trimmed sidebar label.
+ *
+ * @returns Matching prefix when present.
+ */
+function getRuntimeSidebarKindPrefix(
+    label: string
+): (typeof runtimeSidebarKindPrefixes)[number] | null {
+    for (const prefix of runtimeSidebarKindPrefixes) {
+        if (label.startsWith(`${prefix} `)) {
+            return prefix;
+        }
+    }
+
+    return null;
+}
+
+/**
  * Initialize modern interaction features and return cleanup hooks.
  *
  * @returns Cleanup callback for all registered enhancement handlers.
  */
 function initializeAdvancedFeatures(): CleanupFunction {
-    const prefersReducedMotion = window.matchMedia(
+    const isPrefersReducedMotion = globalThis.matchMedia(
         "(prefers-reduced-motion: reduce)"
     ).matches;
     const cleanupFunctions: CleanupFunction[] = [];
@@ -436,14 +354,14 @@ function initializeAdvancedFeatures(): CleanupFunction {
     cleanupFunctions.push(createScrollIndicator());
     cleanupFunctions.push(applySidebarLabelTokenColoring());
 
-    if (!prefersReducedMotion) {
+    if (!isPrefersReducedMotion) {
         cleanupFunctions.push(applyThemeToggleAnimation());
     }
 
     return (): void => {
-        cleanupFunctions.forEach((cleanup) => {
+        for (const cleanup of cleanupFunctions) {
             cleanup();
-        });
+        }
     };
 }
 
@@ -466,7 +384,7 @@ function initializeEnhancements(): CleanupFunction {
 
     const cancelInitialSetup = (): void => {
         if (initialSetupFrame !== null) {
-            window.cancelAnimationFrame(initialSetupFrame);
+            globalThis.cancelAnimationFrame(initialSetupFrame);
             initialSetupFrame = null;
         }
 
@@ -479,7 +397,7 @@ function initializeEnhancements(): CleanupFunction {
     const scheduleInitialSetup = (): void => {
         cancelInitialSetup();
 
-        initialSetupFrame = window.requestAnimationFrame(() => {
+        initialSetupFrame = globalThis.requestAnimationFrame(() => {
             initialSetupFrame = null;
 
             initialSetupTimer = setTimeout(() => {
@@ -543,9 +461,91 @@ function initializeEnhancements(): CleanupFunction {
     };
 }
 
+/**
+ * Check whether a node is an {@link HTMLElement}.
+ *
+ * @param element - DOM element candidate.
+ *
+ * @returns `true` when element is an `HTMLElement` instance.
+ */
+function isHTMLElement(element: Element | null): element is HTMLElement {
+    return element instanceof HTMLElement;
+}
+
+/**
+ * Check whether a sidebar link belongs to a numbered rules subsection.
+ *
+ * @param link - Candidate sidebar link.
+ *
+ * @returns `true` when link is in primary rule-family lists.
+ */
+function isNumberedRuleSidebarLink(link: HTMLAnchorElement): boolean {
+    return (
+        link.closest(".sb-cat-rules-require") !== null ||
+        link.closest(".sb-cat-rules-required-tags") !== null
+    );
+}
+
+/**
+ * Check whether a sidebar link belongs to the runtime API category.
+ *
+ * @param link - Candidate sidebar link.
+ *
+ * @returns `true` when link is under `.sb-cat-api-runtime`.
+ */
+function isRuntimeSidebarLink(link: HTMLAnchorElement): boolean {
+    return link.closest(".sb-cat-api-runtime") !== null;
+}
+
+/**
+ * Check whether a sidebar link was already tokenized by this enhancer pass.
+ *
+ * @param link - Candidate sidebar link.
+ *
+ * @returns `true` when already tokenized.
+ */
+function isSidebarLinkTokenized(link: HTMLAnchorElement): boolean {
+    const tokenizedValue = link.dataset[SIDEBAR_TOKENIZED_DATA_KEY];
+
+    return tokenizedValue !== undefined && tokenizedValue.length > 0;
+}
+
+/**
+ * Replace one sidebar link label with a highlighted leading token.
+ *
+ * @param options - Token replacement parameters.
+ */
+function setSidebarLeadingToken(
+    options: Readonly<{
+        link: HTMLAnchorElement;
+        remainderText: string;
+        separator?: string;
+        tokenClassName: string;
+        tokenText: string;
+    }>
+): void {
+    const {
+        link,
+        remainderText,
+        separator = " ",
+        tokenClassName,
+        tokenText,
+    } = options;
+    const token = document.createElement("span");
+
+    token.className = tokenClassName;
+    token.textContent = tokenText;
+    link.dataset[SIDEBAR_TOKENIZED_DATA_KEY] = tokenClassName;
+
+    link.replaceChildren(
+        token,
+        document.createTextNode(`${separator}${remainderText}`)
+    );
+}
+
 if (typeof window !== "undefined" && typeof document !== "undefined") {
     initializeEnhancements();
-    window.initializeAdvancedFeatures = initializeAdvancedFeatures;
+    globalThis.window.initializeAdvancedFeatures = initializeAdvancedFeatures;
 }
 
 export { initializeAdvancedFeatures, initializeEnhancements };

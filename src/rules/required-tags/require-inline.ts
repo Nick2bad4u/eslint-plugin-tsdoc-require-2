@@ -14,9 +14,8 @@ const RequireInlineRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@inline");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@inline"),
     meta: {
         defaultOptions: [
             {

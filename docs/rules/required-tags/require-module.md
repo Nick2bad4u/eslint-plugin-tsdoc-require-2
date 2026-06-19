@@ -28,19 +28,19 @@ Flat config example (module-only scope):
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
 export default [
+ {
+  plugins: {
+   "tsdoc-require-2": tsdocRequire,
+  },
+  rules: {
+   "tsdoc-require-2/require-module": [
+    "error",
     {
-        plugins: {
-            "tsdoc-require-2": tsdocRequire,
-        },
-        rules: {
-            "tsdoc-require-2/require-module": [
-                "error",
-                {
-                    enforceFor: ["namespace"],
-                },
-            ],
-        },
+     enforceFor: ["namespace"],
     },
+   ],
+  },
+ },
 ];
 ```
 
@@ -51,7 +51,7 @@ export default [
  * Namespace for API surface docs.
  */
 export namespace ApiDocs {
-    export type Id = string;
+ export type Id = string;
 }
 ```
 
@@ -60,10 +60,11 @@ export namespace ApiDocs {
 ```ts
 /**
  * Namespace for API surface docs.
+ *
  * @module
  */
 export namespace ApiDocs {
-    export type Id = string;
+ export type Id = string;
 }
 ```
 

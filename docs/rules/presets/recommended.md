@@ -25,9 +25,7 @@ This preset only checks that comments exist. It does **not** require tags like `
 ```ts
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
-export default [
-    tsdocRequire.configs.recommended,
-];
+export default [tsdocRequire.configs.recommended];
 ```
 
 ## When to choose a stricter preset

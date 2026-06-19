@@ -14,9 +14,8 @@ const RequireIncludeRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@include");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@include"),
     meta: {
         defaultOptions: [
             {

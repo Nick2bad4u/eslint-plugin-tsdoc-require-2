@@ -14,9 +14,8 @@ const RequireUseDeclaredTypeRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@useDeclaredType");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@useDeclaredType"),
     meta: {
         defaultOptions: [
             {

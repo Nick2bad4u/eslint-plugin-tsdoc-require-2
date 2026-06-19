@@ -28,9 +28,7 @@ Compared to `recommended`, this adds structural pressure for richer docs without
 ```ts
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
-export default [
-    tsdocRequire.configs.detailed,
-];
+export default [tsdocRequire.configs.detailed];
 ```
 
 ## Trade-offs

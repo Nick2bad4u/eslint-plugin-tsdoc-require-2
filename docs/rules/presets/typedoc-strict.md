@@ -40,9 +40,7 @@ Compared to `typedoc`, this preset adds:
 ```ts
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
-export default [
-    tsdocRequire.configs["typedoc-strict"],
-];
+export default [tsdocRequire.configs["typedoc-strict"]];
 ```
 
 ## Common customization

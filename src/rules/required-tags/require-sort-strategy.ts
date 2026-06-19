@@ -14,9 +14,8 @@ const RequireSortStrategyRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@sortStrategy");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@sortStrategy"),
     meta: {
         defaultOptions: [
             {

@@ -289,10 +289,10 @@ Then add one small contract file:
 import { defineDocusaurusSiteContract } from "@your-scope/docusaurus-site-contract";
 
 export default defineDocusaurusSiteContract({
-  docusaurusConfig: {
-    path: "docs/docusaurus/docusaurus.config.ts",
-    requireFavicon: true,
-  },
+ docusaurusConfig: {
+  path: "docs/docusaurus/docusaurus.config.ts",
+  requireFavicon: true,
+ },
 });
 ```
 
@@ -300,9 +300,9 @@ Then add one root script:
 
 ```json
 {
-  "scripts": {
-    "docs:check-site-contract": "docusaurus-site-contract --config docs/docusaurus/site-contract.config.mjs"
-  }
+ "scripts": {
+  "docs:check-site-contract": "docusaurus-site-contract --config docs/docusaurus/site-contract.config.mjs"
+ }
 }
 ```
 
@@ -353,66 +353,64 @@ A contract file exports either `default` or `siteContract`.
 
 ```mjs
 export default {
-  docusaurusConfig: {
-    path: "docs/docusaurus/docusaurus.config.ts",
-    requiredPluginNames: ["@docusaurus/plugin-pwa"],
-    requiredThemeNames: ["@easyops-cn/docusaurus-search-local"],
-    requireFavicon: true,
-    navbar: {
-      requireLogo: true,
-      orderedItems: [
-        {
-          labelPattern: /Docs/v,
-          position: "left",
-          type: "dropdown",
-        },
-      ],
+ docusaurusConfig: {
+  path: "docs/docusaurus/docusaurus.config.ts",
+  requiredPluginNames: ["@docusaurus/plugin-pwa"],
+  requiredThemeNames: ["@easyops-cn/docusaurus-search-local"],
+  requireFavicon: true,
+  navbar: {
+   requireLogo: true,
+   orderedItems: [
+    {
+     labelPattern: /Docs/v,
+     position: "left",
+     type: "dropdown",
     },
+   ],
   },
-  manifestFiles: [
+ },
+ manifestFiles: [
+  {
+   path: "docs/docusaurus/static/manifest.json",
+   requiredFields: {
+    name: "Your docs site",
+   },
+   requireExistingIconFiles: true,
+  },
+ ],
+ packageJsonFiles: [
+  {
+   path: "docs/docusaurus/package.json",
+   requiredScripts: [
     {
-      path: "docs/docusaurus/static/manifest.json",
-      requiredFields: {
-        name: "Your docs site",
-      },
-      requireExistingIconFiles: true,
+     name: "build",
+     includes: "docs:check-site-contract",
     },
-  ],
-  packageJsonFiles: [
+   ],
+  },
+ ],
+ requiredFiles: ["docs/docusaurus/static/img/logo.svg"],
+ sourceFiles: [
+  {
+   path: "docs/docusaurus/src/js/modernEnhancements.ts",
+   requiredSnippets: [
+    'window.addEventListener("load", handleWindowLoad, { once: true });',
+   ],
+   forbiddenSnippets: [
+    'document.addEventListener("DOMContentLoaded", handleDOMContentLoaded);',
+   ],
+   orderedPatterns: [
     {
-      path: "docs/docusaurus/package.json",
-      requiredScripts: [
-        {
-          name: "build",
-          includes: "docs:check-site-contract",
-        },
-      ],
+     description: "load bootstrap before export",
+     pattern: /handleWindowLoad/v,
     },
-  ],
-  requiredFiles: [
-    "docs/docusaurus/static/img/logo.svg",
-  ],
-  sourceFiles: [
     {
-      path: "docs/docusaurus/src/js/modernEnhancements.ts",
-      requiredSnippets: [
-        'window.addEventListener("load", handleWindowLoad, { once: true });',
-      ],
-      forbiddenSnippets: [
-        'document.addEventListener("DOMContentLoaded", handleDOMContentLoaded);',
-      ],
-      orderedPatterns: [
-        {
-          description: "load bootstrap before export",
-          pattern: /handleWindowLoad/v,
-        },
-        {
-          description: "global assignment after bootstrap",
-          pattern: /window\.initializeAdvancedFeatures/v,
-        },
-      ],
+     description: "global assignment after bootstrap",
+     pattern: /window\.initializeAdvancedFeatures/v,
     },
-  ],
+   ],
+  },
+ ],
 };
 ```
 

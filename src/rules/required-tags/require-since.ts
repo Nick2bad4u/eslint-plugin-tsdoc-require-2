@@ -14,9 +14,8 @@ const RequireSinceRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@since");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@since"),
     meta: {
         defaultOptions: [
             {

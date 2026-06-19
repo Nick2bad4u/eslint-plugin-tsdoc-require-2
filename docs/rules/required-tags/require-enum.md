@@ -26,14 +26,14 @@ Flat config example (enum-only scope):
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
 export default [
-    {
-        plugins: {
-            "tsdoc-require-2": tsdocRequire,
-        },
-        rules: {
-            "tsdoc-require-2/require-enum": ["error", { enforceFor: ["enum"] }],
-        },
-    },
+ {
+  plugins: {
+   "tsdoc-require-2": tsdocRequire,
+  },
+  rules: {
+   "tsdoc-require-2/require-enum": ["error", { enforceFor: ["enum"] }],
+  },
+ },
 ];
 ```
 
@@ -44,8 +44,8 @@ export default [
  * Status values accepted by the API.
  */
 export enum Status {
-    Ready = "ready",
-    Running = "running",
+ Ready = "ready",
+ Running = "running",
 }
 ```
 
@@ -54,11 +54,12 @@ export enum Status {
 ```ts
 /**
  * Status values accepted by the API.
+ *
  * @enum
  */
 export enum Status {
-    Ready = "ready",
-    Running = "running",
+ Ready = "ready",
+ Running = "running",
 }
 ```
 

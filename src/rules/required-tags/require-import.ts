@@ -14,9 +14,8 @@ const RequireImportRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@import");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@import"),
     meta: {
         defaultOptions: [
             {

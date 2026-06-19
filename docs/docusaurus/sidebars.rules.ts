@@ -1,17 +1,20 @@
 import type { SidebarsConfig } from "@docusaurus/plugin-content-docs";
 
 import { readdirSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const currentDirectoryPath = dirname(fileURLToPath(import.meta.url));
-const rulesDocsDirectoryPath = resolve(currentDirectoryPath, "../rules");
+const currentDirectoryPath = path.dirname(fileURLToPath(import.meta.url));
+const rulesDocsDirectoryPath = path.resolve(currentDirectoryPath, "../rules");
 
 const toDocId = (folderName: string, fileName: string): string =>
-    `${folderName}/${fileName.replace(/\.md$/u, "")}`;
+    `${folderName}/${fileName.replace(/\.md$/v, "")}`;
 
 const readDocIdsFromDirectory = (folderName: string): readonly string[] => {
-    const targetDirectoryPath = resolve(rulesDocsDirectoryPath, folderName);
+    const targetDirectoryPath = path.resolve(
+        rulesDocsDirectoryPath,
+        folderName
+    );
 
     return readdirSync(targetDirectoryPath, { withFileTypes: true })
         .filter((directoryEntry) => directoryEntry.isFile())
@@ -19,7 +22,7 @@ const readDocIdsFromDirectory = (folderName: string): readonly string[] => {
         .filter(
             (fileName) => fileName.endsWith(".md") && fileName !== "index.md"
         )
-        .sort((leftFileName, rightFileName) =>
+        .toSorted((leftFileName, rightFileName) =>
             leftFileName.localeCompare(rightFileName)
         )
         .map((fileName) => toDocId(folderName, fileName));
@@ -29,11 +32,11 @@ const requiredTagRuleDocIds = readDocIdsFromDirectory("required-tags");
 const presetDocIds = readDocIdsFromDirectory("presets");
 
 const requiredTagItemIcons = [
-    "🟢",
-    "🟡",
-    "🟠",
-    "🟣",
     "🔵",
+    "🟠",
+    "🟡",
+    "🟢",
+    "🟣",
     "🟤",
 ] as const;
 
@@ -42,22 +45,23 @@ const toTitleCaseWords = (value: string): string =>
         .split("-")
         .filter((segment) => segment.length > 0)
         .map(
-            (segment) => `${segment[0]?.toUpperCase() ?? ""}${segment.slice(1)}`
+            (segment) =>
+                `${segment.at(0)?.toUpperCase() ?? ""}${segment.slice(1)}`
         )
         .join(" ");
 
 const toRequiredTagLabel = (docId: string): string => {
     const ruleNameWithoutPrefix = docId
-        .replace(/^required-tags\//u, "")
-        .replace(/^require-/u, "");
+        .replace(/^required-tags\//v, "")
+        .replace(/^require-/v, "");
 
     return `Require ${toTitleCaseWords(ruleNameWithoutPrefix)}`;
 };
 
 const toDocItem = (docId: string, className?: string, label?: string) => ({
-    ...(className ? { className } : {}),
+    ...(className && { className }),
     id: docId,
-    ...(label ? { label } : {}),
+    ...(label && { label }),
     type: "doc" as const,
 });
 
@@ -118,7 +122,8 @@ const toPresetDocItem = (docId: string) => {
 };
 
 const toRequiredTagDocItem = (docId: string, itemIndex: number) => {
-    const icon = requiredTagItemIcons[itemIndex % requiredTagItemIcons.length];
+    const icon =
+        requiredTagItemIcons[itemIndex % requiredTagItemIcons.length] ?? "";
     const variantClassName = `sb-required-tag-variant-${itemIndex % requiredTagItemIcons.length}`;
 
     return toDocItem(
@@ -133,8 +138,6 @@ const rulesSidebar = {
         {
             className: "sb-cat-guides",
             collapsed: false,
-            label: "🧭 Guides",
-            type: "category",
             items: [
                 toDocItem(
                     "index",
@@ -147,12 +150,12 @@ const rulesSidebar = {
                     "🚀 Getting Started"
                 ),
             ],
+            label: "🧭 Guides",
+            type: "category",
         },
         {
             className: "sb-cat-developer-ops",
             collapsed: true,
-            label: "🛠️ Developer",
-            type: "category",
             items: [
                 {
                     className: "sb-doc-site-contract",
@@ -167,20 +170,21 @@ const rulesSidebar = {
                     type: "link",
                 },
             ],
+            label: "🛠️ Developer",
+            type: "category",
         },
         {
             className: "sb-cat-presets",
             collapsed: false,
-            items: ["presets/index", ...presetDocIds].map(toPresetDocItem),
+            items: ["presets/index", ...presetDocIds].map((docId) =>
+                toPresetDocItem(docId)
+            ),
             label: "🎛️ Presets",
             type: "category",
         },
         {
             className: "sb-cat-rules-overview",
             collapsed: false,
-            label: "📜 Rules",
-            type: "category",
-            link: { type: "doc", id: "index" },
             items: [
                 toDocItem("require", "sb-doc-rule-core", "🧰 require"),
                 toDocItem(
@@ -203,6 +207,9 @@ const rulesSidebar = {
                     "🚫 restrict-tags"
                 ),
             ],
+            label: "📜 Rules",
+            link: { id: "index", type: "doc" },
+            type: "category",
         },
     ],
 } satisfies SidebarsConfig;

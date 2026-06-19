@@ -14,9 +14,8 @@ const RequireBetaRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@beta");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@beta"),
     meta: {
         defaultOptions: [
             {

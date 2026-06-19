@@ -1,25 +1,24 @@
-import * as React from "react";
-
+import Link from "@docusaurus/Link";
 import Heading from "@theme/Heading";
 import Layout from "@theme/Layout";
-import Link from "@docusaurus/Link";
 import clsx from "clsx";
+import * as React from "react";
 
 import GitHubStats from "../components/GitHubStats";
 import styles from "./index.module.css";
 
-type HeroStat = {
+interface HeroStat {
     readonly description: string;
     readonly headline: string;
     readonly icon: string;
-};
+}
 
-type HomeCard = {
+interface HomeCard {
     readonly description: string;
     readonly icon: string;
     readonly title: string;
     readonly to: string;
-};
+}
 
 const heroStats = [
     {
@@ -48,21 +47,21 @@ const homeCards = [
     {
         description:
             "Install the plugin, enable a preset, and start enforcing documentation quality rules.",
-        icon: "\ueaf7",
+        icon: "\u{EAF7}",
         title: "Start with Overview",
         to: "/docs/getting-started/",
     },
     {
         description:
             "Compare preset intent from baseline recommendations to strict TypeDoc/TSDoc workflows.",
-        icon: "\ueb77",
+        icon: "\u{EB77}",
         title: "Compare Presets",
         to: "/docs/rules/presets/",
     },
     {
         description:
             "Browse every rule with concrete incorrect/correct examples and migration guidance.",
-        icon: "\uf02d",
+        icon: "\u{F02D}",
         title: "Rule Reference",
         to: "/docs/rules/",
     },

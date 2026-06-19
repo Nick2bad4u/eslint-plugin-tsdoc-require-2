@@ -16,20 +16,20 @@ This rule accepts the same options as [`tsdoc-require-2/require`](../require.md)
 
   ```ts
   type Options = [
-      {
-          enforceFor?: Array<
-              | "class"
-              | "enum"
-              | "function"
-              | "interface"
-              | "namespace"
-              | "object"
-              | "type"
-              | "variable"
-          >;
-          exportMode?: "all" | "exported" | "non-exported";
-          includeNonExported?: boolean;
-      },
+   {
+    enforceFor?: Array<
+     | "class"
+     | "enum"
+     | "function"
+     | "interface"
+     | "namespace"
+     | "object"
+     | "type"
+     | "variable"
+    >;
+    exportMode?: "all" | "exported" | "non-exported";
+    includeNonExported?: boolean;
+   },
   ];
   ```
 
@@ -37,20 +37,20 @@ This rule accepts the same options as [`tsdoc-require-2/require`](../require.md)
 
   ```ts
   [
-      {
-          enforceFor: [
-              "class",
-              "enum",
-              "function",
-              "interface",
-              "namespace",
-              "object",
-              "type",
-              "variable",
-          ],
-          exportMode: "exported",
-      },
-  ]
+   {
+    enforceFor: [
+     "class",
+     "enum",
+     "function",
+     "interface",
+     "namespace",
+     "object",
+     "type",
+     "variable",
+    ],
+    exportMode: "exported",
+   },
+  ];
   ```
 
 ## ❌ Incorrect
@@ -60,7 +60,7 @@ This rule accepts the same options as [`tsdoc-require-2/require`](../require.md)
  * Performs a tagged operation.
  */
 export function taggedFunction(value: string): string {
-    return value;
+ return value;
 }
 ```
 
@@ -69,10 +69,11 @@ export function taggedFunction(value: string): string {
 ```ts
 /**
  * Performs a tagged operation.
+ *
  * @protected
  */
 export function taggedFunction(value: string): string {
-    return value;
+ return value;
 }
 ```
 

@@ -14,9 +14,8 @@ const RequireInterfaceRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@interface");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@interface"),
     meta: {
         defaultOptions: [
             {

@@ -15,9 +15,7 @@ Then enable it in your Flat Config:
 ```ts
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
-export default [
-    tsdocRequire.configs.recommended,
-];
+export default [tsdocRequire.configs.recommended];
 ```
 
 ## Optional stricter presets
@@ -26,10 +24,10 @@ export default [
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
 export default [
-    // tsdocRequire.configs.typedoc,
-    // tsdocRequire.configs["typedoc-strict"],
-    // tsdocRequire.configs.tsdoc,
-    // tsdocRequire.configs.jsdoc,
+ // tsdocRequire.configs.typedoc,
+ // tsdocRequire.configs["typedoc-strict"],
+ // tsdocRequire.configs.tsdoc,
+ // tsdocRequire.configs.jsdoc,
 ];
 ```
 

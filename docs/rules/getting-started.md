@@ -18,16 +18,16 @@ npm install --save-dev eslint-plugin-tsdoc-require-2
 
 Pick **one** preset as your starting point:
 
-| Preset | Best for |
-| --- | --- |
-| [`recommended`](./presets/recommended.md) | Minimal rollout: require TSDoc comments only. |
-| [`detailed`](./presets/detailed.md) | Require comments + `@remarks` for richer docs. |
-| [`packages`](./presets/packages.md) | Package/library docs including `@packageDocumentation`. |
-| [`jsdoc`](./presets/jsdoc.md) | Function-tag baseline (`@param`, `@returns`, `@throws`) with JSDoc-friendly behavior. |
-| [`tsdoc`](./presets/tsdoc.md) | Strong TSDoc baseline with tag requirements + compatibility-tag restrictions. |
-| [`typedoc`](./presets/typedoc.md) | TypeDoc-oriented declaration-kind tag enforcement. |
-| [`typedoc-strict`](./presets/typedoc-strict.md) | Stricter TypeDoc baseline with module remarks and restricted tags. |
-| [`all`](./presets/all.md) | Every rule. Useful for audits, usually too strict for day-one adoption. |
+| Preset                                          | Best for                                                                              |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------- |
+| [`recommended`](./presets/recommended.md)       | Minimal rollout: require TSDoc comments only.                                         |
+| [`detailed`](./presets/detailed.md)             | Require comments + `@remarks` for richer docs.                                        |
+| [`packages`](./presets/packages.md)             | Package/library docs including `@packageDocumentation`.                               |
+| [`jsdoc`](./presets/jsdoc.md)                   | Function-tag baseline (`@param`, `@returns`, `@throws`) with JSDoc-friendly behavior. |
+| [`tsdoc`](./presets/tsdoc.md)                   | Strong TSDoc baseline with tag requirements + compatibility-tag restrictions.         |
+| [`typedoc`](./presets/typedoc.md)               | TypeDoc-oriented declaration-kind tag enforcement.                                    |
+| [`typedoc-strict`](./presets/typedoc-strict.md) | Stricter TypeDoc baseline with module remarks and restricted tags.                    |
+| [`all`](./presets/all.md)                       | Every rule. Useful for audits, usually too strict for day-one adoption.               |
 
 ## 3) Enable a preset in Flat Config
 
@@ -45,25 +45,25 @@ After selecting a preset, add a second config block to tune scope/options.
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
 export default [
-    tsdocRequire.configs.tsdoc,
+ tsdocRequire.configs.tsdoc,
+ {
+  rules: {
+   "tsdoc-require-2/require": [
+    "error",
     {
-        rules: {
-            "tsdoc-require-2/require": [
-                "error",
-                {
-                    exportMode: "all",
-                },
-            ],
-            "tsdoc-require-2/restrict-tags": [
-                "error",
-                {
-                    exportMode: "all",
-                    mode: "deny",
-                    tags: ["@typedef", "@callback"],
-                },
-            ],
-        },
+     exportMode: "all",
     },
+   ],
+   "tsdoc-require-2/restrict-tags": [
+    "error",
+    {
+     exportMode: "all",
+     mode: "deny",
+     tags: ["@typedef", "@callback"],
+    },
+   ],
+  },
+ },
 ];
 ```
 

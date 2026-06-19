@@ -14,9 +14,8 @@ const RequireMergeModuleWithRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@mergeModuleWith");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@mergeModuleWith"),
     meta: {
         defaultOptions: [
             {

@@ -14,9 +14,8 @@ const RequireTypeParamRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@typeParam");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@typeParam"),
     meta: {
         defaultOptions: [
             {

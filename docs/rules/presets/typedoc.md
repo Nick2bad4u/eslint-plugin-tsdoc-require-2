@@ -34,9 +34,7 @@ This preset is useful for codebases that:
 ```ts
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
-export default [
-    tsdocRequire.configs.typedoc,
-];
+export default [tsdocRequire.configs.typedoc];
 ```
 
 ## Next step

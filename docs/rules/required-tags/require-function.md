@@ -26,17 +26,14 @@ Flat config example (function-only scope):
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
 export default [
-    {
-        plugins: {
-            "tsdoc-require-2": tsdocRequire,
-        },
-        rules: {
-            "tsdoc-require-2/require-function": [
-                "error",
-                { enforceFor: ["function"] },
-            ],
-        },
-    },
+ {
+  plugins: {
+   "tsdoc-require-2": tsdocRequire,
+  },
+  rules: {
+   "tsdoc-require-2/require-function": ["error", { enforceFor: ["function"] }],
+  },
+ },
 ];
 ```
 
@@ -47,7 +44,7 @@ export default [
  * Creates a stable slug for a title.
  */
 export function toSlug(value: string): string {
-    return value.trim().toLowerCase();
+ return value.trim().toLowerCase();
 }
 ```
 
@@ -56,10 +53,11 @@ export function toSlug(value: string): string {
 ```ts
 /**
  * Creates a stable slug for a title.
+ *
  * @function
  */
 export function toSlug(value: string): string {
-    return value.trim().toLowerCase();
+ return value.trim().toLowerCase();
 }
 ```
 

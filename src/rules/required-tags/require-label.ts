@@ -14,9 +14,8 @@ const RequireLabelRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@label");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@label"),
     meta: {
         defaultOptions: [
             {

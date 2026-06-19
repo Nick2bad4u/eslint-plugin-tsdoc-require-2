@@ -100,7 +100,96 @@ const config = [
             "tsdoc-require-2/restrict-tags": "off",
         },
     },
-    // Add repository-specific config entries below as needed.
+    {
+        ignores: [
+            "knip.config.ts",
+            "plugin.d.mts",
+            "temp/**",
+            "types/**/*.d.ts",
+            "vitest.stryker.config.ts",
+            "docs/docusaurus/typedoc-plugins/*.{mjs,mts}",
+        ],
+        name: "Generated and external tooling shims",
+    },
+    {
+        files: [".ncurc.json", "docs/docusaurus/static/manifest.json"],
+        name: "Non-default JSON schemas",
+        rules: {
+            "json-schema-validator-2/no-invalid": "off",
+        },
+    },
+    {
+        files: ["docs/docusaurus/docusaurus.config.ts"],
+        name: "Docusaurus runtime config",
+        rules: {
+            "n/no-process-env": "off",
+            "unicorn/no-non-function-verb-prefix": "off",
+            "unicorn/no-unreadable-new-expression": "off",
+            "unicorn/prefer-short-arrow-method": "off",
+            "unicorn/prefer-temporal": "off",
+        },
+    },
+    {
+        files: ["docs/docusaurus/sidebars.rules.ts"],
+        name: "Docusaurus sidebar generation",
+        rules: {
+            "@typescript-eslint/no-unsafe-argument": "off",
+            "@typescript-eslint/no-unsafe-call": "off",
+            "@typescript-eslint/no-unsafe-member-access": "off",
+            "@typescript-eslint/no-unsafe-return": "off",
+            "n/no-sync": "off",
+            "unicorn/prefer-import-meta-properties": "off",
+        },
+    },
+    {
+        files: ["docs/docusaurus/src/**/*.css"],
+        name: "Docusaurus CSS uses direct Stylelint gate",
+        rules: {
+            "stylelint-2/stylelint": "off",
+        },
+    },
+    {
+        files: [
+            "docs/docusaurus/src/components/GitHubStats.tsx",
+            "docs/docusaurus/src/js/modernEnhancements.ts",
+            "docs/docusaurus/src/pages/index.tsx",
+        ],
+        name: "Docusaurus client surface conventions",
+        rules: {
+            "canonical/filename-no-index": "off",
+            "runtime-cleanup/no-unmanaged-event-listeners": "off",
+            "unicorn/filename-case": "off",
+        },
+    },
+    {
+        files: ["docs/docusaurus/src/js/modernEnhancements.ts"],
+        name: "Browser enhancement script",
+        rules: {
+            "@typescript-eslint/no-dynamic-delete": "off",
+            "unicorn/no-break-in-nested-loop": "off",
+            "unicorn/no-global-object-property-assignment": "off",
+            "unicorn/no-immediate-mutation": "off",
+            "unicorn/no-unnecessary-global-this": "off",
+            "unicorn/prefer-single-call": "off",
+        },
+    },
+    {
+        files: ["src/rules/require-tag-rules.ts"],
+        name: "Generated required tag rule registry",
+        rules: {
+            "import-x/max-dependencies": "off",
+        },
+    },
+    {
+        files: ["stryker.config.mjs"],
+        name: "Stryker JavaScript config",
+        rules: {
+            "@typescript-eslint/dot-notation": "off",
+            "@typescript-eslint/no-unsafe-assignment": "off",
+            "@typescript-eslint/no-unsafe-call": "off",
+            "@typescript-eslint/no-unsafe-member-access": "off",
+        },
+    },
 ];
 
 export default config;

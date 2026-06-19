@@ -14,9 +14,8 @@ const RequireDecoratorRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@decorator");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@decorator"),
     meta: {
         defaultOptions: [
             {

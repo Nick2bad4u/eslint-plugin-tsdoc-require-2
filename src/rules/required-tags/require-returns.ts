@@ -14,9 +14,8 @@ const RequireReturnsRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@returns");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@returns"),
     meta: {
         defaultOptions: [
             {

@@ -14,9 +14,8 @@ const RequireExperimentalRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@experimental");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@experimental"),
     meta: {
         defaultOptions: [
             {

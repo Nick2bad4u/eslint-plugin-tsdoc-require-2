@@ -14,9 +14,8 @@ const RequireOverrideRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@override");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@override"),
     meta: {
         defaultOptions: [
             {

@@ -14,9 +14,8 @@ const RequireSealedRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@sealed");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@sealed"),
     meta: {
         defaultOptions: [
             {

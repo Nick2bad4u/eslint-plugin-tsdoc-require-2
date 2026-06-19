@@ -14,9 +14,8 @@ const RequireReadonlyRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@readonly");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@readonly"),
     meta: {
         defaultOptions: [
             {

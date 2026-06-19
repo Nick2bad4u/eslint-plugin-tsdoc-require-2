@@ -14,9 +14,8 @@ const RequireThrowsRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@throws");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@throws"),
     meta: {
         defaultOptions: [
             {

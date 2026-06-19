@@ -14,9 +14,8 @@ const RequirePackageDocumentationRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@packageDocumentation");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@packageDocumentation"),
     meta: {
         defaultOptions: [
             {

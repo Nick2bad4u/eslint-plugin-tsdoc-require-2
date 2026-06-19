@@ -14,9 +14,8 @@ const RequireEventPropertyRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@eventProperty");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@eventProperty"),
     meta: {
         defaultOptions: [
             {

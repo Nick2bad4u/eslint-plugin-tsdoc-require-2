@@ -14,9 +14,8 @@ const RequireSeeRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@see");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@see"),
     meta: {
         defaultOptions: [
             {

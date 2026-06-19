@@ -26,19 +26,19 @@ Flat config example (namespace/module focused):
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
 export default [
-  {
-    plugins: {
-      "tsdoc-require-2": tsdocRequire,
-    },
-    rules: {
-      "tsdoc-require-2/require-package-documentation": [
-        "error",
-        {
-          enforceFor: ["namespace"],
-        },
-      ],
-    },
+ {
+  plugins: {
+   "tsdoc-require-2": tsdocRequire,
   },
+  rules: {
+   "tsdoc-require-2/require-package-documentation": [
+    "error",
+    {
+     enforceFor: ["namespace"],
+    },
+   ],
+  },
+ },
 ];
 ```
 
@@ -51,7 +51,7 @@ export default [
  * Public API surface for this package.
  */
 export namespace Api {
-  export type Id = string;
+ export type Id = string;
 }
 ```
 
@@ -60,10 +60,11 @@ export namespace Api {
 ```ts
 /**
  * Public API surface for this package.
+ *
  * @packageDocumentation
  */
 export namespace Api {
-  export type Id = string;
+ export type Id = string;
 }
 ```
 

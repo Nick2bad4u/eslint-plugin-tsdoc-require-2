@@ -15,14 +15,22 @@ It supports the same options as [`tsdoc-require-2/require`](../require.md):
 
 ```json
 {
-  "rules": {
-    "tsdoc-require-2/require-private-remarks": [
-      "error",
-      {
-        "enforceFor": ["class", "function", "interface", "type", "enum", "variable", "object"]
-      }
+ "rules": {
+  "tsdoc-require-2/require-private-remarks": [
+   "error",
+   {
+    "enforceFor": [
+     "class",
+     "function",
+     "interface",
+     "type",
+     "enum",
+     "variable",
+     "object"
     ]
-  }
+   }
+  ]
+ }
 }
 ```
 
@@ -35,7 +43,7 @@ It supports the same options as [`tsdoc-require-2/require`](../require.md):
  * Performs a task.
  */
 export function runTask(value: string): string {
-  return value;
+ return value;
 }
 ```
 
@@ -44,10 +52,9 @@ export function runTask(value: string): string {
 ```ts
 /**
  * Performs a task.
- * @privateRemarks
  */
 export function runTask(value: string): string {
-  return value;
+ return value;
 }
 ```
 

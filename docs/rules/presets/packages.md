@@ -29,9 +29,7 @@ Compared to `detailed`, this adds package-level documentation intent.
 ```ts
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
-export default [
-    tsdocRequire.configs.packages,
-];
+export default [tsdocRequire.configs.packages];
 ```
 
 ## Practical guidance

@@ -42,14 +42,14 @@ Together, these rules turn documentation from optional prose into a consistent A
  * Creates a user record.
  */
 export function createUser(name: string): string {
-  return name;
+ return name;
 }
 ```
 
 With:
 
 ```ts
-["error", { enforceFor: ["function"] }]
+["error", { enforceFor: ["function"] }];
 ```
 
 for `tsdoc-require-2/require-param` and `tsdoc-require-2/require-returns`.
@@ -59,11 +59,13 @@ for `tsdoc-require-2/require-param` and `tsdoc-require-2/require-returns`.
 ```ts
 /**
  * Creates a user record.
+ *
  * @param name - User display name.
+ *
  * @returns Persisted user ID.
  */
 export function createUser(name: string): string {
-  return name;
+ return name;
 }
 ```
 
@@ -82,20 +84,20 @@ Each `require-*` rule accepts the same option shape:
 
 ```ts
 type Options = [
-  {
-    enforceFor?: Array<
-      | "class"
-      | "enum"
-      | "function"
-      | "interface"
-      | "namespace"
-      | "object"
-      | "type"
-      | "variable"
-    >;
-    exportMode?: "all" | "exported" | "non-exported";
-    includeNonExported?: boolean;
-  },
+ {
+  enforceFor?: Array<
+   | "class"
+   | "enum"
+   | "function"
+   | "interface"
+   | "namespace"
+   | "object"
+   | "type"
+   | "variable"
+  >;
+  exportMode?: "all" | "exported" | "non-exported";
+  includeNonExported?: boolean;
+ },
 ];
 ```
 
@@ -103,20 +105,20 @@ Default options:
 
 ```ts
 [
-  {
-    enforceFor: [
-      "class",
-      "enum",
-      "function",
-      "interface",
-      "namespace",
-      "object",
-      "type",
-      "variable",
-    ],
-    exportMode: "exported",
-  },
-]
+ {
+  enforceFor: [
+   "class",
+   "enum",
+   "function",
+   "interface",
+   "namespace",
+   "object",
+   "type",
+   "variable",
+  ],
+  exportMode: "exported",
+ },
+];
 ```
 
 ### Rules in this family
@@ -184,14 +186,14 @@ Default options:
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
 export default [
-  tsdocRequire.configs.recommended,
-  {
-    rules: {
-      "tsdoc-require-2/require-param": ["error", { enforceFor: ["function"] }],
-      "tsdoc-require-2/require-returns": ["error", { enforceFor: ["function"] }],
-      "tsdoc-require-2/require-throws": ["error", { enforceFor: ["function"] }],
-    },
+ tsdocRequire.configs.recommended,
+ {
+  rules: {
+   "tsdoc-require-2/require-param": ["error", { enforceFor: ["function"] }],
+   "tsdoc-require-2/require-returns": ["error", { enforceFor: ["function"] }],
+   "tsdoc-require-2/require-throws": ["error", { enforceFor: ["function"] }],
   },
+ },
 ];
 ```
 

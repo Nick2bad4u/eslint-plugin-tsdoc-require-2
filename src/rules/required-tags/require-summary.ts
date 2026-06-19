@@ -14,9 +14,8 @@ const RequireSummaryRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@summary");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@summary"),
     meta: {
         defaultOptions: [
             {

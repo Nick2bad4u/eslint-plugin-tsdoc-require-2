@@ -14,9 +14,8 @@ const RequireClassRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@class");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@class"),
     meta: {
         defaultOptions: [
             {

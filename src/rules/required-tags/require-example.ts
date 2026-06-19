@@ -14,9 +14,8 @@ const RequireExampleRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@example");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@example"),
     meta: {
         defaultOptions: [
             {

@@ -26,19 +26,19 @@ Flat config example (function-focused scope):
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
 export default [
-  {
-    plugins: {
-      "tsdoc-require-2": tsdocRequire,
-    },
-    rules: {
-      "tsdoc-require-2/require-throws": [
-        "error",
-        {
-          enforceFor: ["function"],
-        },
-      ],
-    },
+ {
+  plugins: {
+   "tsdoc-require-2": tsdocRequire,
   },
+  rules: {
+   "tsdoc-require-2/require-throws": [
+    "error",
+    {
+     enforceFor: ["function"],
+    },
+   ],
+  },
+ },
 ];
 ```
 
@@ -51,11 +51,11 @@ export default [
  * Loads a user by ID.
  */
 export function loadUser(id: string): string {
-  if (id.length === 0) {
-    throw new Error("id is required");
-  }
+ if (id.length === 0) {
+  throw new Error("id is required");
+ }
 
-  return id;
+ return id;
 }
 ```
 
@@ -64,14 +64,15 @@ export function loadUser(id: string): string {
 ```ts
 /**
  * Loads a user by ID.
+ *
  * @throws Error when the id is empty.
  */
 export function loadUser(id: string): string {
-  if (id.length === 0) {
-    throw new Error("id is required");
-  }
+ if (id.length === 0) {
+  throw new Error("id is required");
+ }
 
-  return id;
+ return id;
 }
 ```
 

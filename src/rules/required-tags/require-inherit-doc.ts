@@ -14,9 +14,8 @@ const RequireInheritDocRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@inheritDoc");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@inheritDoc"),
     meta: {
         defaultOptions: [
             {

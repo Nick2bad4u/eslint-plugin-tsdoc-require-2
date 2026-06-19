@@ -14,9 +14,8 @@ const RequireAlphaRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@alpha");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@alpha"),
     meta: {
         defaultOptions: [
             {

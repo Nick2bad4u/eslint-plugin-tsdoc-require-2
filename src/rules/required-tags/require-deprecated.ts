@@ -14,9 +14,8 @@ const RequireDeprecatedRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@deprecated");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@deprecated"),
     meta: {
         defaultOptions: [
             {

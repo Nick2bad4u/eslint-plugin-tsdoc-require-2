@@ -14,9 +14,8 @@ const RequireEnumRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@enum");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@enum"),
     meta: {
         defaultOptions: [
             {

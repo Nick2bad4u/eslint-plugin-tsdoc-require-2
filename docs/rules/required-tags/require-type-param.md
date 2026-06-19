@@ -26,19 +26,19 @@ Flat config example (generic declarations only):
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
 export default [
-  {
-    plugins: {
-      "tsdoc-require-2": tsdocRequire,
-    },
-    rules: {
-      "tsdoc-require-2/require-type-param": [
-        "error",
-        {
-          enforceFor: ["class", "function", "interface", "type"],
-        },
-      ],
-    },
+ {
+  plugins: {
+   "tsdoc-require-2": tsdocRequire,
   },
+  rules: {
+   "tsdoc-require-2/require-type-param": [
+    "error",
+    {
+     enforceFor: ["class", "function", "interface", "type"],
+    },
+   ],
+  },
+ },
 ];
 ```
 
@@ -51,7 +51,7 @@ export default [
  * Wraps data in a typed container.
  */
 export function wrap<T>(value: T): { value: T } {
-  return { value };
+ return { value };
 }
 ```
 
@@ -60,10 +60,11 @@ export function wrap<T>(value: T): { value: T } {
 ```ts
 /**
  * Wraps data in a typed container.
+ *
  * @typeParam T - Value type stored in the wrapper.
  */
 export function wrap<T>(value: T): { value: T } {
-  return { value };
+ return { value };
 }
 ```
 

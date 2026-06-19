@@ -29,9 +29,7 @@ A safer pattern is to start with `recommended`, `tsdoc`, or `typedoc-strict`, th
 ```ts
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
-export default [
-    tsdocRequire.configs.all,
-];
+export default [tsdocRequire.configs.all];
 ```
 
 ## Adoption tip

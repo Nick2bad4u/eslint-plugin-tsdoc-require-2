@@ -44,10 +44,11 @@ Use it with:
 ```ts
 /**
  * Calculates a value.
+ *
  * @typedef ResultShape
  */
 export function calculate(): number {
-  return 1;
+ return 1;
 }
 ```
 
@@ -58,10 +59,12 @@ With default configuration (`mode: "deny"`).
 ```ts
 /**
  * Calculates a value.
- * @remarks Uses plain TSDoc tags.
+ *
+ * @remarks
+ *   Uses plain TSDoc tags.
  */
 export function calculate(): number {
-  return 1;
+ return 1;
 }
 ```
 
@@ -80,22 +83,22 @@ With default configuration (`mode: "deny"`).
 
 ```ts
 type Options = [
-  {
-    enforceFor?: Array<
-      | "class"
-      | "enum"
-      | "function"
-      | "interface"
-      | "namespace"
-      | "object"
-      | "type"
-      | "variable"
-    >;
-    exportMode?: "all" | "exported" | "non-exported";
-    includeNonExported?: boolean;
-    mode?: "allow" | "deny";
-    tags?: Array<`@${string}`>;
-  },
+ {
+  enforceFor?: Array<
+   | "class"
+   | "enum"
+   | "function"
+   | "interface"
+   | "namespace"
+   | "object"
+   | "type"
+   | "variable"
+  >;
+  exportMode?: "all" | "exported" | "non-exported";
+  includeNonExported?: boolean;
+  mode?: "allow" | "deny";
+  tags?: Array<`@${string}`>;
+ },
 ];
 ```
 
@@ -103,31 +106,31 @@ Default options:
 
 ```ts
 [
-  {
-    enforceFor: [
-      "class",
-      "enum",
-      "function",
-      "interface",
-      "namespace",
-      "object",
-      "type",
-      "variable",
-    ],
-    exportMode: "exported",
-    mode: "deny",
-    tags: [
-      "@augments",
-      "@callback",
-      "@extends",
-      "@jsx",
-      "@satisfies",
-      "@type",
-      "@typedef",
-      "@yields",
-    ],
-  },
-]
+ {
+  enforceFor: [
+   "class",
+   "enum",
+   "function",
+   "interface",
+   "namespace",
+   "object",
+   "type",
+   "variable",
+  ],
+  exportMode: "exported",
+  mode: "deny",
+  tags: [
+   "@augments",
+   "@callback",
+   "@extends",
+   "@jsx",
+   "@satisfies",
+   "@type",
+   "@typedef",
+   "@yields",
+  ],
+ },
+];
 ```
 
 ### Allow mode example
@@ -137,18 +140,21 @@ Default options:
 ```ts
 /**
  * Calculates a value.
- * @remarks Useful details.
+ *
+ * @remarks
+ *   Useful details.
+ *
  * @deprecated Use newCalculate instead.
  */
 export function calculate(): number {
-  return 1;
+ return 1;
 }
 ```
 
 With:
 
 ```ts
-["error", { mode: "allow", tags: ["@remarks"] }]
+["error", { mode: "allow", tags: ["@remarks"] }];
 ```
 
 #### Valid in allow mode
@@ -156,17 +162,19 @@ With:
 ```ts
 /**
  * Calculates a value.
- * @remarks Useful details.
+ *
+ * @remarks
+ *   Useful details.
  */
 export function calculate(): number {
-  return 1;
+ return 1;
 }
 ```
 
 With:
 
 ```ts
-["error", { mode: "allow", tags: ["@remarks"] }]
+["error", { mode: "allow", tags: ["@remarks"] }];
 ```
 
 ## ESLint flat config example
@@ -175,18 +183,18 @@ With:
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
 export default [
-  tsdocRequire.configs.tsdoc,
-  {
-    rules: {
-      "tsdoc-require-2/restrict-tags": [
-        "error",
-        {
-          mode: "deny",
-          tags: ["@typedef", "@callback"],
-        },
-      ],
+ tsdocRequire.configs.tsdoc,
+ {
+  rules: {
+   "tsdoc-require-2/restrict-tags": [
+    "error",
+    {
+     mode: "deny",
+     tags: ["@typedef", "@callback"],
     },
+   ],
   },
+ },
 ];
 ```
 

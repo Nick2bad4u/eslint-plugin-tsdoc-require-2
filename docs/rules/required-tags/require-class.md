@@ -26,14 +26,14 @@ Flat config example (class-only scope):
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
 export default [
-    {
-        plugins: {
-            "tsdoc-require-2": tsdocRequire,
-        },
-        rules: {
-            "tsdoc-require-2/require-class": ["error", { enforceFor: ["class"] }],
-        },
-    },
+ {
+  plugins: {
+   "tsdoc-require-2": tsdocRequire,
+  },
+  rules: {
+   "tsdoc-require-2/require-class": ["error", { enforceFor: ["class"] }],
+  },
+ },
 ];
 ```
 
@@ -44,7 +44,7 @@ export default [
  * Represents a cache entry.
  */
 export class CacheEntry {
-    public constructor(public readonly key: string) {}
+ public constructor(public readonly key: string) {}
 }
 ```
 
@@ -53,10 +53,11 @@ export class CacheEntry {
 ```ts
 /**
  * Represents a cache entry.
+ *
  * @class
  */
 export class CacheEntry {
-    public constructor(public readonly key: string) {}
+ public constructor(public readonly key: string) {}
 }
 ```
 

@@ -35,9 +35,7 @@ This preset works well for:
 ```ts
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
-export default [
-    tsdocRequire.configs.tsdoc,
-];
+export default [tsdocRequire.configs.tsdoc];
 ```
 
 ## Common customization

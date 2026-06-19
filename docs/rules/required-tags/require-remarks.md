@@ -26,14 +26,14 @@ Flat config example:
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
 export default [
-  {
-    plugins: {
-      "tsdoc-require-2": tsdocRequire,
-    },
-    rules: {
-      "tsdoc-require-2/require-remarks": "error",
-    },
+ {
+  plugins: {
+   "tsdoc-require-2": tsdocRequire,
   },
+  rules: {
+   "tsdoc-require-2/require-remarks": "error",
+  },
+ },
 ];
 ```
 
@@ -46,7 +46,7 @@ export default [
  * Loads the project configuration.
  */
 export function loadConfig(): string {
-  return "default";
+ return "default";
 }
 ```
 
@@ -55,10 +55,12 @@ export function loadConfig(): string {
 ```ts
 /**
  * Loads the project configuration.
- * @remarks Falls back to default values when no config file exists.
+ *
+ * @remarks
+ *   Falls back to default values when no config file exists.
  */
 export function loadConfig(): string {
-  return "default";
+ return "default";
 }
 ```
 

@@ -14,9 +14,8 @@ const RequireLinkRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@link");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@link"),
     meta: {
         defaultOptions: [
             {

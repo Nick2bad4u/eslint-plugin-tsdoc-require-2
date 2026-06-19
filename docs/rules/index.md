@@ -10,11 +10,11 @@ description: Explore the comprehensive set of rules provided by eslint-plugin-ts
 
 ## Rule family overview
 
-| Family | Purpose | Start here when |
-| --- | --- | --- |
-| [`require`](./require.md) | Require a TSDoc block (`/** ... */`) on selected declarations. | You need a documentation baseline first. |
-| [`required-tags`](./required-tags.md) | Require specific tags (for example `@param`, `@returns`, `@remarks`) through individual `require-*` rules. | You want documentation completeness and consistency. |
-| [`restrict-tags`](./restrict-tags.md) | Allow-list or deny-list tags to control vocabulary and compatibility. | You need a strict tag policy (for example strict TSDoc vs loose JSDoc/TypeDoc tags). |
+| Family                                | Purpose                                                                                                    | Start here when                                                                      |
+| ------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| [`require`](./require.md)             | Require a TSDoc block (`/** ... */`) on selected declarations.                                             | You need a documentation baseline first.                                             |
+| [`required-tags`](./required-tags.md) | Require specific tags (for example `@param`, `@returns`, `@remarks`) through individual `require-*` rules. | You want documentation completeness and consistency.                                 |
+| [`restrict-tags`](./restrict-tags.md) | Allow-list or deny-list tags to control vocabulary and compatibility.                                      | You need a strict tag policy (for example strict TSDoc vs loose JSDoc/TypeDoc tags). |
 
 ## How the families work together
 
@@ -34,20 +34,20 @@ Use a preset for the baseline, then add focused overrides.
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
 export default [
-	tsdocRequire.configs.recommended,
-	{
-		rules: {
-			"tsdoc-require-2/require-param": ["error", { enforceFor: ["function"] }],
-			"tsdoc-require-2/require-returns": ["error", { enforceFor: ["function"] }],
-			"tsdoc-require-2/restrict-tags": [
-				"error",
-				{
-					mode: "deny",
-					tags: ["@typedef", "@callback"],
-				},
-			],
-		},
-	},
+ tsdocRequire.configs.recommended,
+ {
+  rules: {
+   "tsdoc-require-2/require-param": ["error", { enforceFor: ["function"] }],
+   "tsdoc-require-2/require-returns": ["error", { enforceFor: ["function"] }],
+   "tsdoc-require-2/restrict-tags": [
+    "error",
+    {
+     mode: "deny",
+     tags: ["@typedef", "@callback"],
+    },
+   ],
+  },
+ },
 ];
 ```
 
@@ -56,6 +56,6 @@ export default [
 - New adoption: [Getting Started](./getting-started.md)
 - Preset selection: [Presets Overview](./presets/index.md)
 - Rule family details:
-	- [`tsdoc-require-2/require`](./require.md)
-	- [`tsdoc-require-2/required-tags` family](./required-tags.md)
-	- [`tsdoc-require-2/restrict-tags`](./restrict-tags.md)
+  - [`tsdoc-require-2/require`](./require.md)
+  - [`tsdoc-require-2/required-tags` family](./required-tags.md)
+  - [`tsdoc-require-2/restrict-tags`](./restrict-tags.md)

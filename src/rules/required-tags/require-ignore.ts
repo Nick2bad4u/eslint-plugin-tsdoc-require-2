@@ -14,9 +14,8 @@ const RequireIgnoreRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@ignore");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@ignore"),
     meta: {
         defaultOptions: [
             {

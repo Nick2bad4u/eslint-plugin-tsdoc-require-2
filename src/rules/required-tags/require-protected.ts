@@ -14,9 +14,8 @@ const RequireProtectedRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@protected");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@protected"),
     meta: {
         defaultOptions: [
             {

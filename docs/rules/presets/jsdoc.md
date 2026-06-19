@@ -32,9 +32,7 @@ This preset scopes the tag rules to functions only. It does not require `@remark
 ```ts
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
-export default [
-    tsdocRequire.configs.jsdoc,
-];
+export default [tsdocRequire.configs.jsdoc];
 ```
 
 ## When to choose a different preset

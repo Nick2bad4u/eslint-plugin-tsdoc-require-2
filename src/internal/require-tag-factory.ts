@@ -1,11 +1,12 @@
-import type { JSONSchema, TSESLint, TSESTree } from "@typescript-eslint/utils";
-
 import {
     AST_NODE_TYPES,
     AST_TOKEN_TYPES,
     ESLintUtils,
+    type JSONSchema,
+    type TSESLint,
+    type TSESTree,
 } from "@typescript-eslint/utils";
-import { arrayAt, isDefined, setHas } from "ts-extras";
+import { arrayAt, arrayIncludes, isDefined, setHas } from "ts-extras";
 
 /** Supported declaration kinds enforced by require/required-tag rules. */
 type EntityKind =
@@ -69,6 +70,25 @@ type SupportedDefaultExportExpression =
     | TSESTree.ClassExpression
     | TSESTree.FunctionExpression
     | TSESTree.ObjectExpression;
+
+const exportedDeclarationModes = ["all", "exported"] as const;
+const nonExportedDeclarationModes = ["all", "non-exported"] as const;
+const supportedDeclarationNodeTypes = [
+    AST_NODE_TYPES.ClassDeclaration,
+    AST_NODE_TYPES.FunctionDeclaration,
+    AST_NODE_TYPES.TSDeclareFunction,
+    AST_NODE_TYPES.TSEnumDeclaration,
+    AST_NODE_TYPES.TSInterfaceDeclaration,
+    AST_NODE_TYPES.TSModuleDeclaration,
+    AST_NODE_TYPES.TSTypeAliasDeclaration,
+    AST_NODE_TYPES.VariableDeclaration,
+] as const;
+const supportedDefaultExportExpressionNodeTypes = [
+    AST_NODE_TYPES.ArrowFunctionExpression,
+    AST_NODE_TYPES.ClassExpression,
+    AST_NODE_TYPES.FunctionExpression,
+    AST_NODE_TYPES.ObjectExpression,
+] as const;
 
 /** Metadata describing an individual required-tag rule. */
 interface TagRuleDefinition {
@@ -154,10 +174,10 @@ const resolveExportMode = (
 };
 
 const shouldCheckExportedDeclarations = (exportMode: ExportMode): boolean =>
-    exportMode === "all" || exportMode === "exported";
+    arrayIncludes(exportedDeclarationModes, exportMode);
 
 const shouldCheckNonExportedDeclarations = (exportMode: ExportMode): boolean =>
-    exportMode === "all" || exportMode === "non-exported";
+    arrayIncludes(nonExportedDeclarationModes, exportMode);
 
 const isWordCharacter = (character: string | undefined): boolean => {
     if (!isDefined(character)) {
@@ -220,22 +240,12 @@ const getModuleDeclarationName = (
 const isSupportedDeclaration = (
     node: Readonly<TSESTree.Node>
 ): node is SupportedDeclaration =>
-    node.type === AST_NODE_TYPES.ClassDeclaration ||
-    node.type === AST_NODE_TYPES.FunctionDeclaration ||
-    node.type === AST_NODE_TYPES.TSDeclareFunction ||
-    node.type === AST_NODE_TYPES.TSEnumDeclaration ||
-    node.type === AST_NODE_TYPES.TSInterfaceDeclaration ||
-    node.type === AST_NODE_TYPES.TSModuleDeclaration ||
-    node.type === AST_NODE_TYPES.TSTypeAliasDeclaration ||
-    node.type === AST_NODE_TYPES.VariableDeclaration;
+    arrayIncludes(supportedDeclarationNodeTypes, node.type);
 
 const isSupportedDefaultExportExpression = (
     node: Readonly<TSESTree.Node>
 ): node is SupportedDefaultExportExpression =>
-    node.type === AST_NODE_TYPES.ArrowFunctionExpression ||
-    node.type === AST_NODE_TYPES.ClassExpression ||
-    node.type === AST_NODE_TYPES.FunctionExpression ||
-    node.type === AST_NODE_TYPES.ObjectExpression;
+    arrayIncludes(supportedDefaultExportExpressionNodeTypes, node.type);
 
 const getExpressionKind = (
     node: Readonly<SupportedDefaultExportExpression>

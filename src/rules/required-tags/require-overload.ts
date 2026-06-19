@@ -14,9 +14,8 @@ const RequireOverloadRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@overload");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@overload"),
     meta: {
         defaultOptions: [
             {

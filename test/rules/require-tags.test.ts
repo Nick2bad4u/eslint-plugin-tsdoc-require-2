@@ -6,6 +6,22 @@ import {
 import { createTypedRuleTester } from "../_internal/typed-rule-tester.js";
 
 const ruleTester = createTypedRuleTester();
+const additionalValidCaseByRuleName: Partial<
+    Record<RequiredTagRuleName, Readonly<{ code: string }>>
+> = {
+    "require-include": {
+        code: `/**\n * Description.\n * {@include ./snippets/api.md}\n */\nexport function taggedFunction(value: string): string {\n    return value;\n}`,
+    },
+    "require-inherit-doc": {
+        code: `/**\n * {@inheritDoc BaseTaggedFunction}\n */\nexport function taggedFunction(value: string): string {\n    return value;\n}`,
+    },
+    "require-label": {
+        code: `/**\n * Description.\n * {@label stable}\n */\nexport function taggedFunction(value: string): string {\n    return value;\n}`,
+    },
+    "require-link": {
+        code: `/**\n * Description.\n * {@link TaggedItem}\n */\nexport function taggedFunction(value: string): string {\n    return value;\n}`,
+    },
+};
 
 for (const { ruleName, tagName } of requiredTagDefinitions) {
     const typedRuleName = ruleName as RequiredTagRuleName;
@@ -32,28 +48,9 @@ for (const { ruleName, tagName } of requiredTagDefinitions) {
         { code: `export { Foo } from "foo";` },
     ];
 
-    if (ruleName === "require-link") {
-        validCases.push({
-            code: `/**\n * Description.\n * {@link TaggedItem}\n */\nexport function taggedFunction(value: string): string {\n    return value;\n}`,
-        });
-    }
-
-    if (ruleName === "require-label") {
-        validCases.push({
-            code: `/**\n * Description.\n * {@label stable}\n */\nexport function taggedFunction(value: string): string {\n    return value;\n}`,
-        });
-    }
-
-    if (ruleName === "require-inherit-doc") {
-        validCases.push({
-            code: `/**\n * {@inheritDoc BaseTaggedFunction}\n */\nexport function taggedFunction(value: string): string {\n    return value;\n}`,
-        });
-    }
-
-    if (ruleName === "require-include") {
-        validCases.push({
-            code: `/**\n * Description.\n * {@include ./snippets/api.md}\n */\nexport function taggedFunction(value: string): string {\n    return value;\n}`,
-        });
+    const additionalValidCase = additionalValidCaseByRuleName[typedRuleName];
+    if (additionalValidCase !== undefined) {
+        validCases.push(additionalValidCase);
     }
 
     ruleTester.run(typedRuleName, ruleModule, {

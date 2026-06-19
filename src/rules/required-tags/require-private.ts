@@ -14,9 +14,8 @@ const RequirePrivateRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@private");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@private"),
     meta: {
         defaultOptions: [
             {

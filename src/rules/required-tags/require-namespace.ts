@@ -14,9 +14,8 @@ const RequireNamespaceRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@namespace");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@namespace"),
     meta: {
         defaultOptions: [
             {

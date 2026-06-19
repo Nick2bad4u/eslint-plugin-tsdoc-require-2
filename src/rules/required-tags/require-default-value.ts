@@ -14,9 +14,8 @@ const RequireDefaultValueRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@defaultValue");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@defaultValue"),
     meta: {
         defaultOptions: [
             {

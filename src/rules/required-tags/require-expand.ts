@@ -14,9 +14,8 @@ const RequireExpandRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@expand");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@expand"),
     meta: {
         defaultOptions: [
             {

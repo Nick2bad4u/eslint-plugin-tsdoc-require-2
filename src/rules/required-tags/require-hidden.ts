@@ -14,9 +14,8 @@ const RequireHiddenRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@hidden");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@hidden"),
     meta: {
         defaultOptions: [
             {

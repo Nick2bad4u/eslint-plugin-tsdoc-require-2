@@ -14,9 +14,8 @@ const RequirePropertyRule: TagRuleModule = createTagRule<
     TagRuleOptions,
     TagRuleMessageIds
 >({
-    create(context: TagRuleContext) {
-        return createRequireTagRuleListener(context, "@property");
-    },
+    create: (context: TagRuleContext) =>
+        createRequireTagRuleListener(context, "@property"),
     meta: {
         defaultOptions: [
             {

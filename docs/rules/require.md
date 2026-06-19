@@ -31,7 +31,7 @@ When `exportMode: "all"` is enabled, the same checks also apply to non-exported 
 
 If exported APIs are undocumented, consumers have to infer contracts from implementation details.
 
-This rule is the foundation for the plugin’s policy model:
+This rule is the foundation for the plugin's policy model:
 
 - [`required-tags`](./required-tags.md) rules validate comment content.
 - [`restrict-tags`](./restrict-tags.md) validates tag vocabulary.
@@ -43,7 +43,7 @@ This rule is the foundation for the plugin’s policy model:
 export class MissingDocs {}
 
 interface Shape {
-  radius: number;
+ radius: number;
 }
 
 export { Shape };
@@ -60,7 +60,7 @@ export class DocumentedClass {}
 
 /** Shape shared in the public API. */
 interface Shape {
-  radius: number;
+ radius: number;
 }
 
 export { Shape };
@@ -85,20 +85,20 @@ This rule accepts one optional object.
 
 ```ts
 type Options = [
-  {
-    enforceFor?: Array<
-      "class" |
-      "enum" |
-      "function" |
-      "interface" |
-      "namespace" |
-      "object" |
-      "type" |
-      "variable"
-    >;
-    exportMode?: "all" | "exported" | "non-exported";
-    includeNonExported?: boolean;
-  },
+ {
+  enforceFor?: Array<
+   | "class"
+   | "enum"
+   | "function"
+   | "interface"
+   | "namespace"
+   | "object"
+   | "type"
+   | "variable"
+  >;
+  exportMode?: "all" | "exported" | "non-exported";
+  includeNonExported?: boolean;
+ },
 ];
 ```
 
@@ -106,11 +106,20 @@ Default options:
 
 ```ts
 [
-  {
-    enforceFor: ["class", "enum", "function", "interface", "namespace", "object", "type", "variable"],
-    exportMode: "exported",
-  },
-]
+ {
+  enforceFor: [
+   "class",
+   "enum",
+   "function",
+   "interface",
+   "namespace",
+   "object",
+   "type",
+   "variable",
+  ],
+  exportMode: "exported",
+ },
+];
 ```
 
 ### `enforceFor`
@@ -123,19 +132,19 @@ Example flat config that only enforces docs for classes and functions:
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
 export default [
-  {
-    plugins: {
-      "tsdoc-require-2": tsdocRequire,
-    },
-    rules: {
-      "tsdoc-require-2/require": [
-        "error",
-        {
-          enforceFor: ["class", "function"],
-        },
-      ],
-    },
+ {
+  plugins: {
+   "tsdoc-require-2": tsdocRequire,
   },
+  rules: {
+   "tsdoc-require-2/require": [
+    "error",
+    {
+     enforceFor: ["class", "function"],
+    },
+   ],
+  },
+ },
 ];
 ```
 
@@ -153,19 +162,19 @@ Example flat config:
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 
 export default [
-  {
-    plugins: {
-      "tsdoc-require-2": tsdocRequire,
-    },
-    rules: {
-      "tsdoc-require-2/require": [
-        "error",
-        {
-          exportMode: "all",
-        },
-      ],
-    },
+ {
+  plugins: {
+   "tsdoc-require-2": tsdocRequire,
   },
+  rules: {
+   "tsdoc-require-2/require": [
+    "error",
+    {
+     exportMode: "all",
+    },
+   ],
+  },
+ },
 ];
 ```
 
