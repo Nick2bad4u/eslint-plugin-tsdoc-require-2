@@ -25,9 +25,7 @@ function getPluginRule(ruleName: "restrict-tags"): typeof restrictTagsRule;
 function getPluginRule<TRuleName extends keyof typeof requiredTagRules>(
     ruleName: TRuleName
 ): (typeof requiredTagRules)[TRuleName];
-function getPluginRule(
-    ruleName: keyof typeof pluginRules
-):
+function getPluginRule(ruleName: keyof typeof pluginRules):
     | (typeof requiredTagRules)[keyof typeof requiredTagRules]
     | typeof requireRule
     | typeof restrictTagsRule {

@@ -2,7 +2,12 @@ type FlatConfigRuleEntry =
     | "error"
     | "off"
     | "warn"
-    | readonly ["error" | "off" | "warn", ...unknown[]];
+    | readonly [
+        | "error"
+        | "off"
+        | "warn",
+        ...unknown[],
+    ];
 
 type FlatConfig = {
     readonly rules?: Readonly<Record<string, FlatConfigRuleEntry | undefined>>;

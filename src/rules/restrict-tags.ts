@@ -24,7 +24,10 @@ type EntityKind =
     | "object"
     | "type"
     | "variable";
-type ExportMode = "all" | "exported" | "non-exported";
+type ExportMode =
+    | "all"
+    | "exported"
+    | "non-exported";
 type MessageIds = "disallowedTag" | "tagNotAllowed";
 
 type Options = [RuleOption];

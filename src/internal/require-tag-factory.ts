@@ -20,7 +20,10 @@ type EntityKind =
     | "variable";
 
 /** Export targeting modes supported by shared require-tag rules. */
-type ExportMode = "all" | "exported" | "non-exported";
+type ExportMode =
+    | "all"
+    | "exported"
+    | "non-exported";
 
 /** Extra docs metadata shape used by this plugin's RuleCreator. */
 interface RuleDocs {

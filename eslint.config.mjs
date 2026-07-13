@@ -156,6 +156,13 @@ const config = [
         },
     },
     {
+        files: ["docs/docusaurus/site-docs/developer/index.md"],
+        name: "Generated TypeDoc index link on Windows",
+        rules: {
+            "remark/remark": "off",
+        },
+    },
+    {
         files: [
             "docs/docusaurus/src/components/GitHubStats.tsx",
             "docs/docusaurus/src/js/modernEnhancements.ts",
@@ -177,7 +184,15 @@ const config = [
             "unicorn/no-global-object-property-assignment": "off",
             "unicorn/no-immediate-mutation": "off",
             "unicorn/no-unnecessary-global-this": "off",
+            "unicorn/prefer-observer-apis": "off",
             "unicorn/prefer-single-call": "off",
+        },
+    },
+    {
+        files: ["src/rules/**/*.{ts,mts,cts,tsx}"],
+        name: "Rule Export Naming Compatibility",
+        rules: {
+            "unicorn/consistent-boolean-name": "off",
         },
     },
     {

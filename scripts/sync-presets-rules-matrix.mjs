@@ -288,6 +288,7 @@ const buildPresetMatrix = (requiredTagRuleNames) => {
         "",
         ...buildPresetLegendLines(),
         "",
+        "<!-- prettier-ignore -->",
         ...tableHeader,
         ...tableRows,
     ].join("\n");
