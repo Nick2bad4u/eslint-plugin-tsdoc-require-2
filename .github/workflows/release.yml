@@ -344,7 +344,28 @@ jobs:
                   }
 
                   const packMetadata = JSON.parse(readFileSync(metadataPath, "utf8"));
-                  process.stdout.write(packMetadata[0].filename);
+                  const packRecords = Array.isArray(packMetadata)
+                    ? packMetadata
+                    : Object.values(packMetadata);
+
+                  if (packRecords.length !== 1) {
+                    throw new Error(
+                      `Expected exactly one npm pack record, received ${packRecords.length}.`
+                    );
+                  }
+
+                  const [packRecord] = packRecords;
+                  if (
+                    typeof packRecord !== "object" ||
+                    packRecord === null ||
+                    !("filename" in packRecord) ||
+                    typeof packRecord.filename !== "string" ||
+                    packRecord.filename.trim().length === 0
+                  ) {
+                    throw new Error("npm pack metadata did not contain a valid filename.");
+                  }
+
+                  process.stdout.write(packRecord.filename);
                   NODE
                   )
                   tarball_path="${assets_dir}/${tarball_filename}"
