@@ -31,6 +31,7 @@ const RequirePrimaryExportRule: TagRuleModule = createTagRule<
             recommended: false,
             url: "https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/docs/rules/required-tags/require-primary-export.md",
         },
+        languages: ["js/js"],
         messages: {
             missingTag:
                 "TSDoc for {{entityKind}} {{entityName}} must include @primaryExport.",

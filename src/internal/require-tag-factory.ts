@@ -1,12 +1,16 @@
 import {
     AST_NODE_TYPES,
     AST_TOKEN_TYPES,
-    ESLintUtils,
     type JSONSchema,
     type TSESLint,
     type TSESTree,
 } from "@typescript-eslint/utils";
 import { arrayAt, arrayIncludes, isDefined, setHas } from "ts-extras";
+
+import {
+    createRuleCreator,
+    type RuleCreatorWithLanguages,
+} from "./create-rule.js";
 
 /** Supported declaration kinds enforced by require/required-tag rules. */
 type EntityKind =
@@ -36,17 +40,15 @@ type TagRuleContext = Readonly<
 >;
 
 /** Rule module type alias shared by generated required-tag rules. */
-type TagRuleModule = ESLintUtils.RuleModule<
+type TagRuleModule = TSESLint.RuleModule<
     TagRuleMessageIds,
     TagRuleOptions,
     RuleDocs
 >;
 
-const ruleCreator = ESLintUtils.RuleCreator;
-
 /** RuleCreator instance for all required-tag rules in this plugin. */
-const createTagRule: ReturnType<typeof ESLintUtils.RuleCreator<RuleDocs>> =
-    ruleCreator<RuleDocs>(
+const createTagRule: RuleCreatorWithLanguages<RuleDocs> =
+    createRuleCreator<RuleDocs>(
         (ruleName) =>
             `https://github.com/Nick2bad4u/eslint-plugin-tsdoc-require-2/blob/main/docs/rules/required-tags.md#${ruleName}`
     );
@@ -108,7 +110,7 @@ type TagRuleOptions = [RuleOption];
 interface Target {
     commentNode: TSESTree.Node;
     kind: EntityKind;
-    name: string | undefined;
+    name?: string | undefined;
     reportNode: TSESTree.Node;
 }
 
@@ -125,14 +127,6 @@ const enforceableEntityKinds: readonly EntityKind[] = [
 ];
 
 const defaultEnforceFor: readonly EntityKind[] = [...enforceableEntityKinds];
-
-/** Default option tuple for required-tag rules. */
-const defaultRuleOptions: TagRuleOptions = [
-    {
-        enforceFor: defaultEnforceFor,
-        exportMode: "exported",
-    },
-];
 
 /** JSON schema describing shared required-tag rule options. */
 const optionSchema: JSONSchema.JSONSchema4 = {
@@ -484,101 +478,106 @@ const createRequireTagRuleListener = (
         }
     };
 
+    const checkDefaultExport = (
+        exportNode: Readonly<TSESTree.ExportDefaultDeclaration>
+    ): void => {
+        if (
+            !shouldCheckExportedDeclarations(exportMode) ||
+            !isTopLevelNode(exportNode)
+        ) {
+            return;
+        }
+
+        const { declaration } = exportNode;
+
+        if (declaration.type === AST_NODE_TYPES.Identifier) {
+            checkIdentifierExport(declaration);
+            return;
+        }
+
+        if (isSupportedDeclaration(declaration)) {
+            checkDeclarationWithExportComment(declaration, exportNode);
+            return;
+        }
+
+        if (isSupportedDefaultExportExpression(declaration)) {
+            checkTarget({
+                commentNode: exportNode,
+                kind: getExpressionKind(declaration),
+                reportNode: declaration,
+            });
+        }
+    };
+
+    const checkNamedExport = (
+        exportNode: Readonly<TSESTree.ExportNamedDeclaration>
+    ): void => {
+        if (
+            !shouldCheckExportedDeclarations(exportMode) ||
+            !isTopLevelNode(exportNode)
+        ) {
+            return;
+        }
+
+        if (
+            exportNode.declaration !== null &&
+            isSupportedDeclaration(exportNode.declaration)
+        ) {
+            checkDeclarationWithExportComment(
+                exportNode.declaration,
+                exportNode
+            );
+        }
+
+        if (exportNode.source !== null) {
+            return;
+        }
+
+        for (const specifier of exportNode.specifiers) {
+            checkIdentifierExport(specifier.local);
+        }
+    };
+
+    const checkProgram = (programNode: Readonly<TSESTree.Program>): void => {
+        declarationsByName.clear();
+        checkedTargets.clear();
+
+        for (const statement of programNode.body) {
+            if (
+                shouldCheckNonExportedDeclarations(exportMode) &&
+                isSupportedDeclaration(statement)
+            ) {
+                for (const target of declarationTargetsWithCommentNode(
+                    statement,
+                    statement
+                )) {
+                    checkTarget(target);
+                }
+            }
+
+            if (
+                shouldCheckExportedDeclarations(exportMode) &&
+                isSupportedDeclaration(statement)
+            ) {
+                trackDeclarationTargets(statement);
+                continue;
+            }
+
+            if (
+                shouldCheckExportedDeclarations(exportMode) &&
+                statement.type === AST_NODE_TYPES.ExportNamedDeclaration &&
+                statement.declaration !== null &&
+                isSupportedDeclaration(statement.declaration)
+            ) {
+                trackDeclarationTargets(statement.declaration);
+            }
+        }
+    };
+
     return {
-        ExportDefaultDeclaration(
-            exportNode: Readonly<TSESTree.ExportDefaultDeclaration>
-        ): void {
-            if (
-                !shouldCheckExportedDeclarations(exportMode) ||
-                !isTopLevelNode(exportNode)
-            ) {
-                return;
-            }
-
-            const { declaration } = exportNode;
-
-            if (declaration.type === AST_NODE_TYPES.Identifier) {
-                checkIdentifierExport(declaration);
-                return;
-            }
-
-            if (isSupportedDeclaration(declaration)) {
-                checkDeclarationWithExportComment(declaration, exportNode);
-                return;
-            }
-
-            if (isSupportedDefaultExportExpression(declaration)) {
-                checkTarget({
-                    commentNode: exportNode,
-                    kind: getExpressionKind(declaration),
-                    name: undefined,
-                    reportNode: declaration,
-                });
-            }
-        },
-        ExportNamedDeclaration(
-            exportNode: Readonly<TSESTree.ExportNamedDeclaration>
-        ): void {
-            if (
-                !shouldCheckExportedDeclarations(exportMode) ||
-                !isTopLevelNode(exportNode)
-            ) {
-                return;
-            }
-
-            if (
-                exportNode.declaration !== null &&
-                isSupportedDeclaration(exportNode.declaration)
-            ) {
-                checkDeclarationWithExportComment(
-                    exportNode.declaration,
-                    exportNode
-                );
-            }
-
-            if (exportNode.source !== null) {
-                return;
-            }
-
-            for (const specifier of exportNode.specifiers) {
-                checkIdentifierExport(specifier.local);
-            }
-        },
-        Program(programNode: Readonly<TSESTree.Program>): void {
-            declarationsByName.clear();
-            checkedTargets.clear();
-
-            for (const statement of programNode.body) {
-                if (
-                    shouldCheckNonExportedDeclarations(exportMode) &&
-                    isSupportedDeclaration(statement)
-                ) {
-                    for (const target of declarationTargetsWithCommentNode(
-                        statement,
-                        statement
-                    )) {
-                        checkTarget(target);
-                    }
-                }
-
-                if (
-                    shouldCheckExportedDeclarations(exportMode) &&
-                    isSupportedDeclaration(statement)
-                ) {
-                    trackDeclarationTargets(statement);
-                    continue;
-                }
-
-                if (
-                    shouldCheckExportedDeclarations(exportMode) &&
-                    statement.type === AST_NODE_TYPES.ExportNamedDeclaration &&
-                    statement.declaration !== null &&
-                    isSupportedDeclaration(statement.declaration)
-                ) {
-                    trackDeclarationTargets(statement.declaration);
-                }
-            }
-        },
+        ExportDefaultDeclaration: checkDefaultExport,
+        ExportNamedDeclaration: checkNamedExport,
+        Program: checkProgram,
     };
 };
 
@@ -596,7 +595,6 @@ export type {
 export {
     createRequireTagRuleListener,
     createTagRule,
-    defaultRuleOptions,
     enforceableEntityKinds,
     optionSchema,
 };

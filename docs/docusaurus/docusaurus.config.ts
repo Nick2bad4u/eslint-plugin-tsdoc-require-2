@@ -103,9 +103,12 @@ const suppressKnownWebpackWarningsPlugin: PluginModule = () => ({
                  * site-level problem.
                  */
                 (warning: unknown) => {
-                    const warningRecord = warning as
-                        Readonly<Record<string, unknown>> | undefined;
-                    const warningMessage = warningRecord?.["message"];
+                    const warningMessage =
+                        typeof warning === "object" &&
+                        warning !== null &&
+                        "message" in warning
+                            ? warning.message
+                            : undefined;
 
                     return (
                         typeof warningMessage === "string" &&
@@ -191,7 +194,7 @@ const config = {
                 "@type": "WebSite",
                 description: siteDescription,
                 image: socialCardImageUrl,
-                name: "eslint-plugin-tsdoc-require-2",
+                name: projectName,
                 publisher: {
                     "@type": "Person",
                     name: "Nick2bad4u",
@@ -298,11 +301,10 @@ const config = {
             "classic",
             {
                 blog: {
-                    blogDescription:
-                        "Updates, architecture notes, and practical guidance for eslint-plugin-tsdoc-require-2 users.",
+                    blogDescription: `Updates, architecture notes, and practical guidance for ${projectName} users.`,
                     blogSidebarCount: "ALL",
                     blogSidebarTitle: "All posts",
-                    blogTitle: "eslint-plugin-tsdoc-require-2 Blog",
+                    blogTitle: `${projectName} Blog`,
                     editUrl: `https://github.com/${organizationName}/${projectName}/blob/main/docs/docusaurus/`,
                     feedOptions: {
                         type: ["rss", "atom"],
@@ -430,11 +432,11 @@ const config = {
                             label: "\u{EB09} Releases",
                         },
                         {
-                            href: `https://nick2bad4u.github.io/eslint-plugin-tsdoc-require-2/eslint-inspector/`,
+                            href: `${siteUrl}eslint-inspector/`,
                             label: "\u{E7D2} ESLint Inspector",
                         },
                         {
-                            href: `https://nick2bad4u.github.io/eslint-plugin-tsdoc-require-2/stylelint-inspector/`,
+                            href: `${siteUrl}stylelint-inspector/`,
                             label: "\u{E7D2} Stylelint Inspector",
                         },
                         {
@@ -467,7 +469,7 @@ const config = {
                 },
             ],
             logo: {
-                alt: "eslint-plugin-tsdoc-require-2 logo",
+                alt: `${projectName} logo`,
                 height: 60,
                 href: `https://github.com/${organizationName}/${projectName}`,
                 src: "img/logo_60x60.png",
@@ -487,7 +489,7 @@ const config = {
                 name: "twitter:card",
             },
             {
-                content: "eslint-plugin-tsdoc-require-2",
+                content: projectName,
                 property: "og:site_name",
             },
         ],
@@ -595,11 +597,11 @@ const config = {
                             label: "• \u{EB09} Releases",
                         },
                         {
-                            href: `https://nick2bad4u.github.io/eslint-plugin-tsdoc-require-2/eslint-inspector/`,
+                            href: `${siteUrl}eslint-inspector/`,
                             label: "• \u{E7D2} ESLint Inspector",
                         },
                         {
-                            href: `https://nick2bad4u.github.io/eslint-plugin-tsdoc-require-2/stylelint-inspector/`,
+                            href: `${siteUrl}stylelint-inspector/`,
                             label: "• \u{E7D2} Stylelint Inspector",
                         },
                         {
@@ -630,14 +632,14 @@ const config = {
                 },
             ],
             logo: {
-                alt: "eslint-plugin-tsdoc-require-2 logo",
+                alt: `${projectName} logo`,
                 height: 32,
                 href: baseUrl,
                 src: "img/favicon-32x32.png",
                 width: 32,
             },
             style: "dark",
-            title: "eslint-plugin-tsdoc-require-2",
+            title: projectName,
         },
         prism: {
             additionalLanguages: [
@@ -696,7 +698,7 @@ const config = {
             },
         ],
     ],
-    title: "eslint-plugin-tsdoc-require-2",
+    title: projectName,
     trailingSlash: true,
     url: siteOrigin,
 } satisfies Config;

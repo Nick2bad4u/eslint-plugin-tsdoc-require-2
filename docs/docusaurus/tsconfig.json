@@ -3,11 +3,17 @@
     "compilerOptions": {
         "ignoreDeprecations": "6.0",
         "isolatedDeclarations": false,
+        "lib": [
+            "DOM",
+            "DOM.Iterable",
+            "ES2024"
+        ],
         "module": "ESNext",
         "moduleResolution": "bundler",
         "noEmit": true,
         "skipLibCheck": true,
         "strict": true,
+        "target": "ES2024",
         "types": [
             "node"
         ]
