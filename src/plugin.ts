@@ -3,6 +3,9 @@ import type { UnknownRecord } from "type-fest";
 
 import { objectHasOwn, objectValues } from "ts-extras";
 
+// JSON module specifiers require an explicit file extension at runtime.
+// eslint-disable-next-line import-x/extensions -- Node.js cannot resolve this JSON module without its extension.
+import packageMetadata from "../package.json" with { type: "json" };
 import {
     requiredTagDefinitions,
     requiredTagRules,
@@ -57,7 +60,7 @@ const plugin: ESLint.Plugin = {
     configs: {},
     meta: {
         name: "eslint-plugin-tsdoc-require-2",
-        version: "1.0.2",
+        version: packageMetadata.version,
     },
     rules: pluginRules,
 };
