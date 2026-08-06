@@ -101,6 +101,13 @@ const config = [
         },
     },
     {
+        files: ["src/**/*.{js,mjs,cjs,ts,mts,cts,tsx,jsx}"],
+        name: "Source dependency graph",
+        rules: {
+            "import-x/no-cycle": "error",
+        },
+    },
+    {
         ignores: [
             "knip.config.ts",
             "plugin.d.mts",
@@ -116,6 +123,14 @@ const config = [
         name: "Non-default JSON schemas",
         rules: {
             "json-schema-validator-2/no-invalid": "off",
+        },
+    },
+    {
+        name: "Repository compliance exceptions",
+        rules: {
+            // GitHub's repository config only supports real path exclusions.
+            // Do not weaken secret scanning by committing a fabricated ignore.
+            "repo-compliance/require-secret-scanning-config": "off",
         },
     },
     {
@@ -186,6 +201,24 @@ const config = [
             "unicorn/no-unnecessary-global-this": "off",
             "unicorn/prefer-observer-apis": "off",
             "unicorn/prefer-single-call": "off",
+        },
+    },
+    {
+        files: ["src/rules/**/*.{ts,mts,cts,tsx}"],
+        name: "ESLint 10 Rule Metadata",
+        rules: {
+            "eslint-plugin/meta-property-ordering": [
+                "error",
+                [
+                    "defaultOptions",
+                    "deprecated",
+                    "docs",
+                    "languages",
+                    "messages",
+                    "schema",
+                    "type",
+                ],
+            ],
         },
     },
     {

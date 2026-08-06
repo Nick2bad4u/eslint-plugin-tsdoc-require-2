@@ -1,6 +1,6 @@
 import type { SidebarsConfig } from "@docusaurus/plugin-content-docs";
 
-import { readdirSync } from "node:fs";
+import { type Dirent, readdirSync } from "node:fs";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -10,13 +10,14 @@ const rulesDocsDirectoryPath = path.resolve(currentDirectoryPath, "../rules");
 const toDocId = (folderName: string, fileName: string): string =>
     `${folderName}/${fileName.replace(/\.md$/v, "")}`;
 
-const readDocIdsFromDirectory = (folderName: string): readonly string[] => {
-    const targetDirectoryPath = path.resolve(
-        rulesDocsDirectoryPath,
-        folderName
-    );
-
-    return readdirSync(targetDirectoryPath, { withFileTypes: true })
+const readDocIdsFromDirectory = ({
+    directoryEntries,
+    folderName,
+}: Readonly<{
+    directoryEntries: readonly Dirent[];
+    folderName: string;
+}>): readonly string[] =>
+    directoryEntries
         .filter((directoryEntry) => directoryEntry.isFile())
         .map((directoryEntry) => directoryEntry.name)
         .filter(
@@ -26,10 +27,21 @@ const readDocIdsFromDirectory = (folderName: string): readonly string[] => {
             leftFileName.localeCompare(rightFileName)
         )
         .map((fileName) => toDocId(folderName, fileName));
-};
 
-const requiredTagRuleDocIds = readDocIdsFromDirectory("required-tags");
-const presetDocIds = readDocIdsFromDirectory("presets");
+const requiredTagRuleDocIds = readDocIdsFromDirectory({
+    directoryEntries: readdirSync(
+        path.resolve(rulesDocsDirectoryPath, "required-tags"),
+        { withFileTypes: true }
+    ),
+    folderName: "required-tags",
+});
+const presetDocIds = readDocIdsFromDirectory({
+    directoryEntries: readdirSync(
+        path.resolve(rulesDocsDirectoryPath, "presets"),
+        { withFileTypes: true }
+    ),
+    folderName: "presets",
+});
 
 const requiredTagItemIcons = [
     "🔵",
@@ -58,10 +70,13 @@ const toRequiredTagLabel = (docId: string): string => {
     return `Require ${toTitleCaseWords(ruleNameWithoutPrefix)}`;
 };
 
+const isNonEmptyString = (value: string | undefined): value is string =>
+    value !== undefined && value.length > 0;
+
 const toDocItem = (docId: string, className?: string, label?: string) => ({
-    ...(className && { className }),
+    ...(isNonEmptyString(className) && { className }),
     id: docId,
-    ...(label && { label }),
+    ...(isNonEmptyString(label) && { label }),
     type: "doc" as const,
 });
 

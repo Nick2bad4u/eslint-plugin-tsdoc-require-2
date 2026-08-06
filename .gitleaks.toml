@@ -1,12 +1,12 @@
 title = "eslint-plugin-tsdoc-require-2 gitleaks config"
 
 [extend]
-path = "node_modules/gitleaks-config-nick2bad4u/gitleaks.toml"
+    path = "node_modules/gitleaks-config-nick2bad4u/gitleaks.toml"
 
 [[allowlists]]
-description = "Allow generated documentation artifacts"
-paths = [
-    '''^docs/docusaurus/\.docusaurus/''',
-    '''^docs/docusaurus/build/''',
-    '''^docs/docusaurus/site-docs/developer/api/''',
-]
+    description = "Allow generated documentation artifacts"
+    paths       = [
+        '''^docs/docusaurus/\.docusaurus/''',
+        '''^docs/docusaurus/build/''',
+        '''^docs/docusaurus/site-docs/developer/api/''',
+    ]

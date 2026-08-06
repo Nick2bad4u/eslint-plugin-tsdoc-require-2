@@ -1,6 +1,9 @@
 // @ts-check
 const processEnvironment = process.env;
 const isCI = (processEnvironment["CI"] ?? "").toLowerCase() === "true";
+const hasDashboardApiKey =
+    (processEnvironment["STRYKER_DASHBOARD_API_KEY"] ?? "").trim().length > 0;
+const shouldReportToDashboard = isCI && hasDashboardApiKey;
 
 /** @type {import("@stryker-mutator/api/core").PartialStrykerOptions} */
 const config = {
@@ -54,14 +57,25 @@ const config = {
         "!src/**/*.*.ts",
     ],
     packageManager: "npm",
-    plugins: ["@stryker-mutator/*", "@stryker-ignorer/*"],
-    reporters: [
-        "clear-text",
-        "html",
-        "json",
-        "dashboard",
-        "progress",
+    plugins: [
+        "@stryker-ignorer/console-all",
+        "@stryker-mutator/typescript-checker",
+        "@stryker-mutator/vitest-runner",
     ],
+    reporters: shouldReportToDashboard
+        ? [
+              "clear-text",
+              "html",
+              "json",
+              "dashboard",
+              "progress",
+          ]
+        : [
+              "clear-text",
+              "html",
+              "json",
+              "progress",
+          ],
     symlinkNodeModules: true,
     testRunner: "vitest",
     thresholds: {

@@ -321,6 +321,7 @@
 .heroLiveBadges {
     display: grid;
     grid-auto-flow: column;
+    grid-template-rows: minmax(0, auto);
     list-style-type: "";
     margin-block-start: 0.6rem;
     max-inline-size: 100%;
@@ -332,6 +333,7 @@
     gap: 0.75rem;
     grid-auto-flow: column;
     grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    grid-template-rows: minmax(0, auto);
     list-style-type: "";
     margin-block-start: 0.82rem;
     padding-inline-start: 0;
@@ -599,7 +601,7 @@
 
 @media (width <= 1024px) {
     .heroGrid {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .heroPanel {
@@ -615,11 +617,11 @@
 
     .heroGrid {
         gap: 1rem;
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .heroBadgeRow {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .heroPanel {
