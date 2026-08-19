@@ -18,6 +18,11 @@ import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 export default [tsdocRequire.configs.recommended];
 ```
 
+Bundled presets are scoped to `.cjs`, `.cts`, `.js`, `.jsx`, `.mjs`, `.mts`,
+`.ts`, and `.tsx` files. They can therefore share a Flat Config array with
+non-JavaScript language plugins, including JSON configs, without applying the
+plugin's `js/js` rules to those files.
+
 ## Optional stricter presets
 
 ```ts

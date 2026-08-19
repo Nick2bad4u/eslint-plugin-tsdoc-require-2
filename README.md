@@ -32,6 +32,11 @@ Use `tsdocRequire.configs.tsdoc` for stricter TSDoc conventions, or
 `tsdocRequire.configs.jsdoc` for JSDoc-style function tag requirements such as
 `@param`, `@returns`, and `@throws`.
 
+All bundled presets are scoped to JavaScript and TypeScript source extensions
+(`.cjs`, `.cts`, `.js`, `.jsx`, `.mjs`, `.mts`, `.ts`, and `.tsx`). This keeps
+the presets compatible with non-JavaScript ESLint languages such as JSON when
+they share the same Flat Config array.
+
 ```js
 import tsdocRequire from "eslint-plugin-tsdoc-require-2";
 

@@ -4,6 +4,17 @@ Presets are curated rule bundles that help you adopt `eslint-plugin-tsdoc-requir
 
 Use one preset as your baseline, then add rule overrides for project-specific policy.
 
+## File scope and language compatibility
+
+Every bundled preset applies to `**/*.{cjs,cts,js,jsx,mjs,mts,ts,tsx}`. The
+rules declare ESLint's `js/js` language contract, and the preset file scope
+prevents them from being applied to incompatible language plugins such as
+`json/json` in the same Flat Config array.
+
+If a processor exposes JavaScript under another filename, spread the chosen
+preset into a project-owned config and replace `files` with that processor's
+documented file patterns.
+
 ## How to choose quickly
 
 | If you want...                                                   | Start with                              |
