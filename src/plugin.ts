@@ -28,6 +28,8 @@ type RuleModuleMap = typeof requiredTagRules & {
     "restrict-tags": typeof restrictTagsRule;
 };
 
+const sourceFilePatterns = ["**/*.{cjs,cts,js,jsx,mjs,mts,ts,tsx}"] as const;
+
 /** Map of all exported rule modules. */
 const rules: RuleModuleMap = {
     require: requireRule,
@@ -218,6 +220,7 @@ const createPresetRules = (
 const createPresetConfig = (
     ruleEntries: readonly Readonly<PresetRuleEntry>[]
 ): FlatConfig => ({
+    files: [...sourceFilePatterns],
     plugins: {
         "tsdoc-require-2": plugin,
     },

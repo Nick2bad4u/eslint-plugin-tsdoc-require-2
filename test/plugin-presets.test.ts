@@ -1,23 +1,97 @@
+import json from "@eslint/json";
+import tsParser from "@typescript-eslint/parser";
+import { ESLint } from "eslint";
 import { describe, expect, it } from "vitest";
 
 import plugin from "../src/plugin.js";
 import { requiredTagDefinitions } from "../src/rules/require-tag-rules.js";
 
-const getPresetRules = (presetName: string): Record<string, unknown> => {
+const presetNames = [
+    "all",
+    "detailed",
+    "jsdoc",
+    "packages",
+    "recommended",
+    "tsdoc",
+    "typedoc",
+    "typedoc-strict",
+] as const;
+
+const sourceFilePatterns = ["**/*.{cjs,cts,js,jsx,mjs,mts,ts,tsx}"] as const;
+
+const getPresetConfig = (presetName: string) => {
     const preset = plugin.configs?.[presetName];
 
-    if (
-        preset === undefined ||
-        Array.isArray(preset) ||
-        preset.rules === undefined
-    ) {
+    if (preset === undefined || Array.isArray(preset) || !("files" in preset)) {
         throw new TypeError(`Missing flat config preset: ${presetName}`);
     }
 
-    return preset.rules;
+    return preset;
+};
+
+const getPresetRules = (presetName: string): Record<string, unknown> => {
+    const rules = getPresetConfig(presetName).rules;
+
+    if (rules === undefined) {
+        throw new TypeError(
+            `Missing rules for flat config preset: ${presetName}`
+        );
+    }
+
+    return rules;
 };
 
 describe("plugin presets", () => {
+    it("scopes every preset to JavaScript-language source files", () => {
+        expect.hasAssertions();
+
+        for (const presetName of presetNames) {
+            expect(getPresetConfig(presetName).files).toStrictEqual(
+                sourceFilePatterns
+            );
+        }
+    });
+
+    it("coexists with non-JavaScript language plugins", async () => {
+        expect.hasAssertions();
+
+        const eslint = new ESLint({
+            ignore: false,
+            overrideConfig: [
+                getPresetConfig("recommended"),
+                {
+                    files: ["**/*.json"],
+                    language: "json/json",
+                    plugins: { json },
+                },
+                {
+                    files: ["**/*.ts"],
+                    languageOptions: { parser: tsParser },
+                },
+            ],
+            overrideConfigFile: true,
+        });
+
+        const [jsonResult] = await eslint.lintText('{"answer": 42}', {
+            filePath: "mixed-language.json",
+        });
+        const [javascriptResult] = await eslint.lintText(
+            "/** Documented. */ export class Documented {}",
+            { filePath: "documented.js" }
+        );
+        const [typescriptResult] = await eslint.lintText(
+            "export class MissingDocumentation {}",
+            { filePath: "missing-documentation.ts" }
+        );
+
+        expect(jsonResult?.errorCount).toBe(0);
+        expect(javascriptResult?.errorCount).toBe(0);
+        expect(typescriptResult?.errorCount).toBe(1);
+        expect(typescriptResult?.messages[0]?.ruleId).toBe(
+            "tsdoc-require-2/require"
+        );
+    });
+
     it("keeps recommended preset minimal", () => {
         expect.hasAssertions();
 
