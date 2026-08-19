@@ -177,11 +177,11 @@ jobs:
               run: "npm run release:check"
 
             - name: "Ensure verification did not modify tracked files"
-              if: "startsWith(github.ref, 'refs/tags/v')"
+              if: "${{ github.event_name != 'workflow_dispatch' || !inputs.skip_verify }}"
               run: |
                   set -euo pipefail
                   if ! git diff --quiet || ! git diff --cached --quiet; then
-                    echo "release:check modified files on a tag-triggered release. Ensure main is clean before tagging." >&2
+                    echo "release:check modified tracked files. Commit generated or formatting updates before releasing." >&2
                     git status --short
                     exit 1
                   fi
@@ -262,7 +262,20 @@ jobs:
                     exit 1
                   fi
 
-                  git add -A
+                  unexpected_changes=$(
+                    {
+                      git diff --name-only
+                      git diff --cached --name-only
+                      git ls-files --others --exclude-standard
+                    } | sort -u | grep -Ev '^(package.json|package-lock.json)$' || true
+                  )
+                  if [ -n "$unexpected_changes" ]; then
+                    echo "Unexpected files changed while preparing the release:" >&2
+                    echo "$unexpected_changes" >&2
+                    exit 1
+                  fi
+
+                  git add -- package.json package-lock.json
                   if git diff --cached --quiet; then
                     echo "No staged changes found for release commit." >&2
                     exit 1

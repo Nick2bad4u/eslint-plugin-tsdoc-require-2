@@ -167,7 +167,7 @@
         "lint:yamllint": "yamllint -c .yamllint .",
         "open:coverage": "npx open-cli coverage/index.html",
         "prepublishOnly": "npm run release:check",
-        "release:check": "npm run clean && npm run build && npm run docs:api && npm run typecheck && npm run lint:fix && npm run lint:prettier:fix && npm run test",
+        "release:check": "npm run release:verify && npm run lint:all",
         "release:verify": "npx cross-env NODE_OPTIONS= npm run build && npx cross-env NODE_OPTIONS= npm run lint && npx cross-env NODE_OPTIONS= npm run typecheck && npx cross-env NODE_OPTIONS= VITEST_TYPECHECK=false npm run test && npx cross-env NODE_OPTIONS= npm run sync:readme:rules-table && npx cross-env NODE_OPTIONS= npm run sync:readme:presets-matrix && npx cross-env NODE_OPTIONS= npm run docs:api && npx cross-env NODE_OPTIONS= npm run docs:check-links && npx cross-env NODE_OPTIONS= npm pack --dry-run",
         "remark:fix": "npx remark --rc-path .remarkrc.mjs --silently-ignore --ignore-path .remarkignore --frail --quiet --output -- \"*.{md,mdx}\" \"docs/**/*.{md,mdx}\"",
         "remark:test-config": "npx remark --rc-path .remarkrc.mjs --silently-ignore --ignore-path .remarkignore --frail \"README.md\"",
