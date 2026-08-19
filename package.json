@@ -48,6 +48,10 @@
     "main": "./dist/plugin.cjs",
     "module": "./dist/plugin.js",
     "types": "./dist/plugin.d.cts",
+    "directories": {
+        "doc": "docs",
+        "test": "test"
+    },
     "files": [
         "dist",
         "docs/rules",
@@ -325,9 +329,5 @@
         "fsevents": false,
         "gitleaks-secret-scanner@2.1.1": true,
         "unrs-resolver@1.12.2": true
-    },
-    "directories": {
-        "doc": "docs",
-        "test": "test"
     }
 }
