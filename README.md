@@ -6,6 +6,8 @@ Require TSDoc and JSDoc-style comments and documentation tags on exported
 TypeScript declarations and default exports, with optional enforcement for
 non-exported top-level declarations.
 
+> **Oxlint:** Compatible with Oxlint 1.80.0 across all 58 rules and eight presets; the [JavaScript plugin API remains alpha](https://oxc.rs/docs/guide/usage/linter/js-plugins.html), so the release gate reruns ESLint/Oxlint conformance coverage.
+
 ## Table of contents
 
 1. [Installation](#installation)
